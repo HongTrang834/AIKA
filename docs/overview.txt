@@ -1,0 +1,111 @@
+Tên đề tài: Hệ thống hỗ trợ học tiếng Nhật N2 tích hợp chatbot AI trên nền tảng kiến trúc Microservices 
+1. Mục tiêu đề tài
+Xây dựng một web application hỗ trợ học tiếng Nhật trình độ N2 tích hợp nhiều hình thức học khác nhau trong cùng một hệ thống, bao gồm:
+Học từ vựng N2
+Học ngữ pháp N2
+Luyện hội thoại tiếng Nhật với AI thông qua chat hoặc voice
+Flashcard ôn tập 
+Hệ thống tạo môi trường học tập và khắc phục vấn đề luyện giao tiếp - điều vẫn luôn là điểm yếu của người học ngoại ngữ 
+2. Các chức năng chính của hệ thống
+1 Quản lý người dùng
+Đăng ký / đăng nhập
+Quản lý thông tin cá nhân
+Thống kê lượng từ vựng, ngữ pháp đã học, thời gian đã luyện kaiwa  
+2 Học từ vựng N2
+Danh sách từ vựng N2 theo cụm
+Ví dụ minh họa (các câu sử dụng từ vựng đó)
+Đánh dấu 1 từ để thêm vào flashcard
+Trắc nghiệm ôn tập từ vựng sau mỗi cụm
+3 Học ngữ pháp N2
+Danh sách ngữ pháp N2 theo cụm
+Giải thích và ví dụ sử dụng ngữ pháp đó 
+Trắc nghiệm ôn tập ngữ pháp sau mỗi cụm
+4 Luyện hội thoại với AI
+Chat với chatbot AI bằng tiếng Nhật 
+Hội thoại theo tình huống (Scenario-based Chat): Cung cấp các kịch bản thực tế (Phỏng vấn, thảo luận dự án IT, đặt lịch hẹn...). AI sẽ dẫn dắt cuộc hội thoại dựa trên kịch bản đã chọn.
+Thực hiện kiểm tra lỗi xuất hiện trong câu 
+Lưu ý:AI sẽ có 2 chế độ, 1 là hội thoại tự do, 2 là hội thoại theo chủ đề. Trong phần tự do, AI sẽ nói chuyện không giới hạn chủ đề với user, nhưng sẽ chỉ ra lỗi sai nếu có mà user đã dùng. Còn hội thoại theo chủ đề thì Ai sẽ luôn dẫn cuộc hội thoại về chủ đề đã chọn. Và chỉ khi user yêu cầu hội thoại theo kiến thức N2 thì AI mới nói theo N2, còn không thì sẽ hội thoại như giao tiếp thường không phân cấp độ.
+5 Phản hồi và sửa lỗi
+Trong quá trình hội thoại hệ thống có thể:
+phát hiện lỗi ngữ pháp
+gợi ý cách nói đúng
+đưa ra cách diễn đạt tự nhiên hơn, hoặc chuẩn N2 nếu user chọn chế độ hội thoại N2. 
+7 Flashcards tự động: 
+Có các bộ flashcard có sẵn hoặc người dùng tự tạo ( bằng các từ vựng người dùng chọn để thêm vào).
+Dùng thuật toán Spaced Repetition tương tự Anki. 
+3. Phân tích chi tiết Mô hình AI
+    3.1. Công nghệ sử dụng: 
+Python FastAPI (Xử lý NLP, RAG, Kết nối LLM, LangChain)... và các công nghệ khác nếu có phát sinh trong quá trình thực hiện 
+3.2. Kiến trúc hệ thống AI (AI Pipeline)
+Hệ thống không gọi API trực tiếp từ Frontend mà thông qua một AI Service chuyên biệt. Quy trình xử lý bao gồm 4 tầng:
+Tầng Giao tiếp: Tiếp nhận yêu cầu (Text/Voice) và ngữ cảnh (Context) từ Web Server.
+Tầng Tri thức (RAG): Truy xuất dữ liệu từ vựng/ngữ pháp N2 phù hợp từ Vector Database để bổ trợ cho AI.
+Tầng Tư duy: Sử dụng LLM (Gemini 1.5 Flash hoặc 1 model khác nếu Gemini không đáp ứng đúng yêu cầu) để xử lý ngôn ngữ dựa trên các Prompt chuyên biệt.
+Tầng Chuẩn hóa: Chuyển đổi phản hồi của AI thành cấu trúc JSON để hệ thống Web có thể bóc tách lỗi sai.
+3.2. Phân định khối lượng công việc (Tự làm vs Sử dụng sẵn)
+Mô hình ngôn ngữ (LLM): * Công cụ: Google Gemini 1.5 Flash API.
+Sinh viên thực hiện: Prompt Engineering - Thiết kế các bộ khung câu lệnh (System Prompts) phức tạp cho từng chế độ: Hội thoại tự do, Hội thoại tình huống, Sửa lỗi ngữ pháp.
+Cơ sở dữ liệu N2: * Công cụ: Dataset N2 (CSV/JSON).
+Sinh viên thực hiện: Tìm kiếm dataset N2 có sẵn, bổ sung thêm dữ liệu tự thu thập. Xây dựng RAG Logic (Pipeline tìm kiếm ngữ pháp/từ vựng phù hợp ngữ cảnh) để nhồi kiến thức vào AI, đảm bảo không nói sai kiến thức N2.
+Xử lý dữ liệu đầu ra: * Công cụ: LLM JSON Mode.
+Sinh viên thực hiện: Output Parser - Lập trình bộ phân tích để bóc tách lỗi sai (trợ từ, kính ngữ) từ phản hồi của AI và chuyển hóa thành dữ liệu cho tính năng Thống kê.
+Quản lý hội thoại: * Công cụ: LangChain Framework.
+Sinh viên thực hiện: Xử lý bộ nhớ (Memory) để AI ghi nhớ lịch sử hội thoại, duy trì mạch kịch bản (Scenario) mà không bị lạc đề.
+Hạ tầng AI Service: * Công cụ: Python, FastAPI.
+Sinh viên thực hiện: Xây dựng toàn bộ Server AI riêng biệt, xử lý bất đồng bộ (Async) để tối ưu tốc độ. Thiết kế cấu trúc API đồng bộ dữ liệu giữa AI Server và hệ thống Database chính (Node.js).
+4. Hướng mở rộng 
+Định hướng mở rộng đề tài nếu có đủ thời gian và tài nguyên:
+Cung cấp các bài thi thử N2
+Thêm chức năng Luyện nghe 
+Thêm chức năng Tra cứu từ vựng với cộng đồng người dùng thật
+Phát triển chatbot AI thời gian phản hồi nhanh hơn 
+5. Lộ trình chi tiết thực hiện dự án:
+Giai đoạn 1: Chuẩn bị Nền tảng (Setup)
+ Thiết lập Database PostgreSQL
+ Cấu hình Environment Variables (.env)
+ Tạo Database Schema cho User, Vocabulary, Grammar
+ Cấu hình Google Gemini API Key
+Giai đoạn 2: Phát triển Backend Core
+ API User Management (Đăng ký/Đăng nhập)
+ JWT Authentication
+ CRUD endpoints cho Vocabulary & Grammar
+ Flashcard Management API
+ Kết nối với PostgreSQL
+ Thực hiện i18n, responsive xuyên suốt quá trình code 
+
+Giai đoạn 3: Xây dựng AI Service
+ Cài đặt FastAPI Python backend
+ Prompt Engineering cho 3 chế độ AI:
+Hội thoại tự do
+Hội thoại theo chủ đề
+Sửa lỗi ngữ pháp
+ Tích hợp Google Gemini API
+ RAG Pipeline (Tri thức N2)
+Giai đoạn 4: Phát triển Frontend - Trang chính
+ Dashboard (Trang chủ)
+ Sidebar Navigation
+ Layout responsive
+ Styling với Tailwind CSS
+Giai đoạn 5: Các tính năng học tập
+ VocabLab: Danh sách từ vựng + flashcard picker
+ KaiwaHub: Luyện kaiwa (3 chế độ chat AI)
+ Scenarios: Hội thoại theo tình huống
+ Flashcards: Ôn tập với Spaced Repetition Algorithm
+Giai đoạn 6: Tích hợp hoàn chỉnh
+ Kết nối Frontend ↔ Backend API
+ Kết nối Backend → AI Service
+ WebSocket (nếu cần real-time chat)
+ Error Handling & Validation
+Giai đoạn 7: Testing & QA
+ Unit Tests cho Backend
+ Integration Tests
+ E2E Tests cho Frontend
+ Load Testing cho API
+Giai đoạn 8: Triển khai & Tối ưu
+ Build Production
+ Docker & Deployment (AWS/Azure/Heroku)
+ Performance Optimization
+ Update Documentation
+
+
+

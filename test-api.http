@@ -1,0 +1,115 @@
+@baseUrl = http://localhost:3000
+@token = 
+
+### Health Check
+GET {{baseUrl}}/api/health
+
+### 1. Register User
+POST {{baseUrl}}/api/users/register
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "email": "test@example.com",
+  "password": "password123",
+  "full_name": "Test User"
+}
+
+### 2. Login User (Save token from response)
+POST {{baseUrl}}/api/users/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+### 3. Get User Profile (Replace token)
+GET {{baseUrl}}/api/users/profile
+Authorization: Bearer YOUR_TOKEN_HERE
+
+### 4. Update User Profile
+PUT {{baseUrl}}/api/users/profile
+Authorization: Bearer YOUR_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "full_name": "Updated Name",
+  "avatar_url": "https://example.com/avatar.jpg"
+}
+
+### 5. Get All Vocabulary
+GET {{baseUrl}}/api/vocabulary?limit=10&offset=0
+
+### 6. Get Vocabulary by ID
+GET {{baseUrl}}/api/vocabulary/1
+
+### 7. Get Vocabulary Categories
+GET {{baseUrl}}/api/vocabulary/categories
+
+### 8. Get All Grammar
+GET {{baseUrl}}/api/grammar?limit=10&offset=0
+
+### 9. Get Grammar by ID
+GET {{baseUrl}}/api/grammar/1
+
+### 10. Create Flashcard (Replace token)
+POST {{baseUrl}}/api/flashcards
+Authorization: Bearer YOUR_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "vocab_id": 1
+}
+
+### 11. Create Flashcard from Grammar (Replace token)
+POST {{baseUrl}}/api/flashcards
+Authorization: Bearer YOUR_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "grammar_id": 1
+}
+
+### 12. Get User Flashcards (Replace token)
+GET {{baseUrl}}/api/flashcards
+Authorization: Bearer YOUR_TOKEN_HERE
+
+### 13. Update Flashcard (Spaced Repetition) (Replace token & flashcard_id)
+PATCH {{baseUrl}}/api/flashcards/1
+Authorization: Bearer YOUR_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "quality": 4
+}
+
+### 14. Delete Flashcard (Replace token & flashcard_id)
+DELETE {{baseUrl}}/api/flashcards/1
+Authorization: Bearer YOUR_TOKEN_HERE
+
+### 15. Get Conversation History (Replace token)
+GET {{baseUrl}}/api/conversation/history?mode=free&limit=50
+Authorization: Bearer YOUR_TOKEN_HERE
+
+### 16. Save Conversation (Replace token)
+POST {{baseUrl}}/api/conversation/save
+Authorization: Bearer YOUR_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "mode": "free",
+  "user_message": "おはようございます",
+  "ai_response": "おはようございます。今日はいい天気ですね。",
+  "grammar_errors": [
+    {
+      "error": "ございます",
+      "correction": "ます",
+      "explanation": "Too formal in casual context"
+    }
+  ]
+}
+
+### 17. Get Scenarios (Replace token)
+GET {{baseUrl}}/api/conversation/scenarios
+Authorization: Bearer YOUR_TOKEN_HERE
