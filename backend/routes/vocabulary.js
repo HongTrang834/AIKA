@@ -20,10 +20,16 @@ router.get('/', async (req, res) => {
     params.push(limit, offset);
 
     const result = await pool.query(query, params);
-    res.json(result.rows);
+    
+    const countResult = await pool.query('SELECT COUNT(*) as total FROM vocabulary');
+    
+    res.json({
+      rows: result.rows,
+      total: parseInt(countResult.rows[0].total),
+    });
   } catch (error) {
     console.error('Vocab error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: error.message });
   }
 });
 

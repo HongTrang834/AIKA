@@ -7,6 +7,7 @@ interface User {
   email: string;
   full_name?: string;
   avatar_url?: string;
+  role?: 'admin' | 'user' | 'student';
 }
 
 interface AuthContextType {
@@ -31,13 +32,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const savedToken = localStorage.getItem('token');
     if (savedToken) {
       setToken(savedToken);
-      // Có thể gọi getProfile để lấy thông tin user
+      // Gọi getProfile để lấy thông tin user kèm role
       api.getProfile(savedToken).then((data) => {
-        if (data.user) {
-          setUser(data.user);
+        if (data && data.id) {
+          setUser({
+            id: data.id,
+            username: data.username,
+            email: data.email,
+            full_name: data.full_name,
+            avatar_url: data.avatar_url,
+            role: data.role as 'admin' | 'user' | 'student',
+          });
         } else {
           localStorage.removeItem('token');
+          setToken(null);
         }
+      }).catch((error) => {
+        console.error('Error loading profile:', error);
+        localStorage.removeItem('token');
+        setToken(null);
       });
     }
     setLoading(false);

@@ -130,7 +130,7 @@ API Gateway ──────────────────────�
 | Đăng ký | Nhập email, password, username. Hệ thống kiểm tra trùng lặp, hash password (bcrypt), gửi email xác nhận (nếu có) |
 | Đăng nhập | Xác thực email + password. Trả về `access_token` (JWT, TTL: 1h) và `refresh_token` (TTL: 7 ngày) |
 | Refresh Token | Client dùng `refresh_token` để lấy `access_token` mới khi hết hạn |
-| Đăng xuất | Vô hiệu hóa `refresh_token` trong Redis (blacklist) |
+|  | Vô hiệu hóa `refresh_token` trong Redis (blacklist) |
 | Quên mật khẩu | Gửi link reset qua email, link có TTL 15 phút |
 
 #### 4.1.2 Quản lý thông tin cá nhân

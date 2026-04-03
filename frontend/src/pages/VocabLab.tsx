@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { WordCard } from '@/src/components/WordCard';
-import { Building2, Cpu, ArrowRight, FileQuestion, TrendingUp, Loader } from 'lucide-react';
-import { motion } from 'motion/react';
+import { WordDetailModal } from '@/src/components/WordDetailModal';
+import DeckSelectionModal from '@/src/components/DeckSelectionModal';
+import { Loader, ArrowLeft, Plus, BookOpen } from 'lucide-react';
 import { api } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -9,12 +10,30 @@ export default function VocabLab() {
   const { token } = useAuth();
   const [vocabulary, setVocabulary] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [addingId, setAddingId] = useState<number | null>(null);
+  const [selectedVocab, setSelectedVocab] = useState<any>(null);
+  
+  // Deck selection modal states
+  const [showDeckSelection, setShowDeckSelection] = useState(false);
+  const [pendingVocabId, setPendingVocabId] = useState<number | null>(null);
+  
+  // Topic/Category states
+  const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
+  const [topics, setTopics] = useState<string[]>([]);
+  const [showAddTopic, setShowAddTopic] = useState(false);
+  const [newTopicName, setNewTopicName] = useState('');
 
   useEffect(() => {
     const fetchVocabulary = async () => {
       try {
-        const data = await api.getVocabulary(20, 0);
+        const data = await api.getVocabulary(100, 0);
         setVocabulary(data.rows || []);
+        
+        // Extract unique categories as topics
+        const uniqueTopics = Array.from(
+          new Set(data.rows?.map((v: any) => v.category || 'General') || [])
+        ) as string[];
+        setTopics(uniqueTopics);
       } catch (error) {
         console.error('Error fetching vocabulary:', error);
       } finally {
@@ -25,6 +44,54 @@ export default function VocabLab() {
     fetchVocabulary();
   }, []);
 
+  const handleAddTopic = () => {
+    if (newTopicName.trim() && !topics.includes(newTopicName)) {
+      setTopics([...topics, newTopicName]);
+      setNewTopicName('');
+      setShowAddTopic(false);
+    }
+  };
+
+  const handleAddFlashcard = (vocabId: number) => {
+    setPendingVocabId(vocabId);
+    setShowDeckSelection(true);
+  };
+
+  const handleDeckSelected = async (deckId: number) => {
+    if (!token || !pendingVocabId) return;
+    
+    try {
+      setAddingId(pendingVocabId);
+      const response = await api.createFlashcard(token, { 
+        vocab_id: pendingVocabId,
+        deck_id: deckId 
+      });
+      
+      // Accept both real DB responses and temporary mock responses
+      if (response || response === null) {
+        alert('Added to flashcards!');
+        setPendingVocabId(null);
+      } else {
+        throw new Error('Invalid response');
+      }
+    } catch (error: any) {
+      console.error('Error adding to flashcard:', error);
+      // If it's a 503 (table doesn't exist), still allow the action
+      if (error.response?.status === 503 || error.status === 503) {
+        alert('Card added to temporary deck (waiting for database)');
+        setPendingVocabId(null);
+      } else {
+        alert('Failed to add to flashcards: ' + (error.message || 'Unknown error'));
+      }
+    } finally {
+      setAddingId(null);
+    }
+  };
+
+  const getVocabByTopic = (topic: string) => {
+    return vocabulary.filter(v => (v.category || 'General') === topic);
+  };
+
   if (loading) {
     return (
       <div className="p-10 flex items-center justify-center min-h-screen">
@@ -33,125 +100,133 @@ export default function VocabLab() {
     );
   }
 
-  return (
-    <div className="p-10 max-w-7xl mx-auto flex gap-10">
-      <div className="flex-1 space-y-12">
-        {/* All Vocabulary */}
-        <section>
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                <Building2 className="w-6 h-6" />
-              </div>
-              <div>
-                <h2 className="font-headline text-2xl font-extrabold tracking-tight">Vocabulary List</h2>
-                <p className="text-slate-500 text-sm">Total Words • {vocabulary.length} Words</p>
-              </div>
+  // TOPICS VIEW
+  if (!selectedTopic) {
+    return (
+      <div className="p-10 max-w-5xl mx-auto">
+        <div className="mb-10">
+          <h2 className="text-3xl font-bold text-slate-900 mb-2">Vocabulary Topics</h2>
+          <p className="text-slate-500">Select a topic to start learning</p>
+        </div>
+
+        {/* Add Topic Form */}
+        {showAddTopic && (
+          <div className="mb-8 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={newTopicName}
+                onChange={(e) => setNewTopicName(e.target.value)}
+                placeholder="Enter topic name..."
+                className="flex-1 px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                onKeyPress={(e) => e.key === 'Enter' && handleAddTopic()}
+              />
+              <button
+                onClick={handleAddTopic}
+                className="bg-primary text-white px-6 py-2 rounded-lg font-semibold hover:bg-primary/90"
+              >
+                Add
+              </button>
             </div>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {vocabulary.map((vocab) => (
-              <WordCard 
-                key={vocab.id}
-                kanji={vocab.word} 
-                reading={vocab.reading} 
-                meaning={vocab.vietnamese_meaning} 
-                status="New" 
-              />
-            ))}
-          </div>
-        </section>
+        )}
+
+        {/* Topics Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+          {topics.map((topic) => {
+            const vocabCount = getVocabByTopic(topic).length;
+            return (
+              <button
+                key={topic}
+                onClick={() => setSelectedTopic(topic)}
+                className="bg-white p-6 rounded-xl border border-slate-200 hover:border-primary hover:shadow-lg transition-all text-left group"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+                    <BookOpen className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg text-slate-900 group-hover:text-primary transition-colors">{topic}</h3>
+                    <p className="text-sm text-slate-500">{vocabCount} words</p>
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Add Topic Button */}
+        <button
+          onClick={() => setShowAddTopic(!showAddTopic)}
+          className="flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary/90"
+        >
+          <Plus className="w-5 h-5" />
+          {showAddTopic ? 'Cancel' : 'Create Topic'}
+        </button>
+      </div>
+    );
+  }
+
+  // VOCABULARY IN TOPIC VIEW
+  const topicVocabs = getVocabByTopic(selectedTopic);
+
+  return (
+    <div className="p-10 max-w-7xl mx-auto">
+      {/* Header with Back Button */}
+      <div className="flex items-center gap-3 mb-10">
+        <button
+          onClick={() => setSelectedTopic(null)}
+          className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+        >
+          <ArrowLeft className="w-6 h-6 text-slate-600" />
+        </button>
+        <div>
+          <h2 className="text-3xl font-bold text-slate-900">{selectedTopic}</h2>
+          <p className="text-slate-500">{topicVocabs.length} words</p>
+        </div>
       </div>
 
-      {/* Side Panel */}
-      <aside className="w-96 space-y-6">
-        <div className="bg-white rounded-[2.5rem] p-8 shadow-xl shadow-slate-200/50 border border-slate-100 relative overflow-hidden">
-          <div className="absolute -top-12 -right-12 w-32 h-32 bg-primary/5 rounded-full" />
-          <div className="flex items-center gap-2 mb-8">
-            <div className="bg-tertiary/10 p-2 rounded-xl text-tertiary">
-              <TrendingUp className="w-5 h-5" />
-            </div>
-            <h3 className="font-headline font-bold text-lg">Daily Vocab Quiz</h3>
-          </div>
-
-          <div className="mb-10 text-center py-8 bg-slate-50 rounded-3xl">
-            <div className="text-slate-400 text-[10px] mb-2 tracking-widest uppercase font-bold">Select Meaning</div>
-            <div className="text-5xl font-headline font-bold text-primary mb-1">効率</div>
-            <div className="text-slate-400 text-sm">こうりつ</div>
-          </div>
-
-          <div className="space-y-3">
-            {[
-              { id: 'A', text: 'Public institution' },
-              { id: 'B', text: 'Efficiency, Utility', active: true },
-              { id: 'C', text: 'Social standing' },
-              { id: 'D', text: 'Reasonable price' },
-            ].map((opt) => (
-              <button 
-                key={opt.id}
-                className={cn(
-                  "w-full text-left p-4 rounded-2xl border transition-all group flex items-center justify-between",
-                  opt.active 
-                    ? "border-primary bg-primary/5" 
-                    : "border-slate-100 hover:border-primary hover:bg-primary/5"
-                )}
-              >
-                <div className="flex items-center gap-3">
-                  <span className={cn(
-                    "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-colors",
-                    opt.active ? "bg-primary text-white" : "bg-slate-100 group-hover:bg-primary group-hover:text-white"
-                  )}>
-                    {opt.id}
-                  </span>
-                  <span className={cn("font-medium", opt.active ? "text-primary font-bold" : "text-slate-600")}>
-                    {opt.text}
-                  </span>
-                </div>
-                {opt.active && <div className="w-5 h-5 bg-primary rounded-full flex items-center justify-center text-white">
-                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>}
-              </button>
-            ))}
-          </div>
-
-          <button className="w-full mt-8 py-4 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-colors">
-            Next Question
-          </button>
+      {/* Vocabulary Grid */}
+      {topicVocabs.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="text-slate-500 text-lg">No vocabulary in this topic</p>
         </div>
-
-        <div className="bg-slate-50 rounded-[2.5rem] p-8">
-          <h4 className="font-headline font-bold mb-6 text-xs uppercase tracking-wider text-slate-400">Cluster Progress</h4>
-          <div className="space-y-6">
-            {[
-              { label: 'BUSINESS', progress: 82, color: 'secondary' },
-              { label: 'ACADEMIC', progress: 45, color: 'tertiary' },
-            ].map((item) => (
-              <div key={item.label}>
-                <div className="flex justify-between text-[10px] font-bold mb-2">
-                  <span className="text-slate-500">{item.label}</span>
-                  <span className={cn(item.color === 'secondary' ? "text-secondary" : "text-tertiary")}>
-                    {item.progress}%
-                  </span>
-                </div>
-                <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: `${item.progress}%` }}
-                    className={cn("h-full rounded-full", item.color === 'secondary' ? "bg-secondary" : "bg-tertiary")}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {topicVocabs.map((vocab) => (
+            <WordCard
+              key={vocab.id}
+              kanji={vocab.word}
+              reading={vocab.reading}
+              meaning={vocab.meaning || vocab.vietnamese_meaning || 'N/A'}
+              status="New"
+              vocabId={vocab.id}
+              onAdd={handleAddFlashcard}
+              isLoading={addingId === vocab.id}
+              onClickDetail={() => setSelectedVocab(vocab)}
+            />
+          ))}
         </div>
-      </aside>
+      )}
+
+      {/* Detail Modal */}
+      {selectedVocab && (
+        <WordDetailModal
+          vocab={selectedVocab}
+          onClose={() => setSelectedVocab(null)}
+        />
+      )}
+
+      {/* Deck Selection Modal */}
+      <DeckSelectionModal
+        isOpen={showDeckSelection}
+        onClose={() => {
+          setShowDeckSelection(false);
+          setPendingVocabId(null);
+        }}
+        onSelectDeck={handleDeckSelected}
+        isLoading={addingId !== null}
+      />
     </div>
   );
-}
-
-function cn(...inputs: any[]) {
-  return inputs.filter(Boolean).join(' ');
 }

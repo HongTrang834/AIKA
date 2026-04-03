@@ -30,12 +30,12 @@ router.post('/register', async (req, res) => {
 
     // Create user
     const result = await pool.query(
-      'INSERT INTO users (username, email, password_hash, full_name) VALUES ($1, $2, $3, $4) RETURNING id, username, email',
-      [username, email, hashedPassword, full_name || username]
+      'INSERT INTO users (username, email, password_hash, full_name, role) VALUES ($1, $2, $3, $4, $5) RETURNING id, username, email, role',
+      [username, email, hashedPassword, full_name || username, 'student']
     );
 
     const user = result.rows[0];
-    const token = generateToken(user.id);
+    const token = generateToken(user.id, user.role);
 
     // Create user progress record
     await pool.query(
@@ -63,7 +63,7 @@ router.post('/login', async (req, res) => {
     }
 
     const result = await pool.query(
-      'SELECT id, username, email, password_hash FROM users WHERE email = $1',
+      'SELECT id, username, email, password_hash, role FROM users WHERE email = $1',
       [email]
     );
 
@@ -78,10 +78,10 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    const token = generateToken(user.id);
+    const token = generateToken(user.id, user.role);
 
     res.json({
-      user: { id: user.id, username: user.username, email: user.email },
+      user: { id: user.id, username: user.username, email: user.email, role: user.role },
       token,
     });
   } catch (error) {
@@ -96,7 +96,7 @@ router.get('/profile', async (req, res) => {
     const userId = req.userId;
 
     const result = await pool.query(
-      'SELECT id, username, email, full_name, avatar_url, created_at FROM users WHERE id = $1',
+      'SELECT id, username, email, full_name, avatar_url, created_at, role FROM users WHERE id = $1',
       [userId]
     );
 

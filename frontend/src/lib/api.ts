@@ -66,7 +66,7 @@ export const api = {
     return res.json();
   },
 
-  createFlashcard: async (token: string, data: { vocab_id?: number; grammar_id?: number }) => {
+  createFlashcard: async (token: string, data: { vocab_id?: number; grammar_id?: number; deck_id?: number }) => {
     const res = await fetch(`${API_BASE_URL}/flashcards`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -112,6 +112,40 @@ export const api = {
 
   getScenarios: async () => {
     const res = await fetch(`${API_BASE_URL}/conversation/scenarios`);
+    return res.json();
+  },
+
+  // Flashcard Decks
+  getDecks: async (token: string) => {
+    const res = await fetch(`${API_BASE_URL}/decks`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.json();
+  },
+
+  createDeck: async (token: string, data: { name: string; description?: string; color?: string }) => {
+    const res = await fetch(`${API_BASE_URL}/decks`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify(data),
+    });
+    return res.json();
+  },
+
+  updateDeck: async (token: string, id: number, data: { name?: string; description?: string; color?: string }) => {
+    const res = await fetch(`${API_BASE_URL}/decks/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify(data),
+    });
+    return res.json();
+  },
+
+  deleteDeck: async (token: string, id: number) => {
+    const res = await fetch(`${API_BASE_URL}/decks/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+    });
     return res.json();
   },
 };

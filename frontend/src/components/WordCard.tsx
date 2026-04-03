@@ -8,11 +8,24 @@ interface WordCardProps {
   meaning: string;
   status?: 'Mastered' | 'Reviewing' | 'New';
   isCore?: boolean;
+  vocabId?: number;
+  onAdd?: (vocabId: number) => void;
+  isLoading?: boolean;
+  onClickDetail?: () => void;
 }
 
-export function WordCard({ kanji, reading, meaning, status, isCore }: WordCardProps) {
+export function WordCard({ kanji, reading, meaning, status, isCore, vocabId, onAdd, isLoading, onClickDetail }: WordCardProps) {
+  const handleAdd = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (vocabId && onAdd && !isLoading) {
+      onAdd(vocabId);
+    }
+  };
   return (
-    <div className="group bg-white p-6 rounded-2xl shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 relative overflow-hidden border border-slate-100">
+    <div 
+      onClick={onClickDetail}
+      className="group bg-white p-6 rounded-2xl shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 relative overflow-hidden border border-slate-100 cursor-pointer"
+    >
       <div className="absolute top-0 right-0 w-16 h-16 bg-primary/5 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-150" />
       
       <div className="flex justify-between items-start mb-4">
@@ -20,7 +33,16 @@ export function WordCard({ kanji, reading, meaning, status, isCore }: WordCardPr
           <div className="text-xs text-slate-400 font-medium mb-1">{reading}</div>
           <div className="text-4xl font-headline font-bold text-slate-900 tracking-wide">{kanji}</div>
         </div>
-        <button className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-primary group-hover:text-white transition-colors">
+        <button 
+          onClick={handleAdd}
+          disabled={isLoading}
+          className={cn(
+            "w-10 h-10 rounded-full flex items-center justify-center transition-colors",
+            isLoading 
+              ? "bg-slate-200 text-slate-400 cursor-not-allowed"
+              : "bg-slate-50 text-slate-400 group-hover:bg-primary group-hover:text-white"
+          )}
+        >
           <Plus className="w-5 h-5" />
         </button>
       </div>

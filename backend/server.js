@@ -5,12 +5,15 @@ import { fileURLToPath } from "url";
 import { createServer as createViteServer } from "vite";
 import dotenv from "dotenv";
 import pool from "./db.js";
+import { runMigrations } from "./migrations.js";
 import { authMiddleware } from "./auth.js";
 import usersRouter from "./routes/users.js";
 import vocabularyRouter from "./routes/vocabulary.js";
 import grammarRouter from "./routes/grammar.js";
 import flashcardsRouter from "./routes/flashcards.js";
+import decksRouter from "./routes/decks.js";
 import conversationRouter from "./routes/conversation.js";
+import adminRouter from "./routes/admin.js";
 
 dotenv.config();
 
@@ -30,6 +33,9 @@ async function startServer() {
   const app = express();
   const PORT = process.env.PORT || 3000;
 
+  // Run database migrations
+  await runMigrations();
+
   // Middleware
   app.use(express.json());
   app.use(cors({
@@ -45,12 +51,16 @@ async function startServer() {
   // ============ PUBLIC ROUTES ============
   app.use("/api/users", usersRouter);
 
+  // ============ ADMIN ROUTES (Protected) ============
+  app.use("/api/admin", adminRouter);
+
   // ============ PROTECTED ROUTES ============
   app.use("/api/vocabulary", vocabularyRouter);
   app.use("/api/grammar", grammarRouter);
 
   // Protected routes with auth middleware
   app.use("/api/flashcards", authMiddleware, flashcardsRouter);
+  app.use("/api/decks", authMiddleware, decksRouter);
   app.use("/api/conversation", authMiddleware, conversationRouter);
 
   // Error handler
