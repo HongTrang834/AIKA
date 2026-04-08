@@ -7,11 +7,13 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import VocabLab from './pages/VocabLab';
+import GrammarLab from './pages/GrammarLab';
 import Scenarios from './pages/Scenarios';
 import KaiwaHub from './pages/KaiwaHub';
 import Flashcards from './pages/Flashcards';
 import AdminVocabulary from './pages/AdminVocabulary';
 import AdminGrammar from './pages/AdminGrammar';
+import AdminTests from './pages/AdminTests';
 
 function AppContent() {
   const { isAuthenticated, user } = useAuth();
@@ -30,6 +32,7 @@ function AppContent() {
               <Routes>
                 <Route path="vocabulary" element={<AdminVocabulary />} />
                 <Route path="grammar" element={<AdminGrammar />} />
+                <Route path="tests" element={<AdminTests />} />
                 <Route path="*" element={<Navigate to="/admin/vocabulary" />} />
               </Routes>
             </AdminLayout>
@@ -50,7 +53,7 @@ function AppContent() {
                 <Route path="/kaiwa/chat" element={<KaiwaHub />} />
                 <Route path="/flashcards" element={<Flashcards />} />
                 <Route path="/progress" element={<Dashboard />} />
-                <Route path="/grammar" element={<VocabLab />} />
+                <Route path="/grammar" element={<GrammarLab />} />
                 <Route path="*" element={<Dashboard />} />
               </Routes>
             </Layout>

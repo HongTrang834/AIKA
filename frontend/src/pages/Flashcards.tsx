@@ -192,7 +192,7 @@ export default function Flashcards() {
                 <p className="text-slate-600 mb-4 font-semibold text-lg">{deck.count} cards</p>
                 <button
                   onClick={() => {
-                    setSelectedDeckId(idx);
+                  setSelectedDeckId(idx);
                     setFlashcards(deck.cards);
                     setCurrentIndex(0);
                     setIsFlipped(false);

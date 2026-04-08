@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BookOpen, BookMarked, Zap, LogOut } from 'lucide-react';
+import { BookOpen, BookMarked, Zap, LogOut, ClipboardList } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 interface AdminLayoutProps {
@@ -14,6 +14,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   const menuItems = [
     { path: '/admin/vocabulary', label: 'Từ Vựng', icon: BookOpen },
     { path: '/admin/grammar', label: 'Ngữ Pháp', icon: BookMarked },
+    { path: '/admin/tests', label: 'Tests Mini', icon: ClipboardList },
     { path: '/admin/scenarios', label: 'Tình Huống', icon: Zap },
   ];
 

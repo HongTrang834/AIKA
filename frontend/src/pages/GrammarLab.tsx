@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { WordCard } from '@/src/components/WordCard';
-import { WordDetailModal } from '@/src/components/WordDetailModal';
+import { GrammarCard } from '@/src/components/GrammarCard';
+import { GrammarDetailModal } from '@/src/components/GrammarDetailModal';
 import DeckSelectionModal from '@/src/components/DeckSelectionModal';
 import TestTakerModal from '@/src/components/TestTakerModal';
 import { Loader, ArrowLeft, BookOpen, Lightbulb } from 'lucide-react';
 import { api } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 
-export default function VocabLab() {
+export default function GrammarLab() {
   const { token } = useAuth();
-  const [vocabulary, setVocabulary] = useState<any[]>([]);
+  const [grammar, setGrammar] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [addingId, setAddingId] = useState<number | null>(null);
-  const [selectedVocab, setSelectedVocab] = useState<any>(null);
+  const [selectedGrammar, setSelectedGrammar] = useState<any>(null);
   
   // Deck selection modal states
   const [showDeckSelection, setShowDeckSelection] = useState(false);
-  const [pendingVocabId, setPendingVocabId] = useState<number | null>(null);
+  const [pendingGrammarId, setPendingGrammarId] = useState<number | null>(null);
   
   // Topic/Category states
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
@@ -28,33 +28,39 @@ export default function VocabLab() {
   const [loadingTest, setLoadingTest] = useState(false);
 
   useEffect(() => {
-    const fetchVocabulary = async () => {
+    const fetchGrammar = async () => {
       try {
-        const data = await api.getVocabulary(100, 0);
-        setVocabulary(data.rows || []);
+        const data = await api.getGrammar(100, 0);
+        const grammarArray = Array.isArray(data) ? data : (data.rows || []);
+        setGrammar(grammarArray);
         
         // Extract unique categories as topics
         const uniqueTopics = Array.from(
-          new Set(data.rows?.map((v: any) => v.category || 'General') || [])
+          new Set(grammarArray?.map((g: any) => g.category || 'General') || [])
         ) as string[];
         setTopics(uniqueTopics);
       } catch (error) {
-        console.error('Error fetching vocabulary:', error);
+        console.error('Error fetching grammar:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchVocabulary();
+    fetchGrammar();
   }, []);
 
 
+
+  const handleAddFlashcard = (grammarId: number) => {
+    setPendingGrammarId(grammarId);
+    setShowDeckSelection(true);
+  };
 
   const handleTakeTest = async (category: string) => {
     setLoadingTest(true);
     try {
       // Try to get existing test for this category
-      const url = `${import.meta.env.VITE_API_URL}/tests?category=${category}&type=vocabulary`;
+      const url = `${import.meta.env.VITE_API_URL}/tests?category=${category}&type=grammar`;
       console.log('📌 Fetching tests from:', url);
       
       const response = await fetch(url);
@@ -81,9 +87,9 @@ export default function VocabLab() {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            name: `${category} Vocabulary Mini Test`,
+            name: `${category} Grammar Mini Test`,
             category,
-            topic_type: 'vocabulary',
+            topic_type: 'grammar',
             total_questions: 5,
           }),
         });
@@ -120,34 +126,27 @@ export default function VocabLab() {
     }
   };
 
-  const handleAddFlashcard = (vocabId: number) => {
-    setPendingVocabId(vocabId);
-    setShowDeckSelection(true);
-  };
-
   const handleDeckSelected = async (deckId: number) => {
-    if (!token || !pendingVocabId) return;
+    if (!token || !pendingGrammarId) return;
     
     try {
-      setAddingId(pendingVocabId);
+      setAddingId(pendingGrammarId);
       const response = await api.createFlashcard(token, { 
-        vocab_id: pendingVocabId,
+        grammar_id: pendingGrammarId,
         deck_id: deckId 
       });
       
-      // Accept both real DB responses and temporary mock responses
       if (response || response === null) {
         alert('Added to flashcards!');
-        setPendingVocabId(null);
+        setPendingGrammarId(null);
       } else {
         throw new Error('Invalid response');
       }
     } catch (error: any) {
       console.error('Error adding to flashcard:', error);
-      // If it's a 503 (table doesn't exist), still allow the action
       if (error.response?.status === 503 || error.status === 503) {
         alert('Card added to temporary deck (waiting for database)');
-        setPendingVocabId(null);
+        setPendingGrammarId(null);
       } else {
         alert('Failed to add to flashcards: ' + (error.message || 'Unknown error'));
       }
@@ -156,8 +155,8 @@ export default function VocabLab() {
     }
   };
 
-  const getVocabByTopic = (topic: string) => {
-    return vocabulary.filter(v => (v.category || 'General') === topic);
+  const getGrammarByTopic = (topic: string) => {
+    return grammar.filter(g => (g.category || 'General') === topic);
   };
 
   if (loading) {
@@ -168,24 +167,24 @@ export default function VocabLab() {
     );
   }
 
-  // TOPICS VIEW
+  // TOPIC LIST VIEW
   if (!selectedTopic) {
     return (
       <div className="p-10 max-w-7xl mx-auto">
         <div className="mb-10">
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">Vocabulary Topics</h1>
-          <p className="text-slate-600">Browse and study Japanese vocabulary</p>
+          <h1 className="text-4xl font-bold text-slate-900 mb-2">Grammar Patterns</h1>
+          <p className="text-slate-600">Browse and study Japanese grammar patterns</p>
         </div>
 
-        {/* Topics Grid */}
+        {/* Topic Grid */}
         {topics.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-slate-500 text-lg">No vocabulary topics available</p>
+            <p className="text-slate-500 text-lg">No grammar topics available</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {topics.map((topic) => {
-              const vocabCount = getVocabByTopic(topic).length;
+              const topicGrammar = getGrammarByTopic(topic);
               return (
                 <button
                   key={topic}
@@ -193,7 +192,7 @@ export default function VocabLab() {
                   className="text-left p-6 bg-white rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300 border border-slate-100"
                 >
                   <h3 className="text-2xl font-bold text-slate-900 mb-3">{topic}</h3>
-                  <p className="text-slate-600 mb-4">{vocabCount} words</p>
+                  <p className="text-slate-600 mb-4">{topicGrammar.length} patterns</p>
                   <div className="flex items-center gap-2 text-primary font-semibold">
                     <BookOpen className="w-4 h-4" />
                     Browse
@@ -209,8 +208,8 @@ export default function VocabLab() {
     );
   }
 
-  // VOCABULARY IN TOPIC VIEW
-  const topicVocabs = getVocabByTopic(selectedTopic);
+  // GRAMMAR IN TOPIC VIEW
+  const topicGrammar = getGrammarByTopic(selectedTopic);
 
   if (showTestModal && testId) {
     return (
@@ -231,7 +230,7 @@ export default function VocabLab() {
           </button>
           <div>
             <h2 className="text-3xl font-bold text-slate-900">{selectedTopic}</h2>
-            <p className="text-slate-500">{topicVocabs.length} words</p>
+            <p className="text-slate-500">{topicGrammar.length} patterns</p>
           </div>
         </div>
         <button
@@ -244,34 +243,33 @@ export default function VocabLab() {
         </button>
       </div>
 
-      {/* Vocabulary Grid */}
-      {topicVocabs.length === 0 ? (
+      {/* Grammar Grid */}
+      {topicGrammar.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-slate-500 text-lg">No vocabulary in this topic</p>
+          <p className="text-slate-500 text-lg">No grammar in this category</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {topicVocabs.map((vocab) => (
-            <WordCard
-              key={vocab.id}
-              kanji={vocab.word}
-              reading={vocab.reading}
-              meaning={vocab.meaning || vocab.vietnamese_meaning || 'N/A'}
+          {topicGrammar.map((item) => (
+            <GrammarCard
+              key={item.id}
+              pattern={item.pattern}
+              meaning={item.meaning || item.vietnamese_meaning || 'N/A'}
               status="New"
-              vocabId={vocab.id}
+              grammarId={item.id}
               onAdd={handleAddFlashcard}
-              isLoading={addingId === vocab.id}
-              onClickDetail={() => setSelectedVocab(vocab)}
+              isLoading={addingId === item.id}
+              onClickDetail={() => setSelectedGrammar(item)}
             />
           ))}
         </div>
       )}
 
       {/* Detail Modal */}
-      {selectedVocab && (
-        <WordDetailModal
-          vocab={selectedVocab}
-          onClose={() => setSelectedVocab(null)}
+      {selectedGrammar && (
+        <GrammarDetailModal
+          grammar={selectedGrammar}
+          onClose={() => setSelectedGrammar(null)}
         />
       )}
 
@@ -280,7 +278,7 @@ export default function VocabLab() {
         isOpen={showDeckSelection}
         onClose={() => {
           setShowDeckSelection(false);
-          setPendingVocabId(null);
+          setPendingGrammarId(null);
         }}
         onSelectDeck={handleDeckSelected}
         isLoading={addingId !== null}

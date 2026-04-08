@@ -13,6 +13,7 @@ import grammarRouter from "./routes/grammar.js";
 import flashcardsRouter from "./routes/flashcards.js";
 import decksRouter from "./routes/decks.js";
 import conversationRouter from "./routes/conversation.js";
+import testsRouter from "./routes/tests.js";
 import adminRouter from "./routes/admin.js";
 
 dotenv.config();
@@ -62,6 +63,7 @@ async function startServer() {
   app.use("/api/flashcards", authMiddleware, flashcardsRouter);
   app.use("/api/decks", authMiddleware, decksRouter);
   app.use("/api/conversation", authMiddleware, conversationRouter);
+  app.use("/api/tests", testsRouter);
 
   // Error handler
   app.use((err, req, res, next) => {

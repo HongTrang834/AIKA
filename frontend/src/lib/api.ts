@@ -148,4 +148,34 @@ export const api = {
     });
     return res.json();
   },
+
+  // Tests
+  getTests: async (category?: string, type: string = 'vocabulary') => {
+    let url = `${API_BASE_URL}/tests?type=${type}`;
+    if (category) url += `&category=${category}`;
+    const res = await fetch(url);
+    return res.json();
+  },
+
+  getTest: async (id: number, token?: string) => {
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    const res = await fetch(`${API_BASE_URL}/tests/${id}`, { headers });
+    return res.json();
+  },
+
+  submitTest: async (token: string, testId: number, answers: any[]) => {
+    const res = await fetch(`${API_BASE_URL}/tests/${testId}/submit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ answers }),
+    });
+    return res.json();
+  },
+
+  getTestResults: async (token: string, testId: number) => {
+    const res = await fetch(`${API_BASE_URL}/tests/${testId}/results`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.json();
+  },
 };

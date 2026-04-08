@@ -1,30 +1,29 @@
 import React from 'react';
 import { X } from 'lucide-react';
 
-interface WordDetailModalProps {
-  vocab: {
+interface GrammarDetailModalProps {
+  grammar: {
     id: number;
-    word: string;
-    reading: string;
+    title?: string;
+    pattern: string;
     meaning?: string;
     vietnamese_meaning?: string;
+    explanation?: string;
     example_sentence?: string;
     examples?: string; // JSON string array
-    category?: string;
     level?: number;
   };
   onClose: () => void;
 }
 
-export function WordDetailModal({ vocab, onClose }: WordDetailModalProps) {
-  const meaning = vocab.meaning || vocab.vietnamese_meaning || 'N/A';
+export function GrammarDetailModal({ grammar, onClose }: GrammarDetailModalProps) {
+  const meaning = grammar.meaning || grammar.vietnamese_meaning || 'N/A';
   
   // Parse examples from JSON string or fallback to example_sentence
   let examples: Array<{ japanese: string; vietnamese: string }> = [];
-  if (vocab.examples) {
+  if (grammar.examples) {
     try {
-      const parsed = JSON.parse(vocab.examples);
-      // Handle both old format (array of strings) and new format (array of objects)
+      const parsed = JSON.parse(grammar.examples);
       if (Array.isArray(parsed)) {
         examples = parsed.map(ex => 
           typeof ex === 'string' 
@@ -33,19 +32,18 @@ export function WordDetailModal({ vocab, onClose }: WordDetailModalProps) {
         );
       }
     } catch (e) {
-      // If parsing fails, use example_sentence as fallback
-      examples = vocab.example_sentence ? [{ japanese: vocab.example_sentence, vietnamese: '' }] : [];
+      examples = grammar.example_sentence ? [{ japanese: grammar.example_sentence, vietnamese: '' }] : [];
     }
-  } else if (vocab.example_sentence) {
-    examples = [{ japanese: vocab.example_sentence, vietnamese: '' }];
+  } else if (grammar.example_sentence) {
+    examples = [{ japanese: grammar.example_sentence, vietnamese: '' }];
   }
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-auto">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-auto">
         {/* Header */}
         <div className="sticky top-0 bg-white border-b border-slate-100 flex items-center justify-between p-6">
-          <h2 className="text-2xl font-bold text-slate-900">Word Details</h2>
+          <h2 className="text-2xl font-bold text-slate-900">Grammar Pattern</h2>
           <button 
             onClick={onClose}
             className="text-slate-400 hover:text-slate-600 transition-colors"
@@ -56,11 +54,10 @@ export function WordDetailModal({ vocab, onClose }: WordDetailModalProps) {
 
         {/* Content */}
         <div className="p-6 space-y-6">
-          {/* Word & Reading */}
+          {/* Pattern */}
           <div className="text-center">
-            <div className="text-sm text-slate-500 mb-2">Reading</div>
-            <div className="text-sm text-slate-600 font-medium mb-4">{vocab.reading}</div>
-            <div className="text-5xl font-bold text-slate-900 mb-2">{vocab.word}</div>
+            <div className="text-sm text-slate-500 mb-2">Pattern</div>
+            <div className="text-3xl font-mono font-bold text-slate-900 break-words">{grammar.pattern}</div>
           </div>
 
           {/* Meaning */}
@@ -68,6 +65,14 @@ export function WordDetailModal({ vocab, onClose }: WordDetailModalProps) {
             <div className="text-xs font-bold text-blue-600 mb-2 uppercase tracking-wider">Meaning</div>
             <div className="text-lg font-semibold text-slate-900">{meaning}</div>
           </div>
+
+          {/* Explanation */}
+          {grammar.explanation && (
+            <div className="bg-slate-50 rounded-xl p-4">
+              <div className="text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">Explanation</div>
+              <div className="text-sm text-slate-700 leading-relaxed">{grammar.explanation}</div>
+            </div>
+          )}
 
           {/* Example Sentences */}
           {examples.length > 0 && (
@@ -92,25 +97,17 @@ export function WordDetailModal({ vocab, onClose }: WordDetailModalProps) {
             </div>
           )}
 
-          {/* Category & Level */}
-          <div className="grid grid-cols-2 gap-4">
-            {vocab.category && (
-              <div className="bg-slate-50 rounded-xl p-4">
-                <div className="text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">Category</div>
-                <div className="text-sm font-semibold text-slate-900">{vocab.category}</div>
-              </div>
-            )}
-            {vocab.level && (
-              <div className="bg-slate-50 rounded-xl p-4">
-                <div className="text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">Level</div>
-                <div className="text-sm font-semibold text-slate-900">N{vocab.level}</div>
-              </div>
-            )}
-          </div>
+          {/* Level */}
+          {grammar.level && (
+            <div className="bg-slate-50 rounded-xl p-4">
+              <div className="text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">Level</div>
+              <div className="text-sm font-semibold text-slate-900">N{grammar.level}</div>
+            </div>
+          )}
 
           {/* Metadata */}
           <div className="text-xs text-slate-400 text-center">
-            Word ID: {vocab.id}
+            Pattern ID: {grammar.id}
           </div>
         </div>
       </div>
