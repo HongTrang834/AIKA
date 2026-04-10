@@ -14,6 +14,7 @@ import KaiwaHub from './pages/KaiwaHub';
 import Flashcards from './pages/Flashcards';
 import Progress from './pages/Progress';
 import Profile from './pages/Profile';
+import Lesson from './pages/Lesson';
 import AdminVocabulary from './pages/AdminVocabulary';
 import AdminGrammar from './pages/AdminGrammar';
 import AdminTests from './pages/AdminTests';
@@ -60,6 +61,7 @@ function AppContent() {
                 <Route path="/progress" element={<Progress />} />
                 <Route path="/grammar" element={<GrammarLab />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/learn/lesson/:id" element={<Lesson />} />
                 <Route path="*" element={<Dashboard />} />
               </Routes>
             </Layout>

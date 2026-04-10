@@ -94,8 +94,37 @@ CREATE TABLE user_progress
     total_kaiwas INT DEFAULT 0,
     total_flashcard_reviews INT DEFAULT 0,
     last_activity TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_lesson_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Units Table (Curriculum structure)
+CREATE TABLE units
+(
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    description VARCHAR(500),
+    sequence_number INT NOT NULL,
+    difficulty_level INT DEFAULT 2,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Lessons Table (Individual lessons within each unit)
+CREATE TABLE lessons
+(
+    id SERIAL PRIMARY KEY,
+    unit_id INT NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    description VARCHAR(500),
+    lesson_number DECIMAL(3, 1) NOT NULL,
+    type VARCHAR(50),
+    content TEXT,
+    vocabulary_count INT DEFAULT 0,
+    grammar_count INT DEFAULT 0,
+    sequence_number INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (unit_id) REFERENCES units(id) ON DELETE CASCADE
 );
 
 -- Create indexes for faster queries
@@ -104,6 +133,30 @@ CREATE INDEX idx_grammar_level ON grammar(level);
 CREATE INDEX idx_user_email ON users(email);
 CREATE INDEX idx_flashcard_user_id ON flashcards(user_id);
 CREATE INDEX idx_conversation_user_id ON conversation_history(user_id);
+CREATE INDEX idx_lesson_unit_id ON lessons(unit_id);
+CREATE INDEX idx_user_progress_user_id ON user_progress(user_id);
+
+-- Insert sample units and lessons
+INSERT INTO units
+    (title, description, sequence_number, difficulty_level)
+VALUES
+    ('Business Ethics', 'Learn professional Japanese communication', 1, 2),
+    ('Office Communication', 'Daily workplace interactions', 2, 2),
+    ('Formal Presentations', 'Meeting and presentation skills', 3, 2),
+    ('Customer Service', 'Service industry Japanese', 4, 2),
+    ('Advanced Negotiations', 'Complex business discussions', 5, 3);
+
+INSERT INTO lessons
+    (unit_id, title, description, lesson_number, type, sequence_number, vocabulary_count, grammar_count)
+VALUES
+    (1, 'Company Culture', 'Understanding Japanese business values', 1.0, 'grammar', 1, 15, 3),
+    (1, 'Corporate Hierarchy', 'Japanese company structure and roles', 1.1, 'vocabulary', 2, 20, 2),
+    (1, 'Decision Making', 'The consensus-based approach', 1.2, 'scenario', 3, 12, 4),
+    (1, 'Keigo Honorifics', 'Formal humble forms used in presentations', 4.2, 'grammar', 4, 18, 5),
+    (2, 'Email Etiquette', 'Writing professional emails', 2.0, 'grammar', 1, 10, 3),
+    (2, 'Meeting Participation', 'Speaking in meetings', 2.1, 'scenario', 2, 14, 4),
+    (3, 'Presentation Structure', 'Organizing effective presentations', 3.0, 'grammar', 1, 16, 3),
+    (3, 'Visual Aids Discussion', 'Explaining charts and graphs', 3.1, 'vocabulary', 2, 12, 2);
 
 -- Insert sample vocabulary
 INSERT INTO vocabulary

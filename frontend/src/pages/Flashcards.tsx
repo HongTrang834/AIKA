@@ -100,9 +100,36 @@ export default function Flashcards() {
   const handleUpdateFlashcard = async (quality: number) => {
     if (!token || !flashcards[currentIndex]) return;
     try {
-      await api.updateFlashcard(token, flashcards[currentIndex].id, quality);
+      const currentCard = flashcards[currentIndex];
       
       // Update flashcard review progress
+      await api.updateFlashcard(token, currentCard.id, quality);
+      
+      // Mark as learned in user learning history (if it's a vocabulary card)
+      if (currentCard.vocab_id) {
+        try {
+          console.log('📚 Marking vocabulary as learned:', currentCard.vocab_id);
+          
+          // Map quality score to learning status:
+          // 0-2 = still learning, 3-5 = mastered
+          const status = quality >= 3 ? 2 : 1; // 1=LEARNING, 2=MASTERED
+          
+          await fetch(`/api/progress/vocab-learned/${currentCard.vocab_id}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ status })
+          });
+          
+          console.log('✅ Vocabulary marked as learned');
+        } catch (learnError) {
+          console.error('Failed to mark vocabulary as learned:', learnError);
+        }
+      }
+      
+      // Update overall flashcard progress
       try {
         console.log('📚 Updating flashcard progress +1');
         await api.updateProgress(token, 'flashcard', 1);

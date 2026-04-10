@@ -7,6 +7,59 @@ export function TopBar() {
   const { user, logout } = useAuth();
   const [showLogout, setShowLogout] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string>('');
+  const [streak, setStreak] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch streak data
+  useEffect(() => {
+    const fetchStreakData = async () => {
+      try {
+        setLoading(true);
+        const token = localStorage.getItem('token');
+
+        // First: Record daily check-in (login activity)
+        console.log('📝 Recording daily check-in...');
+        const checkInResponse = await fetch('/api/progress/daily-check-in', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!checkInResponse.ok) {
+          console.warn('❌ Check-in failed:', checkInResponse.statusText);
+        } else {
+          console.log('✅ Daily check-in recorded');
+        }
+
+        // Second: Fetch streak data
+        console.log('📊 Fetching streak...');
+        const streakResponse = await fetch('/api/progress/streak', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (streakResponse.ok) {
+          const data = await streakResponse.json();
+          console.log('✅ Streak data:', data);
+          setStreak(data.current_streak || 0);
+        } else {
+          console.error('❌ Streak fetch failed:', streakResponse.statusText);
+          setStreak(0);
+        }
+      } catch (error) {
+        console.error('❌ Error in streak fetch:', error);
+        setStreak(0);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user) {
+      fetchStreakData();
+    }
+  }, [user]);
 
   // Watch for avatar changes and update local state to force re-render
   useEffect(() => {
@@ -29,9 +82,11 @@ export function TopBar() {
       </div>
 
       <div className="flex items-center gap-6">
-        <div className="flex items-center gap-2 bg-indigo-50 px-4 py-2 rounded-full text-primary font-bold">
-          <Flame className="w-4 h-4 fill-current" />
-          <span className="text-sm">12 Day Streak</span>
+        <div className="flex items-center gap-2 bg-indigo-50 px-4 py-2 rounded-full text-primary font-bold hover:bg-indigo-100 transition-colors cursor-default">
+          <Flame className="w-4 h-4 fill-current animate-pulse" />
+          <span className="text-sm">
+            {loading ? 'Loading...' : `${streak} Day${streak !== 1 ? 's' : ''} Streak`}
+          </span>
         </div>
         
         <button className="p-2 rounded-full hover:bg-slate-100 text-slate-500 transition-all relative">

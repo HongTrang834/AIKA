@@ -4,7 +4,6 @@ import {
   LayoutDashboard, 
   BookOpen, 
   Compass, 
-  MessageSquare, 
   Layers, 
   TrendingUp,
   Bot,
@@ -16,7 +15,6 @@ const navItems = [
   { icon: LayoutDashboard, label: 'Home', path: '/' },
   { icon: BookOpen, label: 'Vocab', path: '/vocab' },
   { icon: Compass, label: 'Grammar', path: '/grammar' },
-  { icon: MessageSquare, label: 'AI Kaiwa', path: '/kaiwa' },
   { icon: Layers, label: 'Flashcards', path: '/flashcards' },
   { icon: TrendingUp, label: 'Progress', path: '/progress' },
   { icon: User, label: 'Profile', path: '/profile' },
@@ -55,11 +53,17 @@ export function Sidebar() {
         ))}
       </nav>
 
-      <div className="px-6 mt-auto">
-        <button className="w-full bg-primary text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
+      <div className="px-6 mt-auto w-full">
+        <NavLink
+          to="/kaiwa"
+          className={({ isActive }) => cn(
+            "w-full bg-primary text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all",
+            isActive && "ring-2 ring-primary ring-offset-2"
+          )}
+        >
           <Bot className="w-5 h-5" />
           AI Sensei
-        </button>
+        </NavLink>
       </div>
     </aside>
   );
