@@ -15,6 +15,7 @@ import decksRouter from "./routes/decks.js";
 import conversationRouter from "./routes/conversation.js";
 import testsRouter from "./routes/tests.js";
 import adminRouter from "./routes/admin.js";
+import kaiwaRouter from "./routes/kaiwa.js";
 
 dotenv.config();
 
@@ -38,7 +39,8 @@ async function startServer() {
   await runMigrations();
 
   // Middleware
-  app.use(express.json());
+  app.use(express.json({ limit: '50mb' }));
+  app.use(express.urlencoded({ limit: '50mb', extended: true }));
   app.use(cors({
     origin: "*",
     credentials: true,
@@ -47,6 +49,28 @@ async function startServer() {
   // Health check
   app.get("/api/health", (req, res) => {
     res.json({ status: "ok", database: !!process.env.DATABASE_URL });
+  });
+
+  // Debug endpoint to check database state
+  app.get("/api/debug/user/:userId", authMiddleware, async (req, res) => {
+    try {
+      const userId = req.params.userId || req.userId;
+      const result = await pool.query(
+        'SELECT id, username, email, full_name, avatar_url, created_at FROM users WHERE id = $1',
+        [userId]
+      );
+      if (result.rows.length === 0) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      const user = result.rows[0];
+      res.json({
+        ...user,
+        avatar_url: user.avatar_url ? user.avatar_url.substring(0, 100) + '...' : null
+      });
+    } catch (error) {
+      console.error('Debug error:', error);
+      res.status(500).json({ error: error.message });
+    }
   });
 
   // ============ PUBLIC ROUTES ============
@@ -63,6 +87,7 @@ async function startServer() {
   app.use("/api/flashcards", authMiddleware, flashcardsRouter);
   app.use("/api/decks", authMiddleware, decksRouter);
   app.use("/api/conversation", authMiddleware, conversationRouter);
+  app.use("/api/kaiwa", authMiddleware, kaiwaRouter);
   app.use("/api/tests", testsRouter);
 
   // Error handler

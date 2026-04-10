@@ -7,7 +7,8 @@ import {
   MessageSquare, 
   Layers, 
   TrendingUp,
-  Bot
+  Bot,
+  User
 } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 
@@ -18,6 +19,7 @@ const navItems = [
   { icon: MessageSquare, label: 'AI Kaiwa', path: '/kaiwa' },
   { icon: Layers, label: 'Flashcards', path: '/flashcards' },
   { icon: TrendingUp, label: 'Progress', path: '/progress' },
+  { icon: User, label: 'Profile', path: '/profile' },
 ];
 
 export function Sidebar() {

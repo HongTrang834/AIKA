@@ -6,9 +6,11 @@ import TestTakerModal from '@/src/components/TestTakerModal';
 import { Loader, ArrowLeft, BookOpen, Lightbulb } from 'lucide-react';
 import { api } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 export default function GrammarLab() {
   const { token } = useAuth();
+  const { showToast } = useToast();
   const [grammar, setGrammar] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [addingId, setAddingId] = useState<number | null>(null);
@@ -54,6 +56,21 @@ export default function GrammarLab() {
   const handleAddFlashcard = (grammarId: number) => {
     setPendingGrammarId(grammarId);
     setShowDeckSelection(true);
+  };
+
+  const handleSelectGrammar = (gram: any) => {
+    // Track when user clicks on grammar card
+    if (token) {
+      try {
+        console.log('📚 Updating grammar progress +1 (clicked card)');
+        api.updateProgress(token, 'grammar', 1).catch(err => 
+          console.error('Failed to update grammar progress:', err)
+        );
+      } catch (error) {
+        console.error('Error tracking grammar view:', error);
+      }
+    }
+    setSelectedGrammar(gram);
   };
 
   const handleTakeTest = async (category: string) => {
@@ -120,7 +137,7 @@ export default function GrammarLab() {
       }
     } catch (error) {
       console.error('Error loading test:', error);
-      alert(`Lỗi: ${error instanceof Error ? error.message : 'Lỗi khi tải bài test'}`);
+      console.error('Error loading test:', error);
     } finally {
       setLoadingTest(false);
     }
@@ -137,18 +154,18 @@ export default function GrammarLab() {
       });
       
       if (response || response === null) {
-        alert('Added to flashcards!');
         setPendingGrammarId(null);
+        showToast('Đã thêm vào flashcards', 'success');
       } else {
         throw new Error('Invalid response');
       }
     } catch (error: any) {
       console.error('Error adding to flashcard:', error);
       if (error.response?.status === 503 || error.status === 503) {
-        alert('Card added to temporary deck (waiting for database)');
         setPendingGrammarId(null);
+        showToast('Đã thêm vào flashcards', 'success');
       } else {
-        alert('Failed to add to flashcards: ' + (error.message || 'Unknown error'));
+        showToast('Lỗi: ' + (error.message || 'Không thể thêm vào flashcards'), 'error');
       }
     } finally {
       setAddingId(null);
@@ -259,7 +276,7 @@ export default function GrammarLab() {
               grammarId={item.id}
               onAdd={handleAddFlashcard}
               isLoading={addingId === item.id}
-              onClickDetail={() => setSelectedGrammar(item)}
+              onClickDetail={() => handleSelectGrammar(item)}
             />
           ))}
         </div>

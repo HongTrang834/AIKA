@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 export const api = {
   // Auth
@@ -24,6 +24,10 @@ export const api = {
     const res = await fetch(`${API_BASE_URL}/users/profile`, {
       headers: { Authorization: `Bearer ${token}` },
     });
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.error || 'Failed to load profile');
+    }
     return res.json();
   },
 
@@ -33,6 +37,23 @@ export const api = {
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify(data),
     });
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.error || 'Failed to update profile');
+    }
+    return res.json();
+  },
+
+  changePassword: async (token: string, data: { old_password: string; new_password: string; confirm_password: string }) => {
+    const res = await fetch(`${API_BASE_URL}/users/change-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.error || 'Failed to change password');
+    }
     return res.json();
   },
 
@@ -176,6 +197,33 @@ export const api = {
     const res = await fetch(`${API_BASE_URL}/tests/${testId}/results`, {
       headers: { Authorization: `Bearer ${token}` },
     });
+    return res.json();
+  },
+
+  // Progress tracking
+  updateProgress: async (token: string, type: 'vocab' | 'grammar' | 'kaiwa' | 'flashcard', increment: number = 1) => {
+    const res = await fetch(`${API_BASE_URL}/users/progress`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ type, increment }),
+    });
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.error || 'Failed to update progress');
+    }
+    return res.json();
+  },
+
+  updateProgressBulk: async (token: string, data: { vocab?: number; grammar?: number; kaiwa?: number; flashcard?: number }) => {
+    const res = await fetch(`${API_BASE_URL}/users/progress/bulk`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.error || 'Failed to update progress');
+    }
     return res.json();
   },
 };

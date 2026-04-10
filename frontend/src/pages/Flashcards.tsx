@@ -3,10 +3,12 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Flame, Bell, Lightbulb, History, RotateCcw, Frown, Smile, Rocket, Loader, Plus, ArrowLeft, Layers } from 'lucide-react';
 import { api } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { getMockDecks, getMockDeck } from '../lib/deckStorage';
 
 export default function Flashcards() {
   const { token } = useAuth();
+  const { showToast } = useToast();
   const [flashcards, setFlashcards] = useState<any[]>([]);
   const [decks, setDecks] = useState<any[]>([]);
   const [selectedDeckId, setSelectedDeckId] = useState<number | null>(null);
@@ -99,12 +101,22 @@ export default function Flashcards() {
     if (!token || !flashcards[currentIndex]) return;
     try {
       await api.updateFlashcard(token, flashcards[currentIndex].id, quality);
+      
+      // Update flashcard review progress
+      try {
+        console.log('📚 Updating flashcard progress +1');
+        await api.updateProgress(token, 'flashcard', 1);
+        console.log('✅ Flashcard progress updated');
+      } catch (progressError) {
+        console.error('Failed to update flashcard progress:', progressError);
+      }
+      
       const newIndex = currentIndex + 1;
       if (newIndex < flashcards.length) {
         setCurrentIndex(newIndex);
         setIsFlipped(false);
       } else {
-        alert('Session completed!');
+        showToast('Hoàn thành phiên học flashcards!', 'success');
         setStudyMode(false);
         setSelectedDeckId(null);
         await fetchFlashcards();

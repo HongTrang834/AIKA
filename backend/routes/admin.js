@@ -764,4 +764,342 @@ function getRandomWrongWords(items, correct, currentIndex, count) {
   return wrong.slice(0, count); // Return only real answers, no placeholder
 }
 
+// ======================== DECKS ADMIN ========================
+
+// GET all global decks
+// GET all decks
+router.get('/decks', adminMiddleware, async (req, res) => {
+  try {
+    const limit = req.query.limit || 50;
+    const offset = req.query.offset || 0;
+
+    const result = await pool.query(
+      `SELECT 
+        d.id,
+        d.name,
+        d.description,
+        d.color,
+        d.is_global,
+        d.created_at,
+        COALESCE(COUNT(f.id), 0) as card_count
+      FROM flashcard_decks d
+      LEFT JOIN flashcards f ON f.deck_id = d.id
+      WHERE d.is_global = TRUE
+      GROUP BY d.id
+      ORDER BY d.created_at DESC
+      LIMIT $1 OFFSET $2`,
+      [limit, offset]
+    );
+
+    const countResult = await pool.query('SELECT COUNT(*) FROM flashcard_decks WHERE is_global = TRUE');
+
+    res.json({
+      rows: result.rows,
+      total: parseInt(countResult.rows[0].count),
+    });
+  } catch (error) {
+    console.error('Error fetching decks:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// GET single deck with flashcards
+router.get('/decks/:id', adminMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Get deck info
+    const deckResult = await pool.query(
+      'SELECT * FROM flashcard_decks WHERE id = $1 AND is_global = TRUE',
+      [id]
+    );
+
+    if (deckResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Deck not found' });
+    }
+
+    const deck = deckResult.rows[0];
+
+    // Get flashcards with vocabulary
+    const flashcardsResult = await pool.query(
+      `SELECT 
+        f.id,
+        f.vocab_id,
+        f.deck_id,
+        v.word,
+        v.reading,
+        v.meaning
+      FROM flashcards f
+      LEFT JOIN vocabulary v ON f.vocab_id = v.id
+      WHERE f.deck_id = $1
+      ORDER BY f.id`,
+      [id]
+    );
+
+    res.json({
+      ...deck,
+      flashcards: flashcardsResult.rows,
+    });
+  } catch (error) {
+    console.error('Error fetching deck:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// CREATE global deck
+router.post('/decks', adminMiddleware, async (req, res) => {
+  try {
+    const { name, description, color } = req.body;
+
+    if (!name) {
+      return res.status(400).json({ error: 'Deck name is required' });
+    }
+
+    const result = await pool.query(
+      'INSERT INTO flashcard_decks (user_id, name, description, color, is_global) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [null, name, description || '', color || 'blue', true]
+    );
+
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error('Error creating global deck:', error.message);
+    console.error('Error details:', error.code, error.constraint);
+    res.status(500).json({ error: error.message || 'Internal Server Error' });
+  }
+});
+
+// UPDATE global deck
+router.put('/decks/:id', adminMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, description, color } = req.body;
+
+    const result = await pool.query(
+      `UPDATE flashcard_decks 
+       SET name = COALESCE($1, name), 
+           description = COALESCE($2, description),
+           color = COALESCE($3, color),
+           updated_at = CURRENT_TIMESTAMP
+       WHERE id = $4 AND is_global = TRUE
+       RETURNING *`,
+      [name, description, color, id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Deck not found' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Error updating deck:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// DELETE global deck
+router.delete('/decks/:id', adminMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await pool.query(
+      'DELETE FROM flashcard_decks WHERE id = $1 AND is_global = TRUE RETURNING id',
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Deck not found' });
+    }
+
+    res.json({ message: 'Deck deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting deck:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// BULK CREATE FLASHCARDS FOR DECK
+router.post('/decks/:deckId/flashcards/bulk', adminMiddleware, async (req, res) => {
+  try {
+    const { deckId } = req.params;
+    const { flashcards } = req.body; // Array of {word, reading, meaning}
+
+    console.log(`📝 Bulk creating flashcards for deck ${deckId}`);
+    console.log(`📦 Received ${flashcards?.length || 0} flashcards:`, JSON.stringify(flashcards, null, 2));
+
+    if (!Array.isArray(flashcards) || flashcards.length === 0) {
+      return res.status(400).json({ error: 'No flashcards provided' });
+    }
+
+    // Verify deck exists and is global
+    const deckCheck = await pool.query(
+      'SELECT id FROM flashcard_decks WHERE id = $1 AND is_global = TRUE',
+      [deckId]
+    );
+
+    if (deckCheck.rows.length === 0) {
+      return res.status(404).json({ error: 'Deck not found or not global' });
+    }
+
+    let created = 0;
+    const errors = [];
+
+    for (const fc of flashcards) {
+      try {
+        const { word, reading, meaning } = fc;
+
+        console.log(`  📌 Processing: word="${word}", reading="${reading}", meaning="${meaning}"`);
+
+        if (!word || !meaning) {
+          console.log(`  ⏭️  Skipped: missing word or meaning`);
+          continue;
+        }
+
+        // Create vocabulary item
+        const vocabResult = await pool.query(
+          'INSERT INTO vocabulary (word, reading, meaning, level) VALUES ($1, $2, $3, $4) RETURNING id',
+          [word, reading || word, meaning, 2]
+        );
+
+        const vocabId = vocabResult.rows[0].id;
+        console.log(`  ✅ Created vocab id=${vocabId}`);
+
+        // Create flashcard with user_id = null for global deck
+        await pool.query(
+          'INSERT INTO flashcards (user_id, vocab_id, deck_id) VALUES ($1, $2, $3)',
+          [null, vocabId, deckId]
+        );
+
+        console.log(`  ✅ Created flashcard for deck ${deckId}`);
+        created++;
+      } catch (itemErr) {
+        console.error('❌ Error creating flashcard item:', itemErr.message);
+        errors.push(itemErr.message);
+      }
+    }
+
+    console.log(`✅ Bulk creation complete: ${created}/${flashcards.length} created`);
+
+    res.json({
+      message: `Created ${created} flashcards`,
+      created,
+      errors: errors.length > 0 ? errors : undefined,
+    });
+  } catch (error) {
+    console.error('Error bulk creating flashcards:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// ======================== FLASHCARDS ADMIN ========================
+
+// GET all flashcards (with pagination)
+router.get('/flashcards', adminMiddleware, async (req, res) => {
+  try {
+    const limit = req.query.limit || 50;
+    const offset = req.query.offset || 0;
+
+    const result = await pool.query(
+      `SELECT 
+        f.id,
+        f.user_id,
+        f.vocab_id,
+        f.grammar_id,
+        f.deck_id,
+        f.interval,
+        f.repetitions,
+        f.ease_factor,
+        f.next_review_date,
+        f.created_at,
+        COALESCE(v.word, 'N/A') as word,
+        COALESCE(v.reading, 'N/A') as reading,
+        COALESCE(v.meaning, 'N/A') as meaning,
+        COALESCE(u.username, 'Unknown') as username
+      FROM flashcards f
+      LEFT JOIN vocabulary v ON f.vocab_id = v.id
+      LEFT JOIN users u ON f.user_id = u.id
+      ORDER BY f.created_at DESC
+      LIMIT $1 OFFSET $2`,
+      [limit, offset]
+    );
+
+    const countResult = await pool.query('SELECT COUNT(*) FROM flashcards');
+
+    res.json({
+      rows: result.rows,
+      total: parseInt(countResult.rows[0].count),
+    });
+  } catch (error) {
+    console.error('Error fetching flashcards:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// CREATE flashcard
+router.post('/flashcards', adminMiddleware, async (req, res) => {
+  try {
+    const { user_id, vocab_id, grammar_id, deck_id } = req.body;
+
+    if (!user_id) {
+      return res.status(400).json({ error: 'user_id is required' });
+    }
+
+    if (!vocab_id && !grammar_id) {
+      return res.status(400).json({ error: 'vocab_id or grammar_id is required' });
+    }
+
+    const result = await pool.query(
+      'INSERT INTO flashcards (user_id, vocab_id, grammar_id, deck_id) VALUES ($1, $2, $3, $4) RETURNING *',
+      [user_id, vocab_id || null, grammar_id || null, deck_id || null]
+    );
+
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error('Error creating flashcard:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// UPDATE flashcard
+router.put('/flashcards/:id', adminMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { deck_id, interval, repetitions, ease_factor } = req.body;
+
+    const result = await pool.query(
+      'UPDATE flashcards SET deck_id = $1, interval = $2, repetitions = $3, ease_factor = $4 WHERE id = $5 RETURNING *',
+      [deck_id || null, interval || 0, repetitions || 0, ease_factor || 2.5, id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Flashcard not found' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Error updating flashcard:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// DELETE flashcard
+router.delete('/flashcards/:id', adminMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await pool.query(
+      'DELETE FROM flashcards WHERE id = $1 RETURNING id',
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Flashcard not found' });
+    }
+
+    res.json({ message: 'Flashcard deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting flashcard:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 export default router;

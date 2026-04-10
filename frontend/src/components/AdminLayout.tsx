@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BookOpen, BookMarked, Zap, LogOut, ClipboardList } from 'lucide-react';
+import { BookOpen, BookMarked, Zap, LogOut, ClipboardList, Layers, Folder } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 interface AdminLayoutProps {
@@ -15,6 +15,8 @@ export function AdminLayout({ children }: AdminLayoutProps) {
     { path: '/admin/vocabulary', label: 'Từ Vựng', icon: BookOpen },
     { path: '/admin/grammar', label: 'Ngữ Pháp', icon: BookMarked },
     { path: '/admin/tests', label: 'Tests Mini', icon: ClipboardList },
+    { path: '/admin/decks', label: 'Decks', icon: Folder },
+    { path: '/admin/flashcards', label: 'Flashcards', icon: Layers },
     { path: '/admin/scenarios', label: 'Tình Huống', icon: Zap },
   ];
 
@@ -51,7 +53,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         <div className="absolute bottom-6 left-6 right-6">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-red-600 hover:bg-red-700 transition-colors"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg bg-red-600 hover:bg-red-700 transition-colors"
           >
             <LogOut className="w-5 h-5" />
             <span>Đăng Xuất</span>

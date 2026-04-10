@@ -18,6 +18,7 @@ interface AuthContextType {
   register: (username: string, email: string, password: string, full_name: string) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
+  updateUser: (updates: Partial<User>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -34,6 +35,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setToken(savedToken);
       // Gọi getProfile để lấy thông tin user kèm role
       api.getProfile(savedToken).then((data) => {
+        console.log('AuthContext loaded profile:', {
+          id: data?.id,
+          username: data?.username,
+          avatar_url: data?.avatar_url ? data.avatar_url.substring(0, 50) + '...' : 'null'
+        });
         if (data && data.id) {
           setUser({
             id: data.id,
@@ -60,6 +66,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const data = await api.login({ email, password });
     if (data.error) throw new Error(data.error);
     
+    console.log('Login response - user data:', {
+      id: data.user?.id,
+      username: data.user?.username,
+      avatar_url: data.user?.avatar_url ? data.user.avatar_url.substring(0, 50) + '...' : 'null'
+    });
+
     setToken(data.token);
     setUser(data.user);
     localStorage.setItem('token', data.token);
@@ -80,8 +92,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('token');
   };
 
+  const updateUser = (updates: Partial<User>) => {
+    if (user) {
+      setUser({ ...user, ...updates });
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout, isAuthenticated: !!token }}>
+    <AuthContext.Provider value={{ user, token, loading, login, register, logout, updateUser, isAuthenticated: !!token }}>
       {children}
     </AuthContext.Provider>
   );

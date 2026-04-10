@@ -3,17 +3,17 @@ import pool from '../db.js';
 
 const router = express.Router();
 
-// Get all decks for a user
+// Get all decks for a user (global + personal)
 router.get('/', async (req, res) => {
     try {
         const userId = req.userId;
         try {
             const result = await pool.query(
-                `SELECT id, name, description, color, 
+                `SELECT id, name, description, color, is_global,
                         (SELECT COUNT(*) FROM flashcards WHERE deck_id = flashcard_decks.id) as card_count
                  FROM flashcard_decks 
-                 WHERE user_id = $1 
-                 ORDER BY created_at DESC`,
+                 WHERE is_global = TRUE OR user_id = $1 
+                 ORDER BY is_global DESC, created_at DESC`,
                 [userId]
             );
             res.json({ rows: result.rows });
@@ -61,20 +61,25 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Delete a deck
+// Delete a deck (only personal decks)
 router.delete('/:id', async (req, res) => {
     try {
         const userId = req.userId;
         const deckId = req.params.id;
 
-        // Check if deck belongs to user
+        // Check if deck belongs to user and is not global
         const deckCheck = await pool.query(
-            'SELECT user_id FROM flashcard_decks WHERE id = $1',
+            'SELECT user_id, is_global FROM flashcard_decks WHERE id = $1',
             [deckId]
         );
 
         if (deckCheck.rows.length === 0) {
             return res.status(404).json({ error: 'Deck not found' });
+        }
+
+        // Only allow deletion of personal decks, not global ones
+        if (deckCheck.rows[0].is_global) {
+            return res.status(403).json({ error: 'Cannot delete global decks' });
         }
 
         if (deckCheck.rows[0].user_id !== userId) {
@@ -89,7 +94,7 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-// Update a deck
+// Update a deck (only personal decks)
 router.put('/:id', async (req, res) => {
     try {
         const userId = req.userId;
@@ -98,12 +103,17 @@ router.put('/:id', async (req, res) => {
 
         // Check if deck belongs to user
         const deckCheck = await pool.query(
-            'SELECT user_id FROM flashcard_decks WHERE id = $1',
+            'SELECT user_id, is_global FROM flashcard_decks WHERE id = $1',
             [deckId]
         );
 
         if (deckCheck.rows.length === 0) {
             return res.status(404).json({ error: 'Deck not found' });
+        }
+
+        // Only allow update of personal decks
+        if (deckCheck.rows[0].is_global) {
+            return res.status(403).json({ error: 'Cannot modify global decks' });
         }
 
         if (deckCheck.rows[0].user_id !== userId) {

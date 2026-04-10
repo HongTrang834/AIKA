@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
-import { Search, Bell, Flame, LogOut } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, Bell, Flame, LogOut, User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
 
 export function TopBar() {
   const { user, logout } = useAuth();
   const [showLogout, setShowLogout] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string>('');
+
+  // Watch for avatar changes and update local state to force re-render
+  useEffect(() => {
+    const newAvatarUrl = user?.avatar_url || `https://picsum.photos/seed/${user?.username || 'user'}/100/100`;
+    setAvatarUrl(newAvatarUrl);
+    console.log('TopBar avatar updated:', newAvatarUrl ? newAvatarUrl.substring(0, 50) + '...' : 'null');
+  }, [user?.avatar_url, user?.username]);
 
   return (
     <header className="sticky top-0 z-40 bg-white/60 backdrop-blur-xl border-b border-slate-200/50 px-8 py-4 flex justify-between items-center w-full">
@@ -41,7 +50,8 @@ export function TopBar() {
             className="w-10 h-10 rounded-full border-2 border-white shadow-sm overflow-hidden bg-slate-200 hover:ring-2 ring-indigo-300 transition-all"
           >
             <img 
-              src={user?.avatar_url || 'https://picsum.photos/seed/user123/100/100'} 
+              key={avatarUrl}
+              src={avatarUrl} 
               alt="User" 
               className="w-full h-full object-cover"
               referrerPolicy="no-referrer"
@@ -50,6 +60,14 @@ export function TopBar() {
 
           {showLogout && (
             <div className="absolute right-0 top-16 bg-white shadow-lg rounded-lg p-2 z-50">
+              <Link
+                to="/profile"
+                className="flex items-center gap-2 px-4 py-2 text-slate-700 hover:bg-slate-50 rounded-lg w-full transition-colors"
+                onClick={() => setShowLogout(false)}
+              >
+                <User className="w-4 h-4" />
+                <span>Hồ Sơ Cá Nhân</span>
+              </Link>
               <button
                 onClick={() => {
                   logout();

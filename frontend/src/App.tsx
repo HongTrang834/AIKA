@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ToastProvider } from './context/ToastContext';
 import { Layout } from './components/Layout';
 import { AdminLayout } from './components/AdminLayout';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -11,9 +12,12 @@ import GrammarLab from './pages/GrammarLab';
 import Scenarios from './pages/Scenarios';
 import KaiwaHub from './pages/KaiwaHub';
 import Flashcards from './pages/Flashcards';
+import Profile from './pages/Profile';
 import AdminVocabulary from './pages/AdminVocabulary';
 import AdminGrammar from './pages/AdminGrammar';
 import AdminTests from './pages/AdminTests';
+import AdminFlashcards from './pages/AdminFlashcards';
+import AdminDecks from './pages/AdminDecks';
 
 function AppContent() {
   const { isAuthenticated, user } = useAuth();
@@ -33,6 +37,8 @@ function AppContent() {
                 <Route path="vocabulary" element={<AdminVocabulary />} />
                 <Route path="grammar" element={<AdminGrammar />} />
                 <Route path="tests" element={<AdminTests />} />
+                <Route path="decks" element={<AdminDecks />} />
+                <Route path="flashcards" element={<AdminFlashcards />} />
                 <Route path="*" element={<Navigate to="/admin/vocabulary" />} />
               </Routes>
             </AdminLayout>
@@ -49,11 +55,12 @@ function AppContent() {
               <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/vocab" element={<VocabLab />} />
-                <Route path="/kaiwa" element={<Scenarios />} />
-                <Route path="/kaiwa/chat" element={<KaiwaHub />} />
+                <Route path="/kaiwa" element={<KaiwaHub />} />
+                <Route path="/scenarios" element={<Scenarios />} />
                 <Route path="/flashcards" element={<Flashcards />} />
                 <Route path="/progress" element={<Dashboard />} />
                 <Route path="/grammar" element={<GrammarLab />} />
+                <Route path="/profile" element={<Profile />} />
                 <Route path="*" element={<Dashboard />} />
               </Routes>
             </Layout>
@@ -79,7 +86,9 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <AppContent />
+        <ToastProvider>
+          <AppContent />
+        </ToastProvider>
       </AuthProvider>
     </Router>
   );

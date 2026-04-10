@@ -3,10 +3,12 @@ import pool from '../db.js';
 
 const router = express.Router();
 
-// Get user flashcards
+// Get user flashcards (including global flashcards)
 router.get('/', async (req, res) => {
   try {
     const userId = req.userId;
+    console.log(`📚 Fetching flashcards for user ${userId}`);
+    
     const result = await pool.query(
       `SELECT 
         f.id,
@@ -23,17 +25,25 @@ router.get('/', async (req, res) => {
         v.reading,
         v.meaning,
         COALESCE(d.name, 'No Deck') as deck_name,
-        COALESCE(d.color, 'blue') as deck_color
+        COALESCE(d.color, 'blue') as deck_color,
+        COALESCE(d.is_global, FALSE) as deck_is_global
       FROM flashcards f
       LEFT JOIN vocabulary v ON f.vocab_id = v.id
       LEFT JOIN flashcard_decks d ON f.deck_id = d.id
-      WHERE f.user_id = $1 
+      WHERE f.user_id = $1
+         OR (f.user_id IS NULL AND d.is_global = TRUE)
       ORDER BY COALESCE(d.name, 'No Deck'), f.next_review_date`,
       [userId]
     );
+
+    console.log(`✅ Found ${result.rows.length} flashcards for user ${userId}`);
+    result.rows.forEach((fc) => {
+      console.log(`  • ${fc.word} (${fc.meaning}) - deck: ${fc.deck_name}, user_id: ${fc.user_id}`);
+    });
+
     res.json({ rows: result.rows });
   } catch (error) {
-    console.error('Flashcards error:', error);
+    console.error('❌ Flashcards error:', error);
     // Fallback for when flashcard_decks table doesn't exist
     try {
       const fallbackResult = await pool.query(

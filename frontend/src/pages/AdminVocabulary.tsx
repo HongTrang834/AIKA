@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Loader, Upload, Download, FileText, List } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import BatchVocabularyForm from '../components/BatchVocabularyForm';
 import ImportPreviewModal from '../components/ImportPreviewModal';
 import { parseExcelFile, parseCSVFile, validateRecords } from '../lib/importParsers';
@@ -11,6 +12,7 @@ type ImportTab = 'csv' | 'excel' | 'batch';
 
 export default function AdminVocabulary() {
   const { token } = useAuth();
+  const { showToast } = useToast();
   const [vocabulary, setVocabulary] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -73,15 +75,16 @@ export default function AdminVocabulary() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!window.confirm('Xóa từ vựng này?')) return;
     try {
       await fetch(`${API_BASE_URL}/admin/vocabulary/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
       await fetchVocabulary();
+      showToast('Đã xóa từ vựng', 'success');
     } catch (error) {
       console.error('Error deleting vocabulary:', error);
+      showToast('Lỗi khi xóa từ vựng', 'error');
     }
   };
 

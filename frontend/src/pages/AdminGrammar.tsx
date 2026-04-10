@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Loader, Download, Upload } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { parseCSVFile, parseExcelFile } from '../lib/importParsers';
 import ImportPreviewModal from '../components/ImportPreviewModal';
 
@@ -8,6 +9,7 @@ const API_BASE_URL = 'http://localhost:3000/api';
 
 export default function AdminGrammar() {
   const { token } = useAuth();
+  const { showToast } = useToast();
   const [grammar, setGrammar] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -72,15 +74,16 @@ export default function AdminGrammar() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!window.confirm('Xóa ngữ pháp này?')) return;
     try {
       await fetch(`${API_BASE_URL}/admin/grammar/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
       await fetchGrammar();
+      showToast('Đã xóa ngữ pháp', 'success');
     } catch (error) {
       console.error('Error deleting grammar:', error);
+      showToast('Lỗi khi xóa ngữ pháp', 'error');
     }
   };
 

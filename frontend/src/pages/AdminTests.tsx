@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Loader, Trash2, Edit2, X, Check, RefreshCw } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 interface Test {
   id: number;
@@ -22,6 +23,7 @@ interface Question {
 
 export default function AdminTests() {
   const { token } = useAuth();
+  const { showToast } = useToast();
   const [tests, setTests] = useState<Test[]>([]);
   const [selectedTest, setSelectedTest] = useState<Test | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -105,7 +107,7 @@ export default function AdminTests() {
 
   const handleCreateTest = async () => {
     if (!formData.name || !formData.category) {
-      alert('Hãy điền tất cả các trường');
+      showToast('Hãy điền tất cả các trường', 'error');
       return;
     }
 
@@ -129,7 +131,7 @@ export default function AdminTests() {
         const newTest = await response.json();
         setTests([...tests, newTest]);
         setFormData({ name: '', category: '', total_questions: 5 });
-        alert('Test tạo thành công! Đang sinh câu hỏi...');
+        showToast('Test tạo thành công', 'success');
         
         // Auto-generate questions
         const genResponse = await fetch(`${import.meta.env.VITE_API_URL}/admin/tests/${newTest.id}/auto-generate`, {
@@ -138,22 +140,22 @@ export default function AdminTests() {
         });
         
         if (genResponse.ok) {
-          alert('Câu hỏi đã sinh xong!');
           setSelectedTest(newTest);
           fetchQuestions(newTest.id);
+          showToast('Câu hỏi đã sinh xong', 'success');
         }
+      } else {
+        showToast('Lỗi khi tạo test', 'error');
       }
     } catch (error) {
       console.error('Error creating test:', error);
-      alert('Lỗi khi tạo test');
+      showToast('Lỗi khi tạo test', 'error');
     } finally {
       setCreating(false);
     }
   };
 
   const handleAutoGenerate = async (testId: number) => {
-    if (!window.confirm('Tái tạo tất cả câu hỏi cho test này?')) return;
-
     setLoading(true);
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tests/${testId}/auto-generate`, {
@@ -162,20 +164,20 @@ export default function AdminTests() {
       });
 
       if (response.ok) {
-        alert('Câu hỏi đã tái tạo!');
         fetchQuestions(testId);
+        showToast('Câu hỏi đã tái tạo', 'success');
+      } else {
+        showToast('Lỗi khi tái tạo câu hỏi', 'error');
       }
     } catch (error) {
       console.error('Error regenerating questions:', error);
-      alert('Lỗi khi tái tạo câu hỏi');
+      showToast('Lỗi khi tái tạo câu hỏi', 'error');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDeleteTest = async (testId: number) => {
-    if (!window.confirm('Xóa test này?')) return;
-
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tests/${testId}`, {
         method: 'DELETE',
@@ -188,17 +190,17 @@ export default function AdminTests() {
           setSelectedTest(null);
           setQuestions([]);
         }
-        alert('Test đã xóa');
+        showToast('Test đã xóa', 'success');
+      } else {
+        showToast('Lỗi khi xóa test', 'error');
       }
     } catch (error) {
       console.error('Error deleting test:', error);
-      alert('Lỗi khi xóa test');
+      showToast('Lỗi khi xóa test', 'error');
     }
   };
 
   const handleDeleteQuestion = async (testId: number, questionId: number) => {
-    if (!window.confirm('Xóa câu hỏi này?')) return;
-
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tests/${testId}/questions/${questionId}`, {
         method: 'DELETE',
@@ -207,11 +209,13 @@ export default function AdminTests() {
 
       if (response.ok) {
         setQuestions(questions.filter(q => q.id !== questionId));
-        alert('Câu hỏi đã xóa');
+        showToast('Câu hỏi đã xóa', 'success');
+      } else {
+        showToast('Lỗi khi xóa câu hỏi', 'error');
       }
     } catch (error) {
       console.error('Error deleting question:', error);
-      alert('Lỗi khi xóa câu hỏi');
+      showToast('Lỗi khi xóa câu hỏi', 'error');
     }
   };
 
@@ -219,7 +223,7 @@ export default function AdminTests() {
     if (!editForm || !selectedTest) return;
 
     if (!editForm.question_text || !editForm.correct_answer || !editForm.options || editForm.options.length !== 4) {
-      alert('Điền tất cả trường và đảm bảo có 4 tùy chọn');
+      showToast('Điền tất cả trường và đảm bảo có 4 tùy chọn', 'error');
       return;
     }
 
@@ -246,11 +250,13 @@ export default function AdminTests() {
         setQuestions(questions.map(q => q.id === updated.id ? { ...updated, options: JSON.parse(updated.options) } : q));
         setEditingQuestion(null);
         setEditForm(null);
-        alert('Câu hỏi đã cập nhật');
+        showToast('Câu hỏi đã cập nhật', 'success');
+      } else {
+        showToast('Lỗi khi cập nhật câu hỏi', 'error');
       }
     } catch (error) {
       console.error('Error updating question:', error);
-      alert('Lỗi khi cập nhật câu hỏi');
+      showToast('Lỗi khi cập nhật câu hỏi', 'error');
     }
   };
 

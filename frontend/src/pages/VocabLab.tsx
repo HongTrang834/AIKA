@@ -5,10 +5,10 @@ import DeckSelectionModal from '@/src/components/DeckSelectionModal';
 import TestTakerModal from '@/src/components/TestTakerModal';
 import { Loader, ArrowLeft, BookOpen, Lightbulb } from 'lucide-react';
 import { api } from '../lib/api';
-import { useAuth } from '../context/AuthContext';
-
+import { useAuth } from '../context/AuthContext';import { useToast } from '../context/ToastContext';
 export default function VocabLab() {
   const { token } = useAuth();
+  const { showToast } = useToast();
   const [vocabulary, setVocabulary] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [addingId, setAddingId] = useState<number | null>(null);
@@ -114,7 +114,7 @@ export default function VocabLab() {
       }
     } catch (error) {
       console.error('Error loading test:', error);
-      alert(`Lỗi: ${error instanceof Error ? error.message : 'Lỗi khi tải bài test'}`);
+      console.error('Error loading test:', error);
     } finally {
       setLoadingTest(false);
     }
@@ -123,6 +123,21 @@ export default function VocabLab() {
   const handleAddFlashcard = (vocabId: number) => {
     setPendingVocabId(vocabId);
     setShowDeckSelection(true);
+  };
+
+  const handleSelectVocab = (vocab: any) => {
+    // Track when user clicks on vocabulary card
+    if (token) {
+      try {
+        console.log('📚 Updating vocab progress +1 (clicked card)');
+        api.updateProgress(token, 'vocab', 1).catch(err => 
+          console.error('Failed to update vocab progress:', err)
+        );
+      } catch (error) {
+        console.error('Error tracking vocab view:', error);
+      }
+    }
+    setSelectedVocab(vocab);
   };
 
   const handleDeckSelected = async (deckId: number) => {
@@ -137,8 +152,8 @@ export default function VocabLab() {
       
       // Accept both real DB responses and temporary mock responses
       if (response || response === null) {
-        alert('Added to flashcards!');
         setPendingVocabId(null);
+        showToast('Đã thêm vào flashcards', 'success');
       } else {
         throw new Error('Invalid response');
       }
@@ -146,10 +161,10 @@ export default function VocabLab() {
       console.error('Error adding to flashcard:', error);
       // If it's a 503 (table doesn't exist), still allow the action
       if (error.response?.status === 503 || error.status === 503) {
-        alert('Card added to temporary deck (waiting for database)');
         setPendingVocabId(null);
+        showToast('Đã thêm vào flashcards', 'success');
       } else {
-        alert('Failed to add to flashcards: ' + (error.message || 'Unknown error'));
+        showToast('Lỗi: ' + (error.message || 'Không thể thêm vào flashcards'), 'error');
       }
     } finally {
       setAddingId(null);
@@ -261,7 +276,7 @@ export default function VocabLab() {
               vocabId={vocab.id}
               onAdd={handleAddFlashcard}
               isLoading={addingId === vocab.id}
-              onClickDetail={() => setSelectedVocab(vocab)}
+              onClickDetail={() => handleSelectVocab(vocab)}
             />
           ))}
         </div>

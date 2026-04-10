@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Loader, CheckCircle, XCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { api } from '../lib/api';
 
 interface Question {
@@ -20,6 +21,7 @@ interface Test {
 
 export default function TestTaker({ testId, onBack }: { testId: number; onBack: () => void }) {
   const { token } = useAuth();
+  const { showToast } = useToast();
   const [test, setTest] = useState<Test | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
@@ -70,8 +72,6 @@ export default function TestTaker({ testId, onBack }: { testId: number; onBack: 
   };
 
   const handleSubmit = async () => {
-    if (!window.confirm('Nộp bài làm của bạn?')) return;
-
     setSubmitting(true);
     try {
       const submitAnswers = questions.map(q => ({
@@ -82,9 +82,10 @@ export default function TestTaker({ testId, onBack }: { testId: number; onBack: 
       const result = await api.submitTest(token!, testId, submitAnswers);
       setResult(result);
       setSubmitted(true);
+      showToast('Bài test đã được nộp thành công', 'success');
     } catch (error) {
       console.error('Error submitting test:', error);
-      alert('Có lỗi khi nộp bài');
+      showToast('Lỗi khi nộp bài', 'error');
     } finally {
       setSubmitting(false);
     }
