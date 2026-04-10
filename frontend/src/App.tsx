@@ -12,11 +12,11 @@ import GrammarLab from './pages/GrammarLab';
 import Scenarios from './pages/Scenarios';
 import KaiwaHub from './pages/KaiwaHub';
 import Flashcards from './pages/Flashcards';
+import Progress from './pages/Progress';
 import Profile from './pages/Profile';
 import AdminVocabulary from './pages/AdminVocabulary';
 import AdminGrammar from './pages/AdminGrammar';
 import AdminTests from './pages/AdminTests';
-import AdminFlashcards from './pages/AdminFlashcards';
 import AdminDecks from './pages/AdminDecks';
 
 function AppContent() {
@@ -38,7 +38,6 @@ function AppContent() {
                 <Route path="grammar" element={<AdminGrammar />} />
                 <Route path="tests" element={<AdminTests />} />
                 <Route path="decks" element={<AdminDecks />} />
-                <Route path="flashcards" element={<AdminFlashcards />} />
                 <Route path="*" element={<Navigate to="/admin/vocabulary" />} />
               </Routes>
             </AdminLayout>
@@ -58,7 +57,7 @@ function AppContent() {
                 <Route path="/kaiwa" element={<KaiwaHub />} />
                 <Route path="/scenarios" element={<Scenarios />} />
                 <Route path="/flashcards" element={<Flashcards />} />
-                <Route path="/progress" element={<Dashboard />} />
+                <Route path="/progress" element={<Progress />} />
                 <Route path="/grammar" element={<GrammarLab />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="*" element={<Dashboard />} />

@@ -16,6 +16,7 @@ import conversationRouter from "./routes/conversation.js";
 import testsRouter from "./routes/tests.js";
 import adminRouter from "./routes/admin.js";
 import kaiwaRouter from "./routes/kaiwa.js";
+import progressRouter from "./routes/progress.js";
 
 dotenv.config();
 
@@ -88,6 +89,7 @@ async function startServer() {
   app.use("/api/decks", authMiddleware, decksRouter);
   app.use("/api/conversation", authMiddleware, conversationRouter);
   app.use("/api/kaiwa", authMiddleware, kaiwaRouter);
+  app.use("/api/progress", authMiddleware, progressRouter);
   app.use("/api/tests", testsRouter);
 
   // Error handler
