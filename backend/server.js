@@ -17,8 +17,6 @@ import testsRouter from "./routes/tests.js";
 import adminRouter from "./routes/admin.js";
 import kaiwaRouter from "./routes/kaiwa.js";
 import progressRouter from "./routes/progress.js";
-import notificationRoutes from "./routes/notifications.js";
-import NotificationService from "./services/notificationService.js";
 
 dotenv.config();
 
@@ -92,12 +90,7 @@ async function startServer() {
   app.use("/api/conversation", authMiddleware, conversationRouter);
   app.use("/api/kaiwa", authMiddleware, kaiwaRouter);
   app.use("/api/progress", authMiddleware, progressRouter);
-  app.use("/api/notifications", authMiddleware, notificationRoutes);
   app.use("/api/tests", testsRouter);
-
-  // Initialize notification cron jobs
-  NotificationService.initializeCronJobs();
-  console.log('✅ Notification system initialized');
 
   // Error handler
   app.use((err, req, res, next) => {

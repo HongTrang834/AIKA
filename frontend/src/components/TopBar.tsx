@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Flame, LogOut, User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
-import NotificationPanel from './NotificationPanel';
 
 export function TopBar() {
   const { user, logout } = useAuth();
@@ -81,8 +80,6 @@ export function TopBar() {
             {loading ? 'Loading...' : `${streak} Day${streak !== 1 ? 's' : ''} Streak`}
           </span>
         </div>
-        
-        <NotificationPanel />
 
         <div className="flex items-center gap-3 pl-4 border-l border-slate-200 relative">
           <div className="text-right hidden sm:block">
