@@ -93,17 +93,87 @@ router.post('/vocabulary/import', adminMiddleware, async (req, res) => {
 
     console.log(`\n📊 Import Summary: Imported=${imported}, Skipped=${skipped}, Total=${records.length}`);
 
+    // Auto-generate test if category has >100 items
+    const countResult = await pool.query('SELECT COUNT(*) as total FROM vocabulary WHERE category = $1', [firstCategory]);
+    const categoryCount = parseInt(countResult.rows[0].total);
+    
+    if (categoryCount > 100) {
+      console.log(`\n📖 Auto-generating test for ${firstCategory} (${categoryCount} items)...`);
+      
+      try {
+        let testId = null;
+        const testResult = await pool.query(
+          'SELECT id FROM tests WHERE category = $1 AND topic_type = $2',
+          [firstCategory, 'vocabulary']
+        );
+        
+        if (testResult.rows.length > 0) {
+          testId = testResult.rows[0].id;
+        } else {
+          const newTestResult = await pool.query(
+            'INSERT INTO tests (name, category, topic_type, total_questions) VALUES ($1, $2, $3, $4) RETURNING id',
+            [`${firstCategory} Vocabulary Mini Test`, firstCategory, 'vocabulary', 100]
+          );
+          testId = newTestResult.rows[0].id;
+        }
+        
+        await pool.query('UPDATE tests SET total_questions = 100 WHERE id = $1', [testId]);
+        await pool.query('DELETE FROM test_questions WHERE test_id = $1', [testId]);
+        
+        const vocabItems = await pool.query(
+          'SELECT * FROM vocabulary WHERE category = $1 ORDER BY RANDOM() LIMIT 100',
+          [firstCategory]
+        );
+        
+        const questionTypes = ['fill-blank', 'choose-reading', 'choose-meaning', 'sentence'];
+        for (let i = 0; i < Math.min(100, vocabItems.rows.length); i++) {
+          const item = vocabItems.rows[i];
+          const qType = questionTypes[i % 4];
+          let q = '', ans = '', opts = [];
+          
+          if (qType === 'fill-blank') {
+            q = `Fill: ______ means "${item.meaning}"`;
+            ans = item.word;
+            opts = [item.word];
+          } else if (qType === 'choose-reading') {
+            q = `Reading: ${item.word}`;
+            ans = item.reading;
+            opts = [item.reading];
+          } else if (qType === 'choose-meaning') {
+            q = `Meaning: ${item.word}`;
+            ans = item.meaning;
+            opts = [item.meaning];
+          } else {
+            q = `Fill: "${item.example_sentence}"`;
+            ans = item.word;
+            opts = [item.word];
+          }
+          
+          for (let j = 0; j < 3 && opts.length < 4; j++) {
+            const r = vocabItems.rows[Math.floor(Math.random() * vocabItems.rows.length)];
+            if (qType === 'choose-reading' && !opts.includes(r.reading)) opts.push(r.reading);
+            else if (qType === 'choose-meaning' && !opts.includes(r.meaning)) opts.push(r.meaning);
+            else if (!opts.includes(r.word)) opts.push(r.word);
+          }
+          
+          opts = opts.sort(() => Math.random() - 0.5);
+          await pool.query(
+            'INSERT INTO test_questions (test_id, question_text, correct_answer, options, question_type, vocab_id) VALUES ($1, $2, $3, $4, $5, $6)',
+            [testId, q, ans, JSON.stringify(opts), qType, item.id]
+          );
+        }
+        console.log(`✅ Generated 100 test questions`);
+      } catch (err) {
+        console.error('⚠️  Auto-generate failed:', err.message);
+      }
+    }
+
     res.json({
       imported,
       skipped,
       total: records.length,
       errors: errors.slice(0, 10),
     });
-  } catch (error) {
-    console.error('Error importing vocabulary:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
 
 // CREATE vocabulary
 router.post('/vocabulary', adminMiddleware, async (req, res) => {
@@ -267,17 +337,86 @@ router.post('/grammar/import', adminMiddleware, async (req, res) => {
 
     console.log(`\n📊 Import Summary: Imported=${imported}, Skipped=${skipped}, Total=${records.length}`);
 
+    // Auto-generate test if category has >100 items
+    const countResult = await pool.query('SELECT COUNT(*) as total FROM grammar WHERE category = $1', [firstCategory]);
+    const categoryCount = parseInt(countResult.rows[0].total);
+    
+    if (categoryCount > 100) {
+      console.log(`\n📖 Auto-generating test for ${firstCategory} (${categoryCount} items)...`);
+      
+      try {
+        let testId = null;
+        const testResult = await pool.query(
+          'SELECT id FROM tests WHERE category = $1 AND topic_type = $2',
+          [firstCategory, 'grammar']
+        );
+        
+        if (testResult.rows.length > 0) {
+          testId = testResult.rows[0].id;
+        } else {
+          const newTestResult = await pool.query(
+            'INSERT INTO tests (name, category, topic_type, total_questions) VALUES ($1, $2, $3, $4) RETURNING id',
+            [`${firstCategory} Grammar Mini Test`, firstCategory, 'grammar', 100]
+          );
+          testId = newTestResult.rows[0].id;
+        }
+        
+        await pool.query('UPDATE tests SET total_questions = 100 WHERE id = $1', [testId]);
+        await pool.query('DELETE FROM test_questions WHERE test_id = $1', [testId]);
+        
+        const grammarItems = await pool.query(
+          'SELECT * FROM grammar WHERE category = $1 ORDER BY RANDOM() LIMIT 100',
+          [firstCategory]
+        );
+        
+        const questionTypes = ['fill-blank', 'choose-meaning', 'choose-pattern', 'explanation'];
+        for (let i = 0; i < Math.min(100, grammarItems.rows.length); i++) {
+          const item = grammarItems.rows[i];
+          const qType = questionTypes[i % 4];
+          let q = '', ans = '', opts = [];
+          
+          if (qType === 'fill-blank') {
+            q = `Pattern: ${item.pattern}`;
+            ans = item.meaning;
+            opts = [item.meaning];
+          } else if (qType === 'choose-meaning') {
+            q = `What is the meaning of: ${item.pattern}`;
+            ans = item.meaning;
+            opts = [item.meaning];
+          } else if (qType === 'choose-pattern') {
+            q = `Which pattern means: ${item.meaning}`;
+            ans = item.pattern;
+            opts = [item.pattern];
+          } else {
+            q = `Explanation: ${item.explanation}`;
+            ans = item.pattern;
+            opts = [item.pattern];
+          }
+          
+          for (let j = 0; j < 3 && opts.length < 4; j++) {
+            const r = grammarItems.rows[Math.floor(Math.random() * grammarItems.rows.length)];
+            if (qType === 'choose-pattern' && !opts.includes(r.pattern)) opts.push(r.pattern);
+            else if (!opts.includes(r.meaning)) opts.push(r.meaning);
+          }
+          
+          opts = opts.sort(() => Math.random() - 0.5);
+          await pool.query(
+            'INSERT INTO test_questions (test_id, question_text, correct_answer, options, question_type, grammar_id) VALUES ($1, $2, $3, $4, $5, $6)',
+            [testId, q, ans, JSON.stringify(opts), qType, item.id]
+          );
+        }
+        console.log(`✅ Generated 100 test questions`);
+      } catch (err) {
+        console.error('⚠️  Auto-generate failed:', err.message);
+      }
+    }
+
     res.json({
       imported,
       skipped,
       total: records.length,
       errors: errors.slice(0, 10),
     });
-  } catch (error) {
-    console.error('Error importing grammar:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
 
 // CREATE grammar
 router.post('/grammar', adminMiddleware, async (req, res) => {
