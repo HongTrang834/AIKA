@@ -231,6 +231,98 @@ export async function runMigrations() {
     } catch (err) {
       console.log("ℹ️ test_results table note:", err.message.substring(0, 50));
     }
+
+    // Create user_vocabulary_learned table
+    const userVocabLearned = `
+      CREATE TABLE IF NOT EXISTS user_vocabulary_learned (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        vocabulary_id INTEGER NOT NULL REFERENCES vocabulary(id) ON DELETE CASCADE,
+        status VARCHAR(50) DEFAULT 'NEW',
+        learned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        review_count INTEGER DEFAULT 0,
+        last_reviewed_at TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(user_id, vocabulary_id)
+      );
+      CREATE INDEX IF NOT EXISTS idx_user_vocab_user_id ON user_vocabulary_learned(user_id);
+      CREATE INDEX IF NOT EXISTS idx_user_vocab_status ON user_vocabulary_learned(status);
+    `;
+
+    try {
+      await pool.query(userVocabLearned);
+      console.log("✅ user_vocabulary_learned table ready");
+    } catch (err) {
+      console.log("ℹ️ user_vocabulary_learned table note:", err.message.substring(0, 50));
+    }
+
+    // Create user_grammar_learned table
+    const userGrammarLearned = `
+      CREATE TABLE IF NOT EXISTS user_grammar_learned (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        grammar_id INTEGER NOT NULL REFERENCES grammar(id) ON DELETE CASCADE,
+        status VARCHAR(50) DEFAULT 'NEW',
+        learned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        review_count INTEGER DEFAULT 0,
+        last_reviewed_at TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(user_id, grammar_id)
+      );
+      CREATE INDEX IF NOT EXISTS idx_user_grammar_user_id ON user_grammar_learned(user_id);
+      CREATE INDEX IF NOT EXISTS idx_user_grammar_status ON user_grammar_learned(status);
+    `;
+
+    try {
+      await pool.query(userGrammarLearned);
+      console.log("✅ user_grammar_learned table ready");
+    } catch (err) {
+      console.log("ℹ️ user_grammar_learned table note:", err.message.substring(0, 50));
+    }
+
+    // Create recently_learned_items view
+    const recentlyLearnedView = `
+      CREATE OR REPLACE VIEW recently_learned_items AS
+        SELECT
+          'vocabulary' as type,
+          uvl.id,
+          v.word,
+          COALESCE(v.reading, '') as pronunciation,
+          v.meaning,
+          v.level,
+          uvl.user_id,
+          uvl.learned_at,
+          uvl.status,
+          uvl.review_count,
+          uvl.last_reviewed_at
+        FROM user_vocabulary_learned uvl
+        JOIN vocabulary v ON uvl.vocabulary_id = v.id
+      UNION ALL
+        SELECT
+          'grammar' as type,
+          ugl.id,
+          g.pattern as word,
+          '' as pronunciation,
+          g.meaning,
+          g.level,
+          ugl.user_id,
+          ugl.learned_at,
+          ugl.status,
+          ugl.review_count,
+          ugl.last_reviewed_at
+        FROM user_grammar_learned ugl
+        JOIN grammar g ON ugl.grammar_id = g.id;
+    `;
+
+    try {
+      await pool.query(recentlyLearnedView);
+      console.log("✅ recently_learned_items view ready");
+    } catch (err) {
+      console.log("ℹ️ recently_learned_items view note:", err.message.substring(0, 50));
+    }
+
   } catch (error) {
     console.error("❌ Migration failed:", error);
   }

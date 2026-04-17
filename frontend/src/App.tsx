@@ -19,6 +19,8 @@ import AdminVocabulary from './pages/AdminVocabulary';
 import AdminGrammar from './pages/AdminGrammar';
 import AdminTests from './pages/AdminTests';
 import AdminDecks from './pages/AdminDecks';
+import VocabularyDetail from './pages/VocabularyDetail';
+import GrammarDetail from './pages/GrammarDetail';
 
 function AppContent() {
   const { isAuthenticated, user } = useAuth();
@@ -55,11 +57,13 @@ function AppContent() {
               <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/vocab" element={<VocabLab />} />
+                <Route path="/learn/vocabulary/:id" element={<VocabularyDetail />} />
                 <Route path="/kaiwa" element={<KaiwaHub />} />
                 <Route path="/scenarios" element={<Scenarios />} />
                 <Route path="/flashcards" element={<Flashcards />} />
                 <Route path="/progress" element={<Progress />} />
                 <Route path="/grammar" element={<GrammarLab />} />
+                <Route path="/learn/grammar/:id" element={<GrammarDetail />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/learn/lesson/:id" element={<Lesson />} />
                 <Route path="*" element={<Dashboard />} />
