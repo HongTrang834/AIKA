@@ -376,7 +376,7 @@ export default function Dashboard() {
                   
                   return (
                     <motion.div
-                      key={`${dayName}-${dayNum}`}
+                      key={`activity-${date.toISOString().split('T')[0]}`}
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: i * 0.05 }}
