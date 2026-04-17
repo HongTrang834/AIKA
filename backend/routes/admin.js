@@ -45,9 +45,13 @@ router.post('/vocabulary/import', adminMiddleware, async (req, res) => {
     console.log(`📥 Importing ${records.length} records...`);
     console.log('First record:', JSON.stringify(records[0], null, 2));
 
-    // Delete all existing records first (clean slate)
-    await pool.query('DELETE FROM vocabulary');
-    console.log('🗑️  Cleared all existing vocabulary records');
+    // Get category from first record
+    const firstCategory = records[0]?.category?.trim() || 'General';
+    console.log(`📁 Category: ${firstCategory}`);
+
+    // Only delete records with same category (preserve other categories)
+    await pool.query('DELETE FROM vocabulary WHERE category = $1', [firstCategory]);
+    console.log(`🗑️  Cleared vocabulary records for category: ${firstCategory}`);
 
     // Insert records directly without merging (frontend already merged)
     for (let i = 0; i < records.length; i++) {
@@ -214,9 +218,13 @@ router.post('/grammar/import', adminMiddleware, async (req, res) => {
     console.log(`📥 Importing ${records.length} grammar records...`);
     console.log('First record:', JSON.stringify(records[0], null, 2));
 
-    // Delete all existing records first (clean slate)
-    await pool.query('DELETE FROM grammar');
-    console.log('🗑️  Cleared all existing grammar records');
+    // Get category from first record
+    const firstCategory = records[0]?.category?.trim() || 'jlpt_grammar';
+    console.log(`📁 Category: ${firstCategory}`);
+
+    // Only delete records with same category (preserve other categories)
+    await pool.query('DELETE FROM grammar WHERE category = $1', [firstCategory]);
+    console.log(`🗑️  Cleared grammar records for category: ${firstCategory}`);
 
     // Insert records directly without merging (frontend already merged)
     for (let i = 0; i < records.length; i++) {

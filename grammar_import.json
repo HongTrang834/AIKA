@@ -1,0 +1,1561 @@
+{
+  "records": [
+    {
+      "pattern": "～として（は）／～としても／～としての",
+      "meaning": "＜立場、資格、種類をはっきり言う。＞  Nói về lập trường, tư cách, chủng loại",
+      "title": "N2 Grammar",
+      "explanation": "[名]＋として",
+      "category": "jlpt_grammar",
+      "example_sentence": "彼は国費留学生として日本へ来た。",
+      "example_translation": "Anh ấy đã đến Nhật với tư cách là lưu học sinh ngân sách nhà nước,"
+    },
+    {
+      "pattern": "～について（は）／～につき／～についても／～についての",
+      "meaning": "話したり考えたりする内容を表す。  Về, liên quan đến… Biểu thị nội dung suy nghĩ, lời nói.",
+      "title": "N2 Grammar",
+      "explanation": "[名]＋について",
+      "category": "jlpt_grammar",
+      "example_sentence": "日本の経済について研究しています。",
+      "example_translation": "Tôi đang nghiên cứu về kinh tế Nhật Bản.,"
+    },
+    {
+      "pattern": "～てならない",
+      "meaning": "非常に～  （ある気持ちが自然に強くなってくる状態を表す。）  ~ một cách phi thường (Chỉ cảm xúc mạnh lên một cách tự nhiên)",
+      "title": "N2 Grammar",
+      "explanation": "［動－て形］        ［い形－くて］        ［な形－て］      ＋ならない",
+      "category": "jlpt_grammar",
+      "example_sentence": "交通事故で両親を亡くした子供がかわいそうに思えてならない。",
+      "example_translation": "Không thể kìm lòng trước những đứa trẻ mất bố mẹ do tai nạn giao thông.,"
+    },
+    {
+      "pattern": "～にきまっている",
+      "meaning": "必ず～だ・当然～だと思う  Nghĩ ~ là nhất định, đương nhiên",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の普通形＋にきまっている  （ただし［名］と［な形］は［だ］がつかない。）",
+      "category": "jlpt_grammar",
+      "example_sentence": "ぜんぜん練習していないんだから、今度の試合は負(ま)けるにきまっている。",
+      "example_translation": "Vì chả luyện tập tí nào, trận đấu năm nay nhất định là thua.,"
+    },
+    {
+      "pattern": "～にすぎない",
+      "meaning": "ただ～だけだ・それ以上のものではない  Chỉ, không nhiều hơn ~",
+      "title": "N2 Grammar",
+      "explanation": "［動－普通形］        ［な形－である］                                                ［名 | 名－である］    ＋にすぎない",
+      "category": "jlpt_grammar",
+      "example_sentence": "私は警官としてしなければならないことをしたにすぎません。",
+      "example_translation": "Tôi đã chỉ làm những việc cần làm với tư cách cảnh sát.,"
+    },
+    {
+      "pattern": "～に相違ない",
+      "meaning": "確かに～だろう・間違いなく～だと思う  Chắc đúng là ~, Nghĩ ~ là không sai được",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の普通形＋に相違ない （ただし［な形］と［名］の［だ］はつかない。）",
+      "category": "jlpt_grammar",
+      "example_sentence": "そんな非常識(ひじょうしき)な要求は認(みと)められないに相違ない。",
+      "example_translation": "Yêu cầu thiếu tri thiếu biết thế này đúng là không thể chấp nhận được.,"
+    },
+    {
+      "pattern": "～に違いない",
+      "meaning": "確かに～と思う  Nghĩ chính xác là ~",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の普通形＋に違いない  （ただし［な形］と［名］の［だ］はつかない。）",
+      "category": "jlpt_grammar",
+      "example_sentence": "かぎがない。どこかに落(お)としたに違いない。",
+      "example_translation": "Không có chìa khoá. Đúng là rơi đâu rồi.,"
+    },
+    {
+      "pattern": "～べき／～べきだ／～べきではない",
+      "meaning": "そうするのが人間として当然だ・～したほうがいい  Làm như thế là đương nhiên, nên làm ~",
+      "title": "N2 Grammar",
+      "explanation": "［動－辞書形］＋べき  （［するべき］は［すべき］も使われる。）",
+      "category": "jlpt_grammar",
+      "example_sentence": "書く前に,",
+      "example_translation": ""
+    },
+    {
+      "pattern": "～（より）ほか（は）ない／～ほかしかたがない",
+      "meaning": "～する以外に方法がない  Chả có cách nào khác là ~",
+      "title": "N2 Grammar",
+      "explanation": "［動－辞書形］＋ほかない",
+      "category": "jlpt_grammar",
+      "example_sentence": "だれにも頼めないから、自分でやるほかはない。",
+      "example_translation": "Không nhờ ai được, không có cách nào ngoài tự làm cả.,"
+    },
+    {
+      "pattern": "～向きだ／～向きに／～向きの",
+      "meaning": "～にちょうどいい・～に適している  Vừa đẹp với ~, thích hợp với~",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋向きだ",
+      "category": "jlpt_grammar",
+      "example_sentence": "このスキー場は初心者向きです。",
+      "example_translation": "Khu trượt tuyết này thích hợp với người mới tập.,"
+    },
+    {
+      "pattern": "～向けだ／～向けに／～向けの",
+      "meaning": "～に適するように特に作った  Để thích hợp với ~ mà đã đặc biệt tạo ra.",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋向けだ",
+      "category": "jlpt_grammar",
+      "example_sentence": "ここにある軽量のクリスマスカードは、みんな海外向けだ。",
+      "example_translation": "Lượng nhỏ thiếp giáng sinh ở đây là hướng tới mọi người ở hải ngoại.,"
+    },
+    {
+      "pattern": "～もの（です）か",
+      "meaning": "決して～ない  （強い否定の意味 を表す。）  Quyết không ~ (Ý phủ định mạnh)",
+      "title": "N2 Grammar",
+      "explanation": "名詞修飾型＋ものか  （ただし［名－の］は［名－な］になる。）",
+      "category": "jlpt_grammar",
+      "example_sentence": "あの人が人の忠告(ちゅうこく)なんか聞くものですか。",
+      "example_translation": "Người kia quyết không nghe lời khuyên của người khác.,"
+    },
+    {
+      "pattern": "～にとって（は）／～にとっても／～にとっての",
+      "meaning": "～の立場からみると  （後ろには判断や評価がくる。） Đối với… Nhìn từ lập trường của ~ (sau đó là phán đoán, bình phẩm)",
+      "title": "N2 Grammar",
+      "explanation": "[名]＋にとって",
+      "category": "jlpt_grammar",
+      "example_sentence": "この写真は私にとって、何よりも大切なものです。",
+      "example_translation": "Bức ảnh này đối với tôi là thứ quan trọng hơn tất cả (hơn bất cứ thứ gì).,"
+    },
+    {
+      "pattern": "～ものだ／～ものではない",
+      "meaning": "（感嘆・嘆息(たんそく)・心に深く感ずることを表す。）  Thể hiện cảm xúc mạnh, cảm thán, thở dài",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形］の名詞修飾型＋ものだ",
+      "category": "jlpt_grammar",
+      "example_sentence": "あんな大事故にあって、よく助かったものだ。",
+      "example_translation": "Gặp tai nạn lớn thế mà được cứu sống hết.,"
+    },
+    {
+      "pattern": "～わけだ 接続   ［動・い形・な形］の名詞修飾型＋わけだ",
+      "meaning": "（理由があるから、そうなるのは当然だと言いたい時に使う。 ）  Vì có lý do nên muốn nói như thế là đương nhiên.",
+      "title": "N2 Grammar",
+      "explanation": "",
+      "category": "jlpt_grammar",
+      "example_sentence": "暗いわけだ。蛍光灯(けいこうとう)が１本切れている。",
+      "example_translation": "Tối là phải. Một bóng đèn huỳnh quang bị cháy.,"
+    },
+    {
+      "pattern": "～わけではない／～わけでもない",
+      "meaning": "特に～ではない・必ずしも～ではない  Không nhất thiết là ~, không phải là ~",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形］の名詞修飾型＋わけではない",
+      "category": "jlpt_grammar",
+      "example_sentence": "生活に困っているわけではないが、貯金する余裕(よゆう)はない。",
+      "example_translation": "Cuộc sống không phải là khó khăn nhưng cũng không có dư ra để dành.,"
+    },
+    {
+      "pattern": "～っけ",
+      "meaning": "（思い出そうとした、思い出したことを確認する時に使う。）  Đang nhớ ra, nhớ lại và muốn xác nhận lại",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の普通形＋っけ  （ただし［～でしたっけ］［～ましたっけ］も使う。）",
+      "category": "jlpt_grammar",
+      "example_sentence": "彼にはまだパーティーの場所を知らせていなかったっけ。",
+      "example_translation": "Hình như tôi chưa báo cho anh ấy địa điểm liên hoan hay sao ấy.,"
+    },
+    {
+      "pattern": "～とか",
+      "meaning": "～そうだ・～ということだ  （間接的情報を表す。）  Nghe nói là ~ (chỉ thông tin mang tính gián tiếp)",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の普通形＋とか",
+      "category": "jlpt_grammar",
+      "example_sentence": "新聞によると、国内線の飛行機運賃が上がるとか。",
+      "example_translation": "Thấy báo nói giá cước vận chuyển hàng không tuyến nội địa tăng giá thì phải.,"
+    },
+    {
+      "pattern": "～どころではない／～どころではなく",
+      "meaning": "事情があって、～できない  Có lý do, chịu không thể ~ (strongly emphatic) too preoccupied or busy to even think of ~; ~ is out of the question",
+      "title": "N2 Grammar",
+      "explanation": "［動－辞書形］     ［名］      ＋どころではない",
+      "category": "jlpt_grammar",
+      "example_sentence": "人の仕事を手伝うどころではありません。自分の仕事も間に合わないんです。",
+      "example_translation": "Việc của người khác thì chịu không giúp được rồi. Việc của mình còn đang lỡ dở đây.,"
+    },
+    {
+      "pattern": "～からして 接続   ［名］＋からして",
+      "meaning": "（一つの例をあげて、ほかももちろんだがという気持ちを表す。）  Đưa ra một ví dụ, nghĩ là những cái khác là đương nhiên. Ngay cả ~",
+      "title": "N2 Grammar",
+      "explanation": "",
+      "category": "jlpt_grammar",
+      "example_sentence": "彼は礼儀を知らない。あいさつからして、きちんとしていない。",
+      "example_translation": "Anh ta chả biết lễ nghi gì cả. Đến chào hỏi còn chả thèm.,"
+    },
+    {
+      "pattern": "～からすると／～からすれば 接続   ［名］＋からすると",
+      "meaning": "～の立場から見ると  Nhìn từ lập trường của ~",
+      "title": "N2 Grammar",
+      "explanation": "",
+      "category": "jlpt_grammar",
+      "example_sentence": "親からすると、子供はいくつになっても子供で、心配なものだ。",
+      "example_translation": "Với bố mẹ thì con cái có lớn thế nào thì vẫn lo lắng cho chúng.,"
+    },
+    {
+      "pattern": "～からには／～からは",
+      "meaning": "～のだから当然  As long as; Chừng nào ~ ; vì là ~, đương nhiên",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の普通形＋からには  （ただし［な形］と［名］は［である］を使う。）",
+      "category": "jlpt_grammar",
+      "example_sentence": "試合に出るからには、勝ちたい。",
+      "example_translation": "Đã tham gia vào cuộc chơi, tất nhiên là muốn thắng.,"
+    },
+    {
+      "pattern": "～ことだから",
+      "meaning": "（皆が知っている理由を示す。後ろに推量の文がくる。）  Trình bày lý do mà mọi người đều biết, theo sau là câu suy luận.",
+      "title": "N2 Grammar",
+      "explanation": "［名－の］＋ことだから",
+      "category": "jlpt_grammar",
+      "example_sentence": "子供のことだから、少しぐらいいたずらをしても仕方がないです。",
+      "example_translation": "Vì là trẻ con nên có nghịch một tí cũng không có cách nào.,"
+    },
+    {
+      "pattern": "～に伴(ともな)って／～に伴い／～に伴う",
+      "meaning": "～にしたがって・～につれて  Cùng với, đi kèm....",
+      "title": "N2 Grammar",
+      "explanation": "[動－辞書形]      [名]       ＋に伴って",
+      "category": "jlpt_grammar",
+      "example_sentence": "人口が増えるに伴って、いろいろな問題が起こってきた。",
+      "example_translation": "Đi kèm với việc tăng dân số, nhiều vấn đề đa dạng nảy sinh.,"
+    },
+    {
+      "pattern": "～だけ／～だけあって／～だけに／～だけの",
+      "meaning": "～にふさわしく  （［～だけ］［～だけあって］［～だけに］［～だけの］が使われる。）                                          Phù hợp với, quả đúng là, đúng là….có khác",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の名詞修飾型＋だけ  （ただし［名－の］の［の］はつかない。）",
+      "category": "jlpt_grammar",
+      "example_sentence": "この仕事は努力しただけ成果が現れるので、やりがいがある。",
+      "example_translation": "Công việc này có thành quả thể hiện ra phù hợp với những nỗ lực bỏ ra nên tôi thấy rất có ý nghĩa.,"
+    },
+    {
+      "pattern": "～にあたって／～に当たり",
+      "meaning": "～の時に  （何かをすべき特別の機会や場合を示す。）  Trong khi…　(Dùng trong trường hợp, cơ hội đặc biệt)",
+      "title": "N2 Grammar",
+      "explanation": "［動－辞書形］     ［名］       ＋にあたって",
+      "category": "jlpt_grammar",
+      "example_sentence": "開会にあたって、ひとことごあいさつ申し上げます。",
+      "example_translation": "Khai mạc hội nghị, tôi xin có một vài lời chào.,"
+    },
+    {
+      "pattern": "～にかけては／～にかけても",
+      "meaning": "～について言えば  Nếu nói về…",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋にかけては",
+      "category": "jlpt_grammar",
+      "example_sentence": "数学にかけては、彼女はクラスでいつも一番だった。",
+      "example_translation": "Nếu nói về số học thì cô ấy là giỏi nhất lớp.,"
+    },
+    {
+      "pattern": "～に際して／～に際し／～に際しての",
+      "meaning": "～を始める時に・～をしている時に  Khi bắt đầu…, Khi đang…",
+      "title": "N2 Grammar",
+      "explanation": "［動－辞書形］     ［名］       ＋に際して",
+      "category": "jlpt_grammar",
+      "example_sentence": "留学に際して、先生や友人から励ましの言葉をもらった。",
+      "example_translation": "Khi đang du học, tôi đã nhận được nhiều lời động viên từ thầy cô và bè bạn.,"
+    },
+    {
+      "pattern": "～に先立って／～に先立ち／～に先立つ",
+      "meaning": "～の前に・～より先に  Trước khi...",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋に先立って",
+      "category": "jlpt_grammar",
+      "example_sentence": "映画の一般公開に先立って、主演女優のサイン会が開かれた。",
+      "example_translation": "Trước khi công chiếu bộ phim, lễ ký tặng của nữ diễn viên chính đã được tổ chức.,"
+    },
+    {
+      "pattern": "～にしたら／～にすれば／～にしても",
+      "meaning": "～の立場で言うと  Nếu nói trên lập trường…, nhìn từ suy nghĩ của…, đối với…",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋にしたら",
+      "category": "jlpt_grammar",
+      "example_sentence": "あの人にしたら、私たちの親切はかえって迷惑かもしれません。",
+      "example_translation": "Nếu nhìn từ suy nghĩ của người đó, có thể sự tốt bụng của chúng ta ngược lại đem đến phiền phức.,"
+    },
+    {
+      "pattern": "～につき",
+      "meaning": "～なので  Vì…",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋につき",
+      "category": "jlpt_grammar",
+      "example_sentence": "雨天につき、試合は延期いたします。",
+      "example_translation": "Vì trời mưa nên trận đấu đã bị hoãn.,"
+    },
+    {
+      "pattern": "～につけ／～につけて（は）／～につけても",
+      "meaning": "～するたびに  Mỗi lần làm…",
+      "title": "N2 Grammar",
+      "explanation": "［動－辞書形］＋につけ",
+      "category": "jlpt_grammar",
+      "example_sentence": "家族の写真を見るにつけ、会いたくてたまらなくなる。",
+      "example_translation": "Mỗi lần nhìn ảnh gia đình tôi lại muốn gặp mọi người không chịu nổi.,"
+    },
+    {
+      "pattern": "～のもとで／～のもとに",
+      "meaning": "～のしたで  （影響や条件の範囲内で、あることが行われることを表す。 ） Dưới…(Trong phạm vi ảnh hưởng, trong điều kiện…mà một việc được tiến hành)",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋のもとで",
+      "category": "jlpt_grammar",
+      "example_sentence": "鈴木教授のご指導のもとで、卒業論文を完成させた。",
+      "example_translation": "Dưới sự chỉ đạo của thầy Suzuki, tôi đã hoàn thành khóa luận tốt nghiệp.,"
+    },
+    {
+      "pattern": "～はともかく（として）",
+      "meaning": "～のことは考えないで・～は別にして  Tạm thời không nghĩ đến…, Tạm thời gác chuyện…sang một bên",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋はともかく",
+      "category": "jlpt_grammar",
+      "example_sentence": "この洋服は、デザインはともかく、色がよくない。",
+      "example_translation": "Bộ quần áo này, tạm thời không nói đến thiết kế, màu sắc đã không đẹp rồi.,"
+    },
+    {
+      "pattern": "～によって／～により／～による／～によっては 接続   [名]＋によって",
+      "meaning": "動作の主体（主に受身文で）を示す。  Nhờ vào, do, bởi ~  Chỉ chủ thể của hành động (chủ yếu trong câu bị động).",
+      "title": "N2 Grammar",
+      "explanation": "",
+      "category": "jlpt_grammar",
+      "example_sentence": "アメリカ大陸はコロンブスによって発見された。",
+      "example_translation": "Châu Mỹ do Columbus phát hiện ra.,"
+    },
+    {
+      "pattern": "～をきっかけに（して）／～をきっかけとして",
+      "meaning": "（偶然のできごとから何かが始まったり変わったりすることを表す。）  Biểu thị rằng từ một việc ngẫu nhiên mà có gì đó bắt đầu, thay đổi.",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋をきっかけに",
+      "category": "jlpt_grammar",
+      "example_sentence": "留学をきっかけに、自分の国についていろいろ考えるようになった。",
+      "example_translation": "Từ việc đi du học mà tôi đã có nhiều suy nghĩ về đất nước của mình.,"
+    },
+    {
+      "pattern": "～を契機に（して）／～を契機として",
+      "meaning": "（あるできごとから、前の流れがはっきり表れてきたり大きく変わったりすることを表す。）  Nhân cơ hội ~ (Chỉ một việc mà dòng chảy từ trạng thái trước biểu hiện rõ ràng và thay đổi lớn từ một sự kiện nhất định)",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋を契機に",
+      "category": "jlpt_grammar",
+      "example_sentence": "オイルショックを契機に新エネルギーの研究が進められた。",
+      "example_translation": "Nhân thời cơ của cuộc khủng hoảng dầu lửa, các nghiên cứu về năng lượng mới đã được đẩy mạnh.,"
+    },
+    {
+      "pattern": "～を～として／～を～とする／～を～とした",
+      "meaning": "～を～と決めて・～が～である  Lấy ~ làm ~",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋を＋［名］として",
+      "category": "jlpt_grammar",
+      "example_sentence": "陳さんを先生として、中国語の勉強会を開いた。",
+      "example_translation": "Cử anh Trần làm thầy giáo và hội học tiếng Trung đã được mở.,"
+    },
+    {
+      "pattern": "～あげく（に）",
+      "meaning": "～したその結果とうとう・～したけれども、結局       Sau ~ rốt cuộc là ...",
+      "title": "N2 Grammar",
+      "explanation": "［動－た形］        ［名－の］      ＋あげく",
+      "category": "jlpt_grammar",
+      "example_sentence": "さんざん迷(まよ)ったあげく、大学院には行かないことにした。",
+      "example_translation": "Sau khi cứ lúng túng gay go mãi, rốt cuộc là đã không học lên tiếp cao học được.,"
+    },
+    {
+      "pattern": "～以上（は）",
+      "meaning": "～からには  Chừng nào ~ ; đã là ~ thì",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の名詞修飾型＋以上  （ただし［名－の］の形は使わない。 ［名－である］を使う。［な形－である］も使う。）",
+      "category": "jlpt_grammar",
+      "example_sentence": "日本に住んでいる以上、日本の法律を守らなければならない。",
+      "example_translation": "Đã sống trên đất Nhật thì phải tuân thủ pháp luật Nhật Bản.,"
+    },
+    {
+      "pattern": "～上は",
+      "meaning": "～からには  Chừng nào ~ ; đã là ~ thì",
+      "title": "N2 Grammar",
+      "explanation": "［動－辞書形 | た形］＋上は",
+      "category": "jlpt_grammar",
+      "example_sentence": "契約を結(むす)ぶ上は、条件を慎重に検討すべきである。",
+      "example_translation": "Khi ký kết hợp đồng thì cần phải kiểm thảo thận trọng các điều kiện.,"
+    },
+    {
+      "pattern": "～ことなく",
+      "meaning": "～ないで  Không có ~",
+      "title": "N2 Grammar",
+      "explanation": "［動－辞書形］＋ことなく",
+      "category": "jlpt_grammar",
+      "example_sentence": "ロボットは 24時間休むことなく働いている。",
+      "example_translation": "Robot làm việc 24h mà không nghỉ,"
+    },
+    {
+      "pattern": "～際（は）／～際に",
+      "meaning": "～時・～場合  Thời gian, trường hợp",
+      "title": "N2 Grammar",
+      "explanation": "［動－辞書形 | た形］        ［名－の］         ＋際",
+      "category": "jlpt_grammar",
+      "example_sentence": "帰国の際、保証人の家にあいさつに行った。",
+      "example_translation": "Lúc về nước đã đi chào gia đình người bảo lãnh.,"
+    },
+    {
+      "pattern": "～つつ／～つつも 接続   ［動－ます形］＋つつ",
+      "meaning": "ながら  Đang, trong khi ~",
+      "title": "N2 Grammar",
+      "explanation": "",
+      "category": "jlpt_grammar",
+      "example_sentence": "財布の中身を考えつつ、買い物をした。",
+      "example_translation": "Vừa nghĩ đến ví vừa đi mua hàng.,"
+    },
+    {
+      "pattern": "～てからでないと／～てからでなければ",
+      "meaning": "～た後でないと  （前に言ったことが実現してからでなければ、後ろで言うことが実現しない。）  Nếu không thực hiện cái nói đằng trước thì điều đằng sau cũng không thực hiện.",
+      "title": "N2 Grammar",
+      "explanation": "［動－て形］＋からでないと",
+      "category": "jlpt_grammar",
+      "example_sentence": "お金をいただいてからでないと、商品はお届けできません。",
+      "example_translation": "Nếu chưa nhận được tiền thì hàng cũng không giao được.,"
+    },
+    {
+      "pattern": "～によると／～によれば",
+      "meaning": "伝聞の根拠(こんきょ)を示す。  Theo, y theo ~. Chỉ căn cứ của tin đồn.",
+      "title": "N2 Grammar",
+      "explanation": "[名]＋によると",
+      "category": "jlpt_grammar",
+      "example_sentence": "今朝の新聞によると、来年度、二つの大学が新設されるそうだ。",
+      "example_translation": "Theo báo ra sáng nay, sang năm, hai trường đại học mới sẽ được thành lập.,"
+    },
+    {
+      "pattern": "～といっても",
+      "meaning": "～（だ）が・しかし  （実際はそれから考えられるものとは違う。）  Dù là ~ nhưng ~ (thực tế so với điều được nghĩ từ đó khác nhau)",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の普通形＋といっても  （ただし［名］と［な形］の［だ］はつかない場合もある。）",
+      "category": "jlpt_grammar",
+      "example_sentence": "庭(にわ)があるといっても猫の額ほどです。",
+      "example_translation": "Nói là có vườn đấy nhưng mà bé tí (như cái đầu trán mèo).,"
+    },
+    {
+      "pattern": "～どころか",
+      "meaning": "（前に言ったことはもちろん、それよりもっと程度が激(はげ)しいという時や、実際はそうではなく、正反対であることを強調する時に使う。）  Dùng nhấn mạnh một sự phản đối trực diện, điều nói trước là hiển nhiên. Diễn đạt một vật, việc gì đó quá xa so với trạng thái mong đợi. Ý sau thể hiện cái điều khác xa so với ý trước.",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の普通形＋どころか  （ただし［な形］と［名］は［だ］がつかない。 ［な形－な］も使われる。）",
+      "category": "jlpt_grammar",
+      "example_sentence": "彼は貯金するどころか借金だらけだ。",
+      "example_translation": "Anh ta mà có tiết kiệm à, nợ nần chồng chất kia kìa.,"
+    },
+    {
+      "pattern": "～としたら／～とすれば 接続   ［動・い形・な形・名］の普通形＋としたら",
+      "meaning": "～なら  （仮定の表現。）  Nếu mà (giả định)",
+      "title": "N2 Grammar",
+      "explanation": "",
+      "category": "jlpt_grammar",
+      "example_sentence": "留学するとしたら、日本に行きたいと思っていました。",
+      "example_translation": "Nếu mà đi du học, tôi đã định đi Nhật.,"
+    },
+    {
+      "pattern": "～ないことには",
+      "meaning": "～なければ  Nếu không ~",
+      "title": "N2 Grammar",
+      "explanation": "［動－ない形］        ［い形－く］        ［な形－で］        ［名－で］          ＋ないことには",
+      "category": "jlpt_grammar",
+      "example_sentence": "実際に読まないことには、この小説の面白さはわからないだろう。",
+      "example_translation": "Nếu mà chưa đọc thì không biết được độ hấp dẫn của tiểu thuyết này đâu.,"
+    },
+    {
+      "pattern": "～ながら",
+      "meaning": "けれども  Ấy thế mà, tuy nhiên ~",
+      "title": "N2 Grammar",
+      "explanation": "［動－ます形 | ない形－ない］        ［い形－い］        ［な形－O］        ［名］               ＋ながら",
+      "category": "jlpt_grammar",
+      "example_sentence": "一緒に暮(く)らしていながら、母の病気に気づかなかった。",
+      "example_translation": "Sống cùng một nhà vậy mà không nhận ra bệnh của mẹ.,"
+    },
+    {
+      "pattern": "～にしては",
+      "meaning": "そのことから当然予想されることと違って     Rather, somewhat, to a degree ~ So với điều được đương nhiên nghĩ đến từ đó thì khác",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の普通形＋にしては  （ただし［な形］と［名］は［だ］がつかない。）",
+      "category": "jlpt_grammar",
+      "example_sentence": "兄はアメリカに 20年いたにしては英語が下手だ。",
+      "example_translation": "Dù anh trai sống ở Mỹ đến 20 năm nhưng tiếng Anh thì dở ẹc.,"
+    },
+    {
+      "pattern": "～にしろ／～に（も）せよ／～にしても 接続   ［動・い形・な形・名］の普通形＋にしろ  （ただし［な形］と［名］の［だ］はつかない。 ［な形－である］［名－である］も使う。）",
+      "meaning": "たとえ～ても・～でも  Ngay cả nếu, tỉ như ~, vẫn ~",
+      "title": "N2 Grammar",
+      "explanation": "",
+      "category": "jlpt_grammar",
+      "example_sentence": "どんな人間にしろ長所はあるものだ。",
+      "example_translation": "Dù là người nào thì cũng có sở trường.,"
+    },
+    {
+      "pattern": "～にかかわらず／～に（は）かかわりなく",
+      "meaning": "～に関係なく  Không liên quan đến~",
+      "title": "N2 Grammar",
+      "explanation": "［動－辞書形］＋［動－ない形－ない］        ［名］                  ＋にかかわらず",
+      "category": "jlpt_grammar",
+      "example_sentence": "参加するしないにかかわらず、必ず返事をください。",
+      "example_translation": "Không tính là có tham gia hay không, nhất định hãy trả lời nhé.,"
+    },
+    {
+      "pattern": "～にもかかわらず",
+      "meaning": "～のに  Dù cho, dẫu cho ~",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の普通形＋にもかかわらず  （ただし［な形］と［名］は［だ］がつかない。［な形－である］［名－である］も使う。）",
+      "category": "jlpt_grammar",
+      "example_sentence": "彼は熱(ねつ)があるにもかかわらず、サッカーの試合に出場した。",
+      "example_translation": "Anh ta dù bị sốt nhưng vẫn ra sân thi đấu bóng đá.,"
+    },
+    {
+      "pattern": "～ぬきで（は）／～ぬきに（は）／～ぬきの／～をぬきにして（は）／～はぬきにして",
+      "meaning": "～なしで・なしに  （～がない状態で・～を省(はぶ)いて）  Không có ~ (ở trạng thái không có ~ hoặc lược bớt ~)",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋ぬきで",
+      "category": "jlpt_grammar",
+      "example_sentence": "朝食ぬきで会社へ行くサラリーマンが多いらしい。",
+      "example_translation": "Có vẻ nhiều nhân viên công ty đi làm mà không ăn sáng.,"
+    },
+    {
+      "pattern": "～を中心に（して）／～を中心として",
+      "meaning": "～を真ん中にして・～を一番重要なものとして  Lấy ~ làm trung tâm, lấy ~ là thứ quan trọng nhất.",
+      "title": "N2 Grammar",
+      "explanation": "[名]＋を中心に",
+      "category": "jlpt_grammar",
+      "example_sentence": "駅を中心にたくさんの商店が集まっている。",
+      "example_translation": "Nhiều cửa hàng tập trung quanh ga.,"
+    },
+    {
+      "pattern": "～のみならず",
+      "meaning": "～だけでなく  Như, cũng như, và còn thêm ~ ; Không chỉ, mà còn~",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の普通形＋のみならず  （ただし［な形］と［名］は［だ］がつかない。［な形－である］［名－である］も使う。）",
+      "category": "jlpt_grammar",
+      "example_sentence": "このコンピューターは性能が優れているのみならず、操作も簡単だ。",
+      "example_translation": "Máy tính này không chỉ vượt trội về tính năng mà sử dụng còn dễ dàng.,"
+    },
+    {
+      "pattern": "～反面／～半面",
+      "meaning": "ある面では～と考えられるが、別の面から見ると  Mặt khác, mặt trái",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の名詞修飾型＋反面  （ただし［名］は［である］を使う。また［な形－である］も使う。）",
+      "category": "jlpt_grammar",
+      "example_sentence": "この薬はよくきく反面、副作用がある。",
+      "example_translation": "Thuốc này có tác dụng tốt nhưng mặt trái cũng gây tác dụng phụ.,"
+    },
+    {
+      "pattern": "～ものなら",
+      "meaning": "～なら  （実現が難しいことを希望する時、または、実現の可能性が少ないことを相手に冷たく言う時の言い方。）  If, in the event that, in the case of ~ . Nếu ~ (dùng khi hi vọng vào một điều khó thực hiện hoặc là ít khả năng thực hiện – cách nói lạnh lùng)",
+      "title": "N2 Grammar",
+      "explanation": "［動－辞書形］＋ものなら",
+      "category": "jlpt_grammar",
+      "example_sentence": "父の病気が治るものなら、どんな高価な薬でも手に入れたい。",
+      "example_translation": "Nếu bệnh tình của bố chữa được thì thuốc có đắt đến mấy tôi cũng mua.,"
+    },
+    {
+      "pattern": "～ものの",
+      "meaning": "けれども・～ということは本当だが、しかし  Though, despite, in spite of ~ Dù là ~ ; nói ~ là đương nhiên nhưng mà ~",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形］の名詞修飾型＋ものの",
+      "category": "jlpt_grammar",
+      "example_sentence": "免許はとったものの、車が買えない。",
+      "example_translation": "Dù là có bằng lái nhưng mà không mua được ô tô.,"
+    },
+    {
+      "pattern": "～わりに（は）",
+      "meaning": "～にふさわしくなく以外に Không phù hợp, không xứng với ~ Trong tỉ lệ, so với ~",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の名詞修飾型＋わりに",
+      "category": "jlpt_grammar",
+      "example_sentence": "私はたくさん食べるわりに太らない。",
+      "example_translation": "Mặc dù tôi ăn rất nhiều, nhưng mà không bị tăng cân.,"
+    },
+    {
+      "pattern": "～（よ）うではないか／～（よ）うじゃないか",
+      "meaning": "～しましょう・～しませんか  （強い呼びかけの表現。）  Hãy ~ (kêu gọi mạnh mẽ)",
+      "title": "N2 Grammar",
+      "explanation": "［動－意向形］＋ではないか",
+      "category": "jlpt_grammar",
+      "example_sentence": "災害を受けた人々に救援物資を送ろうではないか。",
+      "example_translation": "Chúng ta hãy gửi đồ cứu viện đến cho những người bị thảm hoạ.,"
+    },
+    {
+      "pattern": "～得る／～得ない",
+      "meaning": "～することができる | できない・～の可能性がある | ない  Có thể/không thể ~. Nói về tính khả thi",
+      "title": "N2 Grammar",
+      "explanation": "［動－ます形］＋得る",
+      "category": "jlpt_grammar",
+      "example_sentence": "考え得る限りの手は尽(つ)くしたが、問題の解決には至(いた)らなかった。",
+      "example_translation": "Đã hết sức trong giới hạn có thể suy nghĩ nhưng vẫn chưa đến được cách giải quyết vấn đề.,"
+    },
+    {
+      "pattern": "～かねない",
+      "meaning": "～おそれがある・～かもしれない  （悪い結果になる可能性がある時に使う。）  Lo ngại là ~ ; Có lẽ ~",
+      "title": "N2 Grammar",
+      "explanation": "［動－ます形］＋かねない",
+      "category": "jlpt_grammar",
+      "example_sentence": "あんなにスピードを出したら、事故を起こしかねない。",
+      "example_translation": "Tăng tốc đến mức này, tai nạn chứ chẳng chơi.,"
+    },
+    {
+      "pattern": "～かねる",
+      "meaning": "～しようとしてもできない・～することが難しい  Muốn làm ~ nhưng không thể, ~ là khó",
+      "title": "N2 Grammar",
+      "explanation": "［動－ます形］＋かねる",
+      "category": "jlpt_grammar",
+      "example_sentence": "そんな多額な寄付(きふ)には応じかねます。",
+      "example_translation": "Đóng góp nhiều tiền thế này thì chúng tôi khó lòng nhận lời được.,"
+    },
+    {
+      "pattern": "～ことか",
+      "meaning": "なんと～でしょう  （感嘆・嘆息を表す。）  Không biết thế nào đây ~ (cảm thán, thở dài)",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形］の名詞修飾型＋ことか",
+      "category": "jlpt_grammar",
+      "example_sentence": "息子から半年も連絡がない。一体何をしていることか。",
+      "example_translation": "Con trai nửa năm rồi chả thấy liên lạc gì, không hiểu là đang làm cái gì đây.,"
+    },
+    {
+      "pattern": "～を問(と)わず／～は問わず",
+      "meaning": "～に関係なく・～に影響されないで  Không kể, bất kể. Không liên quan đến ~, không bị ảnh hưởng bởi ~",
+      "title": "N2 Grammar",
+      "explanation": "[名]＋を問わず",
+      "category": "jlpt_grammar",
+      "example_sentence": "留学生ならどなたでも国籍、年齢、性別を問わず申し込めます。",
+      "example_translation": "Nếu là lưu học sinh, bất cứ ai, không kể quốc tịch, tuổi tác, giới tính đều có thể đăng ký.,"
+    },
+    {
+      "pattern": "～ことだ",
+      "meaning": "（そのことが大切であると勧める時に使う。） Dùng khi khuyên người khác rằng việc đó là quan trọng",
+      "title": "N2 Grammar",
+      "explanation": "［動－辞書形 | ない形－ない］＋ことだ",
+      "category": "jlpt_grammar",
+      "example_sentence": "大学に入りたければ、一生懸命勉強することだ。",
+      "example_translation": "Nếu muốn vào đại học thì nên chăm chỉ học hành.,"
+    },
+    {
+      "pattern": "～ざるを得ない",
+      "meaning": "どうしても～なければいけない・～ないわけにはいかない  Dù thế nào, cũng phải…; Không thể không…",
+      "title": "N2 Grammar",
+      "explanation": "［動－ない形］＋ざるを得ない  （［する］は［せざるを得ない］となる。 ）",
+      "category": "jlpt_grammar",
+      "example_sentence": "みんなで決めた規則だから、守らざるを得ない。",
+      "example_translation": "Vì là nguyên tắc mọi người định ra nên không thể không tuân thủ.,"
+    },
+    {
+      "pattern": "～次第だ／～次第で（は）",
+      "meaning": "～わけだ  （経緯・理由を示して、～の結果になったと言いたい時の表現。）  Vì…(Chỉ nguồn căn, lý do; cách dùng khi muốn nói đã có kết quả là…)",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形］の名詞修飾型＋次第だ",
+      "category": "jlpt_grammar",
+      "example_sentence": "このたび日本政府の招きにより、親善大使として日本に来た次第です。",
+      "example_translation": "Lần này nhận lời mời của chính phủ Nhật Bản nên tôi đã đến Nhật với tư cách Đại sứ thiện chí.,"
+    },
+    {
+      "pattern": "～っこない",
+      "meaning": "決して～ない・絶対～ない  Nhất định không…, Tuyệt đối không…",
+      "title": "N2 Grammar",
+      "explanation": "［動－ます形］＋っこない",
+      "category": "jlpt_grammar",
+      "example_sentence": "宝(たから)くじなんて当たりっこないよ。",
+      "example_translation": "Tôi thì những thứ như xổ số là nhất định sẽ không bao giờ trúng.,"
+    },
+    {
+      "pattern": "～というものだ",
+      "meaning": "（それが当たり前という話者の主張や感想を表す。 ）  Biểu thị cách nghĩ và cảm giác của người nói rằng việc đó là đương nhiên",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の普通形＋というものだ  （ただし［な形］と［名］は［だ］がつかない場合が多い。）",
+      "category": "jlpt_grammar",
+      "example_sentence": "彼の作品がやっと世間から評価された。長年の苦労が認められたというものだ。",
+      "example_translation": "Tác phẩm của anh ấy cuối cùng cũng được dư luận đánh giá cao. Đó chính là sự công nhận công sức lao động trong thời gian dài.,"
+    },
+    {
+      "pattern": "～というものではない／～というものでもない",
+      "meaning": "～とは言いきれない  Không thể nói hết là…",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の普通形＋というものではない  （ただし［な形］と［名］の［だ］ はつかないこともある。）",
+      "category": "jlpt_grammar",
+      "example_sentence": "性格は絶対に変えられないというものではない。",
+      "example_translation": "Không thể nói rằng là tính cách tuyệt đối sẽ không thay đổi.,"
+    },
+    {
+      "pattern": "～ないことはない／～ないこともない",
+      "meaning": "～の可能性もある  Cũng có khả năng là…, không phải là không thể…",
+      "title": "N2 Grammar",
+      "explanation": "［動－ない形］        ［い形－く］        ［な形－で］        ［名］      ＋ないこともない",
+      "category": "jlpt_grammar",
+      "example_sentence": "難しいが、やり方次第ではできないことはないだろう。",
+      "example_translation": "Dù khó nhưng mà tùy theo cách làm cũng không phải là không thể làm được.,"
+    },
+    {
+      "pattern": "～ないではいられない／～ずにはいられない",
+      "meaning": "どうしても～してしまう  （どうしても我慢できず、自然にそうなってしまうと言いたい時の表現。）  Dù thế nào cũng đã làm… ( Dù thế nào cũng không thể chịu đựng, Dùng khi muốn nói tự nhiên mà thành như thế)",
+      "title": "N2 Grammar",
+      "explanation": "［動－ない形］＋ないではいられない  （ただし［する］は［せずにはいられない］となる。）",
+      "category": "jlpt_grammar",
+      "example_sentence": "彼のもの真似を見るとおかしくて、笑わないではいられない。",
+      "example_translation": "Nhìn cách anh ấy bắt chước các sự vật buồn cười quá nên tôi không thể nhịn được.,"
+    },
+    {
+      "pattern": "～に限る／～に限り／～に限って 接続   ［名］＋に限る",
+      "meaning": "～だけ  （［～に限る］［～に限り］［～に限って］を使う。）  Giới hạn ở…",
+      "title": "N2 Grammar",
+      "explanation": "［動－辞書形 | ない形－ない］      ［名］               ＋に限る",
+      "category": "jlpt_grammar",
+      "example_sentence": "参加者は女性に限る。",
+      "example_translation": "Người tham gia chỉ giới hạn ở nữ.,"
+    },
+    {
+      "pattern": "～に限らず",
+      "meaning": "～だけではなく～も   Không chỉ…mà cũng…, Không những…mà còn…",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋に限らず",
+      "category": "jlpt_grammar",
+      "example_sentence": "ディズニーランドは子供に限らず、大人にも人気がある。",
+      "example_translation": "Disneyland thì không những được trẻ con ưa thích mà cả người lớn nữa.,"
+    },
+    {
+      "pattern": "～をはじめ／～をはじめとする",
+      "meaning": "一つの主(おもな)な例を出す言い方。  Cách nói đưa ra một ví dụ chính.",
+      "title": "N2 Grammar",
+      "explanation": "[名]＋をはじめ",
+      "category": "jlpt_grammar",
+      "example_sentence": "上野動物園にはパンダをはじめ、子供たちに人気がある動物がたくさんいます。",
+      "example_translation": "Ở vườn thú Ueno, những động vật mà trẻ em yêu thích, như gấu trúc, có rất nhiều.,"
+    },
+    {
+      "pattern": "～にほかならない",
+      "meaning": "まさに～だ・それ以外でない  （強調。断定的に述べる時に使う。）  Chính là…, Không gì khác là…",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の普通形＋にほかならない  （ただし［な形］と［名］は［だ］がつかない。［な形－である］［名－である］も使う。理由を表す［から］にもつく。 ）",
+      "category": "jlpt_grammar",
+      "example_sentence": "この手紙は私の正直な気持ちを申し上げたにほかなりません。",
+      "example_translation": "Bức thư này không gì khác chính là nói lên tình cảm chân thành của tôi.,"
+    },
+    {
+      "pattern": "～もの",
+      "meaning": "～から  （理由の説明や言いわけの表現。） Bởi vì…",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の普通形＋もの  （［です］［ます］に接続 する場合もある。 ）",
+      "category": "jlpt_grammar",
+      "example_sentence": "一人で行ける。うん、大丈夫、地図を持っているもの。",
+      "example_translation": "Cậu có thể đi một mình chứ? Ừ, không sao đâu vì tớ có bản đồ mà.,"
+    },
+    {
+      "pattern": "～ものがある",
+      "meaning": "～という感じがある・～ように感じられる  Có cảm giác…, Có thể càm giác như là…",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形］の名詞修飾型の現在＋ものがある",
+      "category": "jlpt_grammar",
+      "example_sentence": "この絵には人を引きつけるものがある。",
+      "example_translation": "Tôi có cảm giác bức tranh này rất lôi cuốn người xem.,"
+    },
+    {
+      "pattern": "～ようがない／～ようもない",
+      "meaning": "～する方法がない・手段がなくて～できない  Không còn phương pháp nào, không còn cách nào, không thể",
+      "title": "N2 Grammar",
+      "explanation": "［動－ます形］＋ようがない",
+      "category": "jlpt_grammar",
+      "example_sentence": "木村さんは今どこにいるのかわからないので、連絡しようがない。",
+      "example_translation": "Tôi không biết anh Kimura giờ ở đâu nên không thể liên lạc được.,"
+    },
+    {
+      "pattern": "～をもとに／～を元にして",
+      "meaning": "～を判断の基準・材料などにして  Lấy ~ làm cơ sở, tài liệu cho phán đoán.",
+      "title": "N2 Grammar",
+      "explanation": "[名]＋をもとに",
+      "category": "jlpt_grammar",
+      "example_sentence": "ファンの人気投票(とうひょう)をもとに審査し、今年の歌のベストテンが決まります。",
+      "example_translation": "Bảng xếp hạng ca khúc top ten năm nay sẽ được quyết định dựa trên sự thẩm tra phiếu bình chọn của fan.,"
+    },
+    {
+      "pattern": "～上（に）",
+      "meaning": "～だけでなく・～に加えて  Không chỉ ~, thêm vào với ~",
+      "title": "N2 Grammar",
+      "explanation": "[動・い形・な形・名]の名詞修飾型＋うえ",
+      "category": "jlpt_grammar",
+      "example_sentence": "今年のインフルエンザは高熱が出る上、せきもひどい。",
+      "example_translation": "Dịch cúm năm nay không chỉ có sốt cao, mà còn ho dữ dội nữa.,"
+    },
+    {
+      "pattern": "～とともに",
+      "meaning": "～と一緒にCùng với...",
+      "title": "N2 Grammar",
+      "explanation": "[名]＋とともに",
+      "category": "jlpt_grammar",
+      "example_sentence": "お正月は家族とともに過ごしたい。",
+      "example_translation": "Tôi muốn ăn Tết cùng gia đình.,"
+    },
+    {
+      "pattern": "～うちに／～ないうちに 接続   [動－辞書形 | ない形－ない]     [い形－い]     [な形－な]     [名－の]              ＋うちに",
+      "meaning": "その間に  （その状態が変わる前に何かをする。）  Trong lúc… (làm việc gì đó trước khi trạng thái đó thay đổi)",
+      "title": "N2 Grammar",
+      "explanation": "",
+      "category": "jlpt_grammar",
+      "example_sentence": "日本にいるうちに、一度京都を訪(たず)ねたいと思っている。",
+      "example_translation": "Trong lúc còn ở Nhật, tôi định sẽ đi thăm Kyoto một lần.,"
+    },
+    {
+      "pattern": "～おかげで／～おかげだ",
+      "meaning": "～ために  （それが原因で、いい結果になって感謝する気持ちを表す。） Nhờ, do có... ( Biểu thị lòng biết ơn vì nhớ nguyên nhân đó mà có kết quả tốt)",
+      "title": "N2 Grammar",
+      "explanation": "[動・い形・な形・名]の名詞修飾型＋おかげで",
+      "category": "jlpt_grammar",
+      "example_sentence": "科学技術が発達したおかげで、我々の生活は便利になった。",
+      "example_translation": "Nhờ khoa học kỹ thuận phát triển, đời sống của chúng ta trở nên tiện lợi hơn.,"
+    },
+    {
+      "pattern": "～かわりに",
+      "meaning": "～をしないで  （それをしないで、別のことをする。）  Thay vì không ~ (Không làm ~ mà làm một việc khác.",
+      "title": "N2 Grammar",
+      "explanation": "[動－辞書形]＋かわりに",
+      "category": "jlpt_grammar",
+      "example_sentence": "私立大学を一つ受けるかわりに、国立大学を三つ受けたい。",
+      "example_translation": "Không đăng ký vào một trường tư nào, tôi muốn đăng ký 3 trường quốc lập.,"
+    },
+    {
+      "pattern": "～くらい／～ぐらい／～くらいだ／～ぐらいだ",
+      "meaning": "（状態の程度を表す。）  Biểu thị mức độ trạng thái",
+      "title": "N2 Grammar",
+      "explanation": "[動－辞書形 | ない形－ない]      [い形－い]      [な形－な]      [名]                ＋くらい",
+      "category": "jlpt_grammar",
+      "example_sentence": "棚(だな)から物が落ちるくらい大きい地震があった。",
+      "example_translation": "Trận động đất mạnh đến mức các đồ vật bị rơi xuống từ trên giá.,"
+    },
+    {
+      "pattern": "～最中に／～最中だ",
+      "meaning": "何かをしているちょうどその時に  Ngay trong lúc đang làm việc gì đó",
+      "title": "N2 Grammar",
+      "explanation": "[動-ている]     [名-の]       ＋最中に",
+      "category": "jlpt_grammar",
+      "example_sentence": "考えている最中に、話しかけられて困った。",
+      "example_translation": "Đang nghĩ, cứ bị nói xen vào, đến khổ.,"
+    },
+    {
+      "pattern": "～次第",
+      "meaning": "～したら、すぐ  （～が終わったらすぐ後のことをすることを表す。） Ngay khi ~. Chỉ việc làm ngay sau khi ~ kết thức.",
+      "title": "N2 Grammar",
+      "explanation": "[動-ます形]     [名]        ＋次第",
+      "category": "jlpt_grammar",
+      "example_sentence": "新しい住所が決まり次第、連絡します。",
+      "example_translation": "Ngay sau khi quyết định được địa chỉ mới, chúng tôi sẽ liên lạc.,"
+    },
+    {
+      "pattern": "～せいだ／～せいで／～せいか",
+      "meaning": "ために  （それが原因で悪い結果になったことを表す。） Tại vì ~ . (Do nguyên nhân đó mà có kết quả xấu)",
+      "title": "N2 Grammar",
+      "explanation": "[動・い形・な形・名]の名詞修飾型＋せいだ",
+      "category": "jlpt_grammar",
+      "example_sentence": "私が失敗したのは、彼のせいだ。",
+      "example_translation": "Tôi thất bại là tại thằng ấy.,"
+    },
+    {
+      "pattern": "～たとたん（に）",
+      "meaning": "～するとすぐに  Ngay sau ~",
+      "title": "N2 Grammar",
+      "explanation": "[動－た形]＋とたん",
+      "category": "jlpt_grammar",
+      "example_sentence": "犯人は警官の姿(すがた)を見たとたん、逃(に)げ出した。",
+      "example_translation": "Ngay khi thấy bóng cảnh sát, tên phạm nhân đã chạy trốn.,"
+    },
+    {
+      "pattern": "～たび（に）",
+      "meaning": "～する時はいつも  Mỗi khi, mỗi dịp ~",
+      "title": "N2 Grammar",
+      "explanation": "[動－辞書形]     [名－の]     ＋たび",
+      "category": "jlpt_grammar",
+      "example_sentence": "その歌を歌うたび、幼(おさな)い日のことを思い出す。",
+      "example_translation": "Mỗi lần nghe bài hát đó, tôi lại nhớ về những ngày thơ ấu.,"
+    },
+    {
+      "pattern": "～て以来",
+      "meaning": "それから後ずっと  Suốt từ đó về sau…",
+      "title": "N2 Grammar",
+      "explanation": "[動－て形]＋以来",
+      "category": "jlpt_grammar",
+      "example_sentence": "日本に来て以来、日本に対する考え方が少しずつ変わってきた。",
+      "example_translation": "Từ ngày đến nước Nhật, cách nghĩ của tôi về Nhật Bản cũng thay đổi dần dần từng chút một.,"
+    },
+    {
+      "pattern": "～において（は）／～においても／～における",
+      "meaning": "～で（場所・時間を示す。）  Ở; tại; trong; về việc; đối với -> Chỉ địa điểm, thời gian",
+      "title": "N2 Grammar",
+      "explanation": "[名]＋において",
+      "category": "jlpt_grammar",
+      "example_sentence": "会議は第一会議室において行われる。",
+      "example_translation": "Hội nghị được tổ chức ở phòng họp số 1.,"
+    },
+    {
+      "pattern": "～とおり（に）／～どおり（に）",
+      "meaning": "～と同じに  Làm giống như ~",
+      "title": "N2 Grammar",
+      "explanation": "[動－辞書形 | た形]     [名－の]            ＋とおり     [名]              ＋どおり",
+      "category": "jlpt_grammar",
+      "example_sentence": "説明書に書いてあるとおりにやってみてください。",
+      "example_translation": "Hãy thử làm như được viết trong bản hướng dẫn.,"
+    },
+    {
+      "pattern": "～ところに／～ところへ／～ところを",
+      "meaning": "そういう時に | そういう場へ | そういう場面を  Đúng lúc, đúng địa điểm, đúng hoàn cảnh ấy…",
+      "title": "N2 Grammar",
+      "explanation": "[動－辞書形 | た形 | ている]     [い形－い]                ＋ところに",
+      "category": "jlpt_grammar",
+      "example_sentence": "ちょうど金さんのうわさをしているところに、本人がやって来た。",
+      "example_translation": "Vừa lúc đang tán gẫu về anh Kim, thì anh ấy đã đến.,"
+    },
+    {
+      "pattern": "～ほど／～ほどだ／～ほどの",
+      "meaning": "～くらい  （程度を表す。）  Chừng, mức ~",
+      "title": "N2 Grammar",
+      "explanation": "[動－辞書形 | ない形－ない]      [い形－い]      [な形－な]      [名]                ＋ほど",
+      "category": "jlpt_grammar",
+      "example_sentence": "会場にはあふれるほど、ギターを持った若者が集まっていた。",
+      "example_translation": "Các thanh niên mang đàn ghi ta tụ tập đông đến mức tràn ngập cả hội trường.,"
+    },
+    {
+      "pattern": "～ばかりに",
+      "meaning": "～だけのために  （それだけが原因で悪い結果になった残念な気持ちを表す。）  Chỉ vỉ ~ (Biểu thị tâm trạng tiếc vi chỉ tại nguyên nhân đó mà trở thành kết quả xấu)",
+      "title": "N2 Grammar",
+      "explanation": "[動・い形・な形・名]の名詞修飾型＋ばかりに",
+      "category": "jlpt_grammar",
+      "example_sentence": "うそをついたばかりに恋人に嫌われてしまった。",
+      "example_translation": "Chỉ tại nói dối mà bị người yêu ghét/giận.,"
+    },
+    {
+      "pattern": "～ものだから",
+      "meaning": "～ので  （理由。言い訳の時よく使う。） Tại vì ~ (Hay dùng khi nói lý do, phân trần, biện bạch)",
+      "title": "N2 Grammar",
+      "explanation": "[動・い形・な形・名]の名詞修飾型＋ものだから",
+      "category": "jlpt_grammar",
+      "example_sentence": "事故で電車が遅れたものですから、遅くなってすみません。",
+      "example_translation": "Do tai nạn nên tàu bị trễ, tôi xin lỗi vì đã đến muộn.,"
+    },
+    {
+      "pattern": "～ように／～ような",
+      "meaning": "（例を表す。）  Biểu thị ví dụ, như là ~",
+      "title": "N2 Grammar",
+      "explanation": "[動・名]の名詞修飾型＋ように",
+      "category": "jlpt_grammar",
+      "example_sentence": "ここに書いてあるように申込書に記入してください。",
+      "example_translation": "Hãy điền vào đơn đăng ký như viết ở mẫu này.,"
+    },
+    {
+      "pattern": "～一方だ",
+      "meaning": "（その傾向(けいこう)がますます進むことを示す。）  Diễn tả việc xu hướng đó ngày càng tiếp diễn",
+      "title": "N2 Grammar",
+      "explanation": "[動－辞書形]＋一方だ",
+      "category": "jlpt_grammar",
+      "example_sentence": "最近、パソコン通信の利用者は増える一方だ。",
+      "example_translation": "Gần đây người dùng máy tính để trao đổi thông tin ngày càng tăng lên.,"
+    },
+    {
+      "pattern": "～おそれがある",
+      "meaning": "～する心配がある Có sự lo lắng là ~, e là ~",
+      "title": "N2 Grammar",
+      "explanation": "[動－辞書形]     [名－の]      ＋恐れがある",
+      "category": "jlpt_grammar",
+      "example_sentence": "早く手術しないと、手遅(ておく)れになる恐れがある。",
+      "example_translation": "Nếu không phẫu thuật nhanh, e là muộn mất.,"
+    },
+    {
+      "pattern": "～ことになっている",
+      "meaning": "（予定・規則などを表す。 ） Biểu thị dự định, quy tắc…",
+      "title": "N2 Grammar",
+      "explanation": "[動－辞書形 | ない形－ない]     [い形－い]               ＋ことになっている",
+      "category": "jlpt_grammar",
+      "example_sentence": "今度の日曜日には、友達と会うことになっています。",
+      "example_translation": "Chủ Nhật tới tôi định gặp mặt bạn bè.,"
+    },
+    {
+      "pattern": "～ことはない",
+      "meaning": "～する必要はない  Không cần phải làm ~",
+      "title": "N2 Grammar",
+      "explanation": "[動－辞書形]＋ことはない",
+      "category": "jlpt_grammar",
+      "example_sentence": "時間は十分あるから、急ぐことはない。",
+      "example_translation": "Vẫn có đủ thời gian, không cần phải vội.,"
+    },
+    {
+      "pattern": "～に応じて／～に応じ／～に応じた",
+      "meaning": "～にしたがって・～に適している  Phụ thuộc vào, ứng với",
+      "title": "N2 Grammar",
+      "explanation": "[名]＋に応じて",
+      "category": "jlpt_grammar",
+      "example_sentence": "保険金は被害(ひがい)状況に応じて、払われる。",
+      "example_translation": "Tiền bảo hiểm sẽ được trả tuỳ theo tình trạng thiệt hại.,"
+    },
+    {
+      "pattern": "～しかない",
+      "meaning": "～ほかに方法がない・～しなければならない  Không có cách nào khác ngoài ~ ; Cần phải làm ~",
+      "title": "N2 Grammar",
+      "explanation": "[動－辞書形]＋しかない",
+      "category": "jlpt_grammar",
+      "example_sentence": "事故で電車が動かないから、歩いて行くしかない。",
+      "example_translation": "Do tai nạn nên tàu không chạy, chả có cách nào khác là đi bộ.,"
+    },
+    {
+      "pattern": "～ということだ 接続   [動・い形・な形・名]の普通形＋ということだ  （命令、意向、推量、禁止の形などにも接続 する。）",
+      "meaning": "～ということを聞いた  （伝聞。聞いたことをそのまま引用する言い方。） Nghe thấy nói là ~ (cách nói dẫn dụng y nguyên điều nghe được)",
+      "title": "N2 Grammar",
+      "explanation": "",
+      "category": "jlpt_grammar",
+      "example_sentence": "新聞によると、また地下鉄の運賃が値上げされるということだ。",
+      "example_translation": "Theo báo nói, giá vé tàu điện ngầm lại bị tăng lên.,"
+    },
+    {
+      "pattern": "～まい／～まいか 接続   [動－辞書形]＋まい  （ただし、[動]II グループ、III グループは[ない形]にも接続 する。      [する]は[すまい]の形もある。 ）",
+      "meaning": "～ないだろう  （否定の推量を表す。）  Có lẽ không phải ~ (Thể hiện suy đoán phủ định)",
+      "title": "N2 Grammar",
+      "explanation": "",
+      "category": "jlpt_grammar",
+      "example_sentence": "あの民族紛争(ふんそう)は容易に解決するまいと思うが、平和的解決への努力が必要だ。",
+      "example_translation": "Tuy tôi nghĩ là cuộc phân tranh sắc tộc đó không dễ giải quyết nhưng những nỗ lực để giải quyết một cách hoà bình là cần thiết.,"
+    },
+    {
+      "pattern": "～わけがない／～わけはない",
+      "meaning": "～（の）はずがない  Không có nghĩa là ~, không chắc ~",
+      "title": "N2 Grammar",
+      "explanation": "[動・い形・な形・名]の名詞修飾型＋わけがない",
+      "category": "jlpt_grammar",
+      "example_sentence": "あんな下手な絵が売れるわけがない。",
+      "example_translation": "Bức tranh tệ thế không chắc đã bán được.,"
+    },
+    {
+      "pattern": "～わけにはいかない／～わけにもいかない",
+      "meaning": "理由があって～できない。  Có lý do nên ~ không làm được",
+      "title": "N2 Grammar",
+      "explanation": "[動－辞書形]＋わけにはいかない",
+      "category": "jlpt_grammar",
+      "example_sentence": "絶対にほかの人に言わないと約束したので、話すわけにはいかない。",
+      "example_translation": "Vì đã hứa là tuyệt đối không nói với người khác nên không thể kể được.,"
+    },
+    {
+      "pattern": "～から～にかけて",
+      "meaning": "～から～までの間に  （時間・場所の大体の範囲を表す。）  Từ khoảng ~ đến ~ (chỉ chung phạm vi thời gian, địa điểm)",
+      "title": "N2 Grammar",
+      "explanation": "[名]＋から[名]＋にかけて",
+      "category": "jlpt_grammar",
+      "example_sentence": "昨夜から今朝にかけて雨が降りました。",
+      "example_translation": "Trời đã mưa từ đêm qua đến sáng nay.,"
+    },
+    {
+      "pattern": "～たとえ～ても／たとえ～でも",
+      "meaning": "もし～ても  Ví dụ; nếu như; dù cho; ngay cả nếu; tỉ như ~ thì vẫn ~",
+      "title": "N2 Grammar",
+      "explanation": "たとえ＋[動－ても]         [い形－くても]         [な形－でも]         [名－でも]",
+      "category": "jlpt_grammar",
+      "example_sentence": "自分で決めた道だから、たとえ失敗しても後悔(こうかい)しない。",
+      "example_translation": "Vì con đường đi do tôi tự quyết định nên nếu có thất bại thì cũng không hối tiếc.,"
+    },
+    {
+      "pattern": "～さえ～ば",
+      "meaning": "（それだけあれば | なければ、後ろの状態が成立する。）  Chỉ cần có ~ hay thành ~, trạng thái sau đó sẽ được thành lập.",
+      "title": "N2 Grammar",
+      "explanation": "[動－ます形]＋さえ＋すれば | しなければ     [い形－く]     [な形－で]    ＋さえ＋あれば | なければ     [名－で]            [動－ば]     [名]＋さえ＋    [い形－ければ]        [な形－なら]        [名－なら]",
+      "category": "jlpt_grammar",
+      "example_sentence": "インスタントラーメンはお湯を入れさえすれば食べられる便利な食品だ。",
+      "example_translation": "Mì ăn liền là thứ đồ ăn tiện lợi, chỉ cần cho nước nóng vào là ăn được.,"
+    },
+    {
+      "pattern": "～も～ば～も／～も～なら～も",
+      "meaning": "～も～し、～も  （前に述べたことの上に後のことを加える時の表現。プラスとプラス、またはマイナスとマイナスの言葉が使われる。）  Cũng ~ cũng ~ . (Mẫu câu dùng khi thêm một việc nữa vào những điều trình bày đằng trước, các từ ngữ tiêu cực + tiêu cực hoặc tích cực + tích cực được sử dụng)",
+      "title": "N2 Grammar",
+      "explanation": "[名]＋も＋  [動－ば]        ＋[名]＋も              [い形－ければ]              [な形－なら]",
+      "category": "jlpt_grammar",
+      "example_sentence": "父はお酒も飲めばタバコも吸うので、健康が心配だ。",
+      "example_translation": "Bố rượu cũng uống, thuốc cũng hút, vì thế nên sức khoẻ rất đáng lo.,"
+    },
+    {
+      "pattern": "～やら～やら",
+      "meaning": "～や～など  Liệt kê",
+      "title": "N2 Grammar",
+      "explanation": "[動－辞書形]          [動－辞書形]      [い形－い]      ＋やら   [い形－い]       ＋やら      [名]             [名]",
+      "category": "jlpt_grammar",
+      "example_sentence": "帰国前は飛行機を予約するやらおみやげを買うやらで忙しい。",
+      "example_translation": "Trước khi về nước, tất bật với đặt vé máy bay, mua quà lưu niệm…,"
+    },
+    {
+      "pattern": "～にかわって／～にかわり接続   [名]＋にかわって",
+      "meaning": "今までの～ではなく（今までに使われていたものが別のものに変わることを表す。）  Bây giờ thì ~ không.... (Biểu thị việc thay đổi một thứ đã được sử dụng thành một thứ khác)",
+      "title": "N2 Grammar",
+      "explanation": "",
+      "category": "jlpt_grammar",
+      "example_sentence": "ここでは、人間にかわってロボットが作業をしている。",
+      "example_translation": "Ở đây, robot đang làm việc thay cho con người.,"
+    },
+    {
+      "pattern": "～だらけ",
+      "meaning": "～がたくさんある・～がたくさんついている  （汚(きたな)いもの、いやなものがたくさんあったり、表面についたりしていることを表す。）  ~ có đầy, được gắn đầy. Nói về những thứ bẩn, đáng ghét có đầy hoặc đang dính đầy.",
+      "title": "N2 Grammar",
+      "explanation": "[名]＋だらけ",
+      "category": "jlpt_grammar",
+      "example_sentence": "このレポートは字が間違いだらけで読みにくい。",
+      "example_translation": "Bản báo cáo này đầy chữ đánh nhầm, đọc khó.,"
+    },
+    {
+      "pattern": "～っぽい",
+      "meaning": "～のように感じる・～のように見える  Cảm thấy như là ~ ; Thấy như là ~",
+      "title": "N2 Grammar",
+      "explanation": "[い形－O]      [名]      ＋っぽい",
+      "category": "jlpt_grammar",
+      "example_sentence": "このテーブルは高いのに安っぽく見える。",
+      "example_translation": "Cái bàn này dù đắt nhưng nhìn rẻ tiền.,"
+    },
+    {
+      "pattern": "～がたい",
+      "meaning": "～するのは難しい・なかなか～することができない  Khó làm ~ ; gần như không thể ~",
+      "title": "N2 Grammar",
+      "explanation": "[動－ます形]＋がたい",
+      "category": "jlpt_grammar",
+      "example_sentence": "彼女がそんなことをするは、信じがたい。",
+      "example_translation": "Cô ấy đến việc đó mà cũng làm được, thật khó tin.,"
+    },
+    {
+      "pattern": "～がちだ／～がちの",
+      "meaning": "～することが多い・～しやすい  Việc làm ~ là nhiều; ~ dễ làm; có chiều hướng ~",
+      "title": "N2 Grammar",
+      "explanation": "[動－ます形]     [名]        ＋がちだ",
+      "category": "jlpt_grammar",
+      "example_sentence": "雪が降ると、電車は遅れがちだ。",
+      "example_translation": "Khi tuyết rơi, tàu thường hay trễ.,"
+    },
+    {
+      "pattern": "～気味",
+      "meaning": "少し～の感じがある  Hơi có cảm giác là ~",
+      "title": "N2 Grammar",
+      "explanation": "[動－ます形]     [名]      ＋気味",
+      "category": "jlpt_grammar",
+      "example_sentence": "仕事が忙しくて、最近少し疲れ気味だ。",
+      "example_translation": "Vì công việc bận nên gần đây hơi thấy mệt.,"
+    },
+    {
+      "pattern": "～げ",
+      "meaning": "～そう  （見てその人の気持ちが感じられる様子を表す。） Chỉ trạng thái cảm nhận được về tâm trạng của một người. Vẻ~",
+      "title": "N2 Grammar",
+      "explanation": "[い形－O]     [な形－O]    ＋げ",
+      "category": "jlpt_grammar",
+      "example_sentence": "彼女は悲しげな様子で話した。",
+      "example_translation": "Cô ấy đã nói chuyện với dáng vẻ buồn thảm.,"
+    },
+    {
+      "pattern": "～かけだ／～かけの／～かける",
+      "meaning": "～し始めて、まだ～終わっていない途中の状態を表す。  Chỉ trạng thái giữa chừng, mới bắt đầu ~, chưa kết thúc ~",
+      "title": "N2 Grammar",
+      "explanation": "[動－ます形]＋かけだ",
+      "category": "jlpt_grammar",
+      "example_sentence": "この仕事はやりかけですから、そのままにしておいてください。",
+      "example_translation": "Công việc này mới bắt đầu làm nên cứ để như thế.,"
+    },
+    {
+      "pattern": "～きる／～きれる／～きれない",
+      "meaning": "すっかり～する | 最後まで～できる | 最後まで～できない  Hoàn toàn, hết cả ~ / đến cuối cùng có thể, không thể ~",
+      "title": "N2 Grammar",
+      "explanation": "[動－ます形]＋きる",
+      "category": "jlpt_grammar",
+      "example_sentence": "木村さんは疲れきった顔をして帰って来た。",
+      "example_translation": "Anh Kimura với bộ mặt mệt phờ đã về.,"
+    },
+    {
+      "pattern": "～ぬく",
+      "meaning": "最後まで頑張って～する・非常に～する  ~đến cùng. Cố gắng đến cuối cùng làm ~ / Làm ~ một cách phi thường.",
+      "title": "N2 Grammar",
+      "explanation": "[動－ます形]＋ぬく",
+      "category": "jlpt_grammar",
+      "example_sentence": "途中、失敗もありましたが、何とかこの仕事をやりぬくことができました。",
+      "example_translation": "Giữa chừng tuy cũng có thất bại, nhưng dù thế nào thì công việc này đã được làm đến cùng.,"
+    },
+    {
+      "pattern": "～こそ／～からこそ",
+      "meaning": "強調を表す。  Thể hiện ý nhấn mạnh",
+      "title": "N2 Grammar",
+      "explanation": "[名]＋こそ     [動・い形・な形・名]の普通形＋からこそ",
+      "category": "jlpt_grammar",
+      "example_sentence": "今度こそ試合に勝ちたい。",
+      "example_translation": "Muốn thắng trận trong chính năm nay.,"
+    },
+    {
+      "pattern": "～に比べて／～に比べ",
+      "meaning": "～を基準にして程度の違いなどを言う。  So với.... ; Nói về mức độ khác nhau so với ~ lấy làm tiêu chuẩn.",
+      "title": "N2 Grammar",
+      "explanation": "[名]＋に比べて",
+      "category": "jlpt_grammar",
+      "example_sentence": "兄に比べて、弟はよく勉強する。",
+      "example_translation": "So với anh trai, ông em học chăm hơn.,"
+    },
+    {
+      "pattern": "～さえ／～でさえ",
+      "meaning": "～も・～でも  （特に、ある極端(きょくたん)なものを例に出して、他のものも、[もちろん～]という時に使う。）  Lấy cái ví dụ cực đoan, đáo để để diễn đạt những thứ khác (ở mức độ thấp hơn) là đương nhiên.",
+      "title": "N2 Grammar",
+      "explanation": "[名]＋さえ",
+      "category": "jlpt_grammar",
+      "example_sentence": "そこは電気さえない山奥(やまおく)だ。",
+      "example_translation": "Chỗ đó ở tít trong núi, đến điện cũng không có. (thì còn có Internet làm sao được ),"
+    },
+    {
+      "pattern": "～など／～なんか／～なんて 接続   [名]＋など",
+      "meaning": "（例としてあげ、表現を軽く、やわらかくしたい時に使う。 ）  Dùng khi muốn nêu lên một ví dụ để muốn làm nhẹ, đánh giá thấp.",
+      "title": "N2 Grammar",
+      "explanation": "",
+      "category": "jlpt_grammar",
+      "example_sentence": "「この機械に詳(くわ)しい人はいませんか。」「彼など詳しいと思いますよ。",
+      "example_translation": "」  Có ai biết tường tận về cái máy này không? Tôi nghĩ như anh ấy là người biết rõ đấy.,"
+    },
+    {
+      "pattern": "～に関して（は）／～に関しても／～に関する",
+      "meaning": "～について（の）  Liên quan đến, về ~",
+      "title": "N2 Grammar",
+      "explanation": "[名]＋に関して",
+      "category": "jlpt_grammar",
+      "example_sentence": "計画変更に関しては、十分検討する必要がある。",
+      "example_translation": "Cần phải kiểm tra kỹ càng về việc thay đổi kế hoạch.,"
+    },
+    {
+      "pattern": "～に加えて／～に加え",
+      "meaning": "～の上にさらに  Ngoài ra; thêm vào đó",
+      "title": "N2 Grammar",
+      "explanation": "[名]＋に加(くわ)えて",
+      "category": "jlpt_grammar",
+      "example_sentence": "電気代に加えて、ガス代までが値上がりした。",
+      "example_translation": "Giá điện rồi đến giá gas cũng tăng lên.,"
+    },
+    {
+      "pattern": "～に答えて／～にこたえ／～にこたえる／～にこたえた",
+      "meaning": "～に応じて  （ほかからのはたらきかけに応じる。 ）  Ứng với, đối với ~ (đáp ứng với tác động từ bên ngoài)",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋にこたえて",
+      "category": "jlpt_grammar",
+      "example_sentence": "社員の要求にこたえて、労働時間を短縮(たんしゅく)した。",
+      "example_translation": "Đáp ứng yêu cầu của nhân viên, thời gian làm việc đã được rút ngắn.,"
+    },
+    {
+      "pattern": "～に沿(そ)って／～に沿い／～に沿う／～に沿った",
+      "meaning": "～に従(したが)って・～のとおりに  Sở dĩ, vì vậy, do vậy, theo ~",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋に沿って",
+      "category": "jlpt_grammar",
+      "example_sentence": "決まった方針に沿って、新しい計画を立てましょう。",
+      "example_translation": "Theo phương châm đã quyết định, hãy lập kế hoạch mới.,"
+    },
+    {
+      "pattern": "～に反して／～に反し／～に反する／～に反した",
+      "meaning": "～と反対に・～と逆に  Trái ngược với; tương phản với",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋に反して",
+      "category": "jlpt_grammar",
+      "example_sentence": "神の意向に反して、人間は自然を破壊(はかい)している。",
+      "example_translation": "Trái với ý hướng của thần linh, con người đang phá hoại tự nhiên.,"
+    },
+    {
+      "pattern": "～に基づいて／～に基づき／～に基づく／～に基づいた",
+      "meaning": "～を基礎にして・～を根拠にして  Lấy ~ làm cơ sở, căn cứ",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋に基づいて",
+      "category": "jlpt_grammar",
+      "example_sentence": "調査した資料に基づいて、レポートを書かなければならない。",
+      "example_translation": "Cần phải viết báo cáo dựa trên các tư liệu đã điều tra.,"
+    },
+    {
+      "pattern": "～にわたって／～に渡り／～にわたる／～にわたった",
+      "meaning": "時間的、空間的にその範囲全体に広がっていることを表す。  Biểu thị sự trải rông trên phạm vi toàn thể mang tính thời gian, không gian.",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋にわたって",
+      "category": "jlpt_grammar",
+      "example_sentence": "陳さんは病気のため、２か月に渡って学校を休んだ。",
+      "example_translation": "Anh Trần do bị bệnh nên đã nghỉ học trong suốt hai tháng.,"
+    },
+    {
+      "pattern": "～ばかりか／～ばかりでなく",
+      "meaning": "～だけでなく・その上  Không chỉ ~, ngoài ra còn…",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の名詞修飾型  （ただし［名－の］の［の］はつかない。 ）",
+      "category": "jlpt_grammar",
+      "example_sentence": "林さんのお宅でごちそうになったばかりか、おみやげまでいただいた。",
+      "example_translation": "Ở nhà anh Hayashi, không chỉ được ăn ngon mà còn có cả quà mang về nữa.,"
+    },
+    {
+      "pattern": "～にしたがって／～にしたがい    従い／したがい",
+      "meaning": "～と一緒に  （一方の変化とともに他方も変わることを表す。 ） Cùng với ~ (Biểu thị việc cùng với sự thay đổi theo một hướng nào đó, một hướng khác cũng thay đổi)",
+      "title": "N2 Grammar",
+      "explanation": "[動－辞書形]     [名]        ＋にしたがって",
+      "category": "jlpt_grammar",
+      "example_sentence": "高く登るにしたがって、見晴(みは)らしがよくなった。",
+      "example_translation": "Khi lên cao, tầm nhìn cũng rõ hơn.,"
+    },
+    {
+      "pattern": "～はもとより／～はもちろん",
+      "meaning": "～は、言う必要がないくらい当然で  ~ thì đương nhiên đến mức không cần nói.",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋はもとより",
+      "category": "jlpt_grammar",
+      "example_sentence": "私が生まれた村は、電車はもとより、バスも通(かよ)っていない。",
+      "example_translation": "Ngôi làng mà tôi đã sinh ra thì xe điện là đương nhiên, xe bus cũng không lưu thông.,"
+    },
+    {
+      "pattern": "～もかまわず",
+      "meaning": "～を気にしないで・～に気を使わず平気で  Không bận tâm đến ~ / dửng dưng không đếm xỉa đến ~",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋もかまわず",
+      "category": "jlpt_grammar",
+      "example_sentence": "人の迷惑もかまわず、電車の中で携帯電話で話している人がいる。",
+      "example_translation": "Không cần quan tâm đến việc làm phiền người khác, vẫn có người nói chuyện di động trong tàu điện.,"
+    },
+    {
+      "pattern": "～をこめて",
+      "meaning": "気持ちをその中に入れて  Gửi gắm tâm tư, tình cảm vào ~",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋をこめて",
+      "category": "jlpt_grammar",
+      "example_sentence": "母は私のために心をこめて、セーターを編んでくれた。",
+      "example_translation": "Gửi gắm tất cả tình cảm của mình, mẹ đã đan cho tôi chiếc áo len.,"
+    },
+    {
+      "pattern": "～を通じて／～を通して 接続   ［名］＋を通じて",
+      "meaning": "その期間始めから終わりまでずっと  Trong khoảng thời gian đó từ đầu đến cuối, liên tục.",
+      "title": "N2 Grammar",
+      "explanation": "",
+      "category": "jlpt_grammar",
+      "example_sentence": "あの地方は、１年を通じて雨が多い。",
+      "example_translation": "Ở địa phương đó, trong suốt năm mưa nhiều.,"
+    },
+    {
+      "pattern": "～をめぐって／～をめぐる",
+      "meaning": "～を中心にそれに関係あることについて  Nói về quan hệ liên quan đến trung tâm là ~, quanh~",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋をめぐって",
+      "category": "jlpt_grammar",
+      "example_sentence": "その法案の賛否をめぐって、活発な議論が交(か)わされた。",
+      "example_translation": "Vì tán thành hay phủ quyết dự luật đó mà những thảo luận sôi nổi đã được trao đổi.,"
+    },
+    {
+      "pattern": "～あまり",
+      "meaning": "非常に～ので Vì ~ bất thường nên…",
+      "title": "N2 Grammar",
+      "explanation": "［動－辞書形 | た形］        ［な形－な］        ［名－の］          ＋あまり",
+      "category": "jlpt_grammar",
+      "example_sentence": "子供の将来を思うあまり、厳しすぎることを言ってしまった。",
+      "example_translation": "Chỉ vì nghĩ đến tương lai của con mà tôi đã lỡ nói lời quá nghiêm khắc.,"
+    },
+    {
+      "pattern": "～一方／～一方で（は）",
+      "meaning": "～のに対して  （対比を表す。）  Mặt khác, trái lại… (thể hiện sự so sánh)",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の名詞修飾型＋一方  （ただし［な形－である］［名－である］も使う。）",
+      "category": "jlpt_grammar",
+      "example_sentence": "私の仕事は夏は非常に忙しい一方、冬は暇になる。",
+      "example_translation": "Công việc của tôi thì trái với mùa hè bận túi bụi, mùa đông lại nhàn hạ.,"
+    },
+    {
+      "pattern": "～上で（は）／～上の／～上でも／～上での",
+      "meaning": "～してから  Xong ~ rồi…",
+      "title": "N2 Grammar",
+      "explanation": "［動－た形］       ［名－の］    ＋上で",
+      "category": "jlpt_grammar",
+      "example_sentence": "みんなの意見を聞いた上で決めました。",
+      "example_translation": "Nghe ý kiến của mọi người xong rồi quyết định.,"
+    },
+    {
+      "pattern": "～限り（は）／～かぎりでは／～ないかぎり（は）",
+      "meaning": "～する間は・～するうちは  （［～かぎり（は）］が使われる。 ）  Giới hạn, hạn chế, hạn trong ~",
+      "title": "N2 Grammar",
+      "explanation": "［動－辞書形］       ［い形－い］       ［な形－な］       ［名－の | である］    ＋かぎり",
+      "category": "jlpt_grammar",
+      "example_sentence": "日本にいるかぎり、丹さんは私に連絡してくれるはずだ。",
+      "example_translation": "Chừng nào còn ở Nhật, anh Đan chắc chắn sẽ liên lạc với tôi.,"
+    },
+    {
+      "pattern": "～（か）と思うと／～（か）と思ったら",
+      "meaning": "～するとすぐ  Làm xong ~ ngay lập tức…, vừa thấy là ~ thì",
+      "title": "N2 Grammar",
+      "explanation": "［動－た形］＋（か）と思うと",
+      "category": "jlpt_grammar",
+      "example_sentence": "リーさんは［さようなら］と言ったかと思うと教室を飛び出していった。",
+      "example_translation": "Vừa thấy cô Li nói [Sayounara] xong đã chạy biến ra khỏi phòng học.,"
+    },
+    {
+      "pattern": "～につれて／～につれ",
+      "meaning": "～と一緒に  （一方の変化とともに他方も変わることを表す。 ）  Cùng với ~ (Biểu thị việc cùng với sự thay đổi theo một hướng nào đó, một hướng khác cũng thay đổi)",
+      "title": "N2 Grammar",
+      "explanation": "[動－辞書形]        [名]        ＋につれて",
+      "category": "jlpt_grammar",
+      "example_sentence": "品質がよくなるにつれて、値段が高くなる。",
+      "example_translation": "Khi chất lượng tốt lên, giá cũng trở nên đắt.,"
+    },
+    {
+      "pattern": "～か～ないかのうちに",
+      "meaning": "～とほぼ同時に  （一つのことが終わったかどうかはっきりしないうちに、続いてすぐ次のことが起きる。）  Việc này chưa qua, việc khác đã xảy ra.",
+      "title": "N2 Grammar",
+      "explanation": "［動－辞書形 | た形］＋か＋［動－ない形］＋ないかのうちに",
+      "category": "jlpt_grammar",
+      "example_sentence": "ヘビースモーカーの彼は、タバコを１本吸い終わったか終わらないかのうちに、また次のタバコに火をつけた。",
+      "example_translation": "Người nghiện thuốc nặng như anh ấy thì điếu này còn cháy dở đã châm điếu khác.,"
+    },
+    {
+      "pattern": "～からいうと／～からいえば／～からいって",
+      "meaning": "～の点で見ると  Nhìn từ quan điểm ~",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋からいうと",
+      "category": "jlpt_grammar",
+      "example_sentence": "中国は人口からいうと世界一だが、人口密度は日本よりずっと低い。",
+      "example_translation": "Trung Quốc nói về dân số thì đứng đầu thế giới, nhưng mật độ dân số thấp hơn Nhật nhiều.,"
+    },
+    {
+      "pattern": "～からといって",
+      "meaning": "～だけの理由で  Chỉ vì lý do ~ ; tuy nhiên; tuy thế mà; không nhất thiết; chỉ vì; với lý do là",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の普通形＋からと言って",
+      "category": "jlpt_grammar",
+      "example_sentence": "お金があるからといって偉いわけではない。",
+      "example_translation": "Chì vì có tiền thì không có nghĩa là người giỏi giang.,"
+    },
+    {
+      "pattern": "～から見ると／～から見れば／～から見て（も）",
+      "meaning": "～から考えると  Nhìn từ ~ , xét theo ~",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋から見ると",
+      "category": "jlpt_grammar",
+      "example_sentence": "子供の教育という点からみると、豊かすぎる生活は、必ずしもいいとは言えない。",
+      "example_translation": "Nhìn từ quan điểm giáo dục trẻ em, chưa hẳn cuộc sống quá sung túc là tốt.,"
+    },
+    {
+      "pattern": "～きり（だ）",
+      "meaning": "～だけ  Chỉ có ~",
+      "title": "N2 Grammar",
+      "explanation": "［動－辞書形 | た形］  ［名］             ＋きり",
+      "category": "jlpt_grammar",
+      "example_sentence": "彼女は、何を聞いても笑っているきりで、答えない。",
+      "example_translation": "Cô ấy nghe gì cũng chỉ cười, chả đáp lại lời nào.,"
+    },
+    {
+      "pattern": "～くせに",
+      "meaning": "～のに・～にもかかわらず  （軽蔑(けいべつ)・非難する気持ちを表す。）  Dù; mặc dầu; lại còn; ngay cả ~ (Diễn tả tâm trạng khinh miệt, quở trách)",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の名詞修飾型＋くせに",
+      "category": "jlpt_grammar",
+      "example_sentence": "よく知らないくせに、あの人は何でも説明したがる。",
+      "example_translation": "Dù là chả biết mấy, ông kia cái gì cũng muốn giải thích.,"
+    },
+    {
+      "pattern": "～ことから",
+      "meaning": "ので  （その理由を述べて後ろの文の根拠を示す。）  Bởi vì ~ (Nói lí do là căn cứ cho câu sau)",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の名詞修飾型＋ことから  （ただし［名－の］の形は使わない。 ［名 －である］を使う。［な形－である］も使う。）",
+      "category": "jlpt_grammar",
+      "example_sentence": "道がぬれていることから、昨夜、雨が降ったことがわかった。",
+      "example_translation": "Vì là đường ướt nên biết là đêm qua trời mưa.,"
+    },
+    {
+      "pattern": "～ことに（は）",
+      "meaning": "（話者の気持ち・感情を先に述べて強調する時に使う。）  Đặc biệt là; một cách đặc biệt; đặc biệt (Nhấn mạnh trước cảm tình, tâm trạng người nói)",
+      "title": "N2 Grammar",
+      "explanation": "［動－た形］        ［い形－い］        ［な形－な］      ＋ことに",
+      "category": "jlpt_grammar",
+      "example_sentence": "驚(おどろ)いたことに、私の祖父と恋人のおじいさんは小学校時代の友達だったそうだ。",
+      "example_translation": "Ngạc nhiên quá cơ, nghe nói ông tôi và ông của người yêu lại là bạn hồi tiểu học.,"
+    },
+    {
+      "pattern": "～上（は）／～上も／～上の",
+      "meaning": "～の視点から考えて  Xét từ quan điểm~",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋上",
+      "category": "jlpt_grammar",
+      "example_sentence": "京都には歴史上有名なお寺が数多(かずおお)くある。",
+      "example_translation": "Kyoto xét về mặt lịch sử thì có rất nhiều chùa nổi tiếng.,"
+    },
+    {
+      "pattern": "～た末（に）／～た末の／～の末（に）",
+      "meaning": "長い間～をしたあとで            Rất lâu sau khi ~",
+      "title": "N2 Grammar",
+      "explanation": "［動－た］        ［名］の        ＋末",
+      "category": "jlpt_grammar",
+      "example_sentence": "いろいろ考えた末(すえ)、会社を辞めることにした。",
+      "example_translation": "Sau khi đã suy nghĩ rất nhiều, tôi đã nghỉ việc.,"
+    },
+    {
+      "pattern": "～に対して（は）／～に対し／～に対しても／～に対する",
+      "meaning": "～に  （対象・相手を示す。）  Về việc, đối với~ ; chỉ đối tượng, đối phương",
+      "title": "N2 Grammar",
+      "explanation": "[名]＋に対して",
+      "category": "jlpt_grammar",
+      "example_sentence": "お客様に対して失礼なことを言ってはいけません。",
+      "example_translation": "Đối với khách hàng, cấm nói điều thất lễ. (3) いいことをした人に対し、表彰状(ひょうしょうじょう)が贈られる。  Với người làm việc tốt, sẽ được tặng giấy khen. (4) 陳さんは日本の経済だけではなく日本の文化に対しても、興味を持っている。  Anh Trần không chỉ có hứng thú với kinh thế Nhật Bản mà còn cả với văn hoá Nhật nữa. (5) 被害者に対する補償問題を検討する。 Chúng tôi xem xét vấn đề bồi thường với người bị hại.,"
+    },
+    {
+      "pattern": "～たところ",
+      "meaning": "～たら  （あることをしたら、その結果がどうなったかを表す表現。）  Sau ~ (sau khi làm cái đó thì kết quả sẽ như thế nào đó)",
+      "title": "N2 Grammar",
+      "explanation": "［動－た形］＋ところ",
+      "category": "jlpt_grammar",
+      "example_sentence": "新しいワープロを使ってみたところ、とても使いやすかった。",
+      "example_translation": "Thử dùng cái máy tính mới xong mới biết là nó dễ sử dụng thế.,"
+    },
+    {
+      "pattern": "～ついでに",
+      "meaning": "（あることをする時にその機械を利用してもう一つのこともすることを表す。）  Nhân tiện; tiện thể (Lúc làm việc gì đó, lợi dụng cơ hội đó làm một việc khác)",
+      "title": "N2 Grammar",
+      "explanation": "［動－辞書形 | た形］        ［名－の］          ＋ついでに",
+      "category": "jlpt_grammar",
+      "example_sentence": "銀行へ行くついでにこの手紙を出してくれませんか。",
+      "example_translation": "Tiện thể đến ngân hàng anh gửi cho em lá thư này được không ạ?,"
+    },
+    {
+      "pattern": "～というと／～といえば",
+      "meaning": "（その話題に関係する代表的なものを取り上げる時に使う。）  Lấy lên một ví dụ làm đại diện liên quan đến chủ đề ~.",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋というと",
+      "category": "jlpt_grammar",
+      "example_sentence": "スポーツの祭典というと、まずオリンピックですね。",
+      "example_translation": "Nói về ngày hội thể thao thì trước hết phải là Olympic nhỉ?,"
+    },
+    {
+      "pattern": "～といったら",
+      "meaning": "（感嘆(かんたん)・驚(おどろ)き・期待はずれの感情（プラス、マイナスの両方）を表す。）  Nói về cảm xúc thán phục, ngạc nhiên, ngoài mong đợi (cả tiêu cực và tích cực)",
+      "title": "N2 Grammar",
+      "explanation": "［名］＋といったら",
+      "category": "jlpt_grammar",
+      "example_sentence": "息子の部屋の汚(きたな)いことといったら、ひどいものです。",
+      "example_translation": "Về độ bẩn của phòng con giai tôi thì rất kinh khủng.,"
+    },
+    {
+      "pattern": "～というより",
+      "meaning": "（～だが、それよりむしろ～と言ったほうが適切だと言い直す時に使う。）  Là ~ , nhưng cái nói đằng sau mới là thích đáng hơn.",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の普通形＋というより  （ただし［な形］と［名］は［だ］がつかないことが多い。）",
+      "category": "jlpt_grammar",
+      "example_sentence": "彼の言い方は勧(すす)めているというより、強制しているようだ。",
+      "example_translation": "Cách nói của anh ta có vẻ là đang thuyết phục nhưng thực ra là đang cưỡng ép mọi người.,"
+    },
+    {
+      "pattern": "～ば～ほど",
+      "meaning": "（一方の程度が高くなると、もう一方の程度も高くなる。）  Càng ~ càng ~ . Mặt này có mức độ cao lên, thêm một mặt khác cũng có mức độ cao lên.",
+      "title": "N2 Grammar",
+      "explanation": "［動－ば］＋［動－辞書形］        ［い形－ければ］＋［い形－い］        ［な形－なら | であれば］＋［な形－な | である］      ＋ほど        ［名－なら | であれば］＋［名－である］",
+      "category": "jlpt_grammar",
+      "example_sentence": "練習すればするほど上手になります。",
+      "example_translation": "Càng luyện tập thì càng giỏi.,"
+    },
+    {
+      "pattern": "～ほど",
+      "meaning": "（一方の程度が変わると、一緒に他方の程度も変化する。）  Mặt này có mức độ thay đổi, cùng lúc một mặt khác cũng thay đổi mức độ.",
+      "title": "N2 Grammar",
+      "explanation": "［動－辞書形］        ［い形－い］        ［な形－な］      ［名］        ＋ほど",
+      "category": "jlpt_grammar",
+      "example_sentence": "相撲では、太っているほど有利だ。",
+      "example_translation": "Sumo thì càng béo càng có lợi.,"
+    },
+    {
+      "pattern": "～かのようだ／～かのような／～かのように",
+      "meaning": "実際にはそうではないが、～のようだ  Thực tế thì không phải vậy nhưng có vẻ như là ~",
+      "title": "N2 Grammar",
+      "explanation": "［動・い形・な形・名］の普通形＋かのようだ  （ただし、［な形－だ］［名－だ］は［な形－である］［名－である］となるが、［である］がない場合もある。）",
+      "category": "jlpt_grammar",
+      "example_sentence": "激(はげ)しい雨と風は、まるで台風が来たかのようだ。",
+      "example_translation": "Gió mưa dữ dội quá, như là bão về thật ấy.,"
+    },
+    {
+      "pattern": "～つつある",
+      "meaning": "（だんだん）＋ている  Dần dần đang",
+      "title": "N2 Grammar",
+      "explanation": "［動－ます形］＋つつある",
+      "category": "jlpt_grammar",
+      "example_sentence": "景気は徐々(じょじょ)に回復しつつある。",
+      "example_translation": "Tình hình đang từ từ được khôi phục.,"
+    },
+    {
+      "pattern": "～てたまらない／～てしようがない",
+      "meaning": "非常に～  （前に感情・感覚を表す言葉がきて、それを押(お)さえられない様子を表す。 ）  Không thể kìm nén được.",
+      "title": "N2 Grammar",
+      "explanation": "［動－て形］        ［い形－くて］        ［な形－で］        ＋たまらない",
+      "category": "jlpt_grammar",
+      "example_sentence": "頭痛(ずつう)がしてたまらないので、近くの病院に行った。",
+      "example_translation": "Do đau đầu không chịu được tôi đã phải đi bệnh viện gần nhà.,"
+    }
+  ]
+}
