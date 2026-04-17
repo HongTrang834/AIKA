@@ -34,28 +34,70 @@ export async function parseExcelFile(file: File): Promise<any[]> {
 }
 
 /**
- * Parse CSV file
+ * Parse CSV file with proper handling of quoted values
+ * Handles commas inside quoted strings
  * Returns array of records with word, reading, meaning fields
  */
 export function parseCSVFile(text: string): any[] {
   const lines = text.trim().split('\n');
-  const headers = lines[0].toLowerCase().split(',').map(h => h.trim());
+  
+  // Parse header line with proper quote handling
+  const headerLine = lines[0];
+  const headers = parseCSVLine(headerLine).map(h => h.toLowerCase().trim());
+  
   const data = [];
 
   for (let i = 1; i < lines.length; i++) {
     if (!lines[i].trim()) continue;
     
-    const values = lines[i].split(',').map(v => v.trim());
+    const values = parseCSVLine(lines[i]);
     const row: any = {};
     
     headers.forEach((header, idx) => {
-      row[header] = values[idx] || '';
+      row[header] = (values[idx] || '').trim();
     });
 
     data.push(row);
   }
 
   return data;
+}
+
+/**
+ * Parse a single CSV line with proper quote handling
+ * Example: "name","value with, comma","other" → ["name", "value with, comma", "other"]
+ */
+function parseCSVLine(line: string): string[] {
+  const result = [];
+  let current = '';
+  let insideQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    const nextChar = line[i + 1];
+
+    if (char === '"') {
+      if (insideQuotes && nextChar === '"') {
+        // Escaped quote: ""
+        current += '"';
+        i++; // Skip next quote
+      } else {
+        // Toggle quote state
+        insideQuotes = !insideQuotes;
+      }
+    } else if (char === ',' && !insideQuotes) {
+      // Field separator
+      result.push(current);
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+
+  // Add last field
+  result.push(current);
+
+  return result;
 }
 
 /**
@@ -75,7 +117,7 @@ export function validateRecord(record: any): { valid: boolean; error?: string } 
 }
 
 /**
- * Validate batch of records
+ * Validate batch of records and create preview format
  */
 export function validateRecords(records: any[]): any[] {
   return records.map(record => {
@@ -87,6 +129,8 @@ export function validateRecords(records: any[]): any[] {
       category: record.category?.toString().trim() || '',
       level: record.level ? parseInt(record.level) : 2,
       example_sentence: record.example_sentence?.toString().trim() || '',
+      example_count: record.examples?.length || 0,
+      examples: record.examples || [],
       error: validation.valid ? undefined : validation.error,
     };
   });

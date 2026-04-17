@@ -273,7 +273,7 @@ export default function AdminTests() {
 
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold mb-8 text-gray-900">📝 Quản Lý Bài Test</h1>
+      <h1 className="text-3xl font-bold mb-8 text-gray-900">Quản Lý Bài Test</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Panel: Create Test */}
@@ -288,8 +288,8 @@ export default function AdminTests() {
                 onChange={(e) => setSelectedType(e.target.value)}
                 className="w-full px-3 py-2 border rounded-lg"
               >
-                <option value="vocabulary">📚 Từ Vựng</option>
-                <option value="grammar">📖 Ngữ Pháp</option>
+                <option value="vocabulary">Từ Vựng</option>
+                <option value="grammar">Ngữ Pháp</option>
               </select>
             </div>
 

@@ -24,6 +24,8 @@ export default function AdminVocabulary() {
   const [showPreview, setShowPreview] = useState(false);
   const [previewRecords, setPreviewRecords] = useState<any[]>([]);
   const [pendingImport, setPendingImport] = useState<any | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [formData, setFormData] = useState({
     word: '',
     reading: '',
@@ -39,7 +41,7 @@ export default function AdminVocabulary() {
 
   const fetchVocabulary = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/admin/vocabulary?limit=50`, {
+      const res = await fetch(`${API_BASE_URL}/admin/vocabulary?limit=5000`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -88,6 +90,28 @@ export default function AdminVocabulary() {
     }
   };
 
+  const handleDeleteAll = async () => {
+    setIsDeleting(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/admin/vocabulary/all`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        await fetchVocabulary();
+        setShowDeleteConfirm(false);
+        showToast('Đã xóa tất cả từ vựng', 'success');
+      } else {
+        showToast('Lỗi khi xóa từ vựng', 'error');
+      }
+    } catch (error) {
+      console.error('Error deleting all vocabulary:', error);
+      showToast('Lỗi khi xóa từ vựng', 'error');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   const handleEdit = (item: any) => {
     setFormData(item);
     setEditingId(item.id);
@@ -126,6 +150,7 @@ export default function AdminVocabulary() {
       const category = record.category?.toString().trim() || '';
       const level = record.level ? parseInt(record.level) : 2;
       const example = record.example_sentence?.toString().trim() || '';
+      const example_translation = record.example_translation?.toString().trim() || '';
 
       // Validate required fields
       if (!word || !reading || !meaning) {
@@ -141,6 +166,8 @@ export default function AdminVocabulary() {
           meaning,
           category: category || '',
           level: level,
+          example_sentence: example || '',
+          example_translation: example_translation || '',
           examples: [],
         };
       }
@@ -151,24 +178,18 @@ export default function AdminVocabulary() {
       }
     }
 
-    // Convert grouped records to array and create preview format
-    return Object.values(groupedRecords).map((record: any) => ({
-      word: record.word,
-      reading: record.reading,
-      meaning: record.meaning,
-      category: record.category || '',
-      level: record.level,
-      example_count: record.examples.length,
-      examples: record.examples,
-      error: undefined,
-    }));
+    // Convert grouped records to array - ready to send to backend
+    return Object.values(groupedRecords);
   };
 
   const handleShowPreview = async (records: any[]) => {
+    // DEBUG: Check merge impact
     const merged = mergeRecords(records);
+    console.log(`📊 Original records: ${records.length}, After merge: ${merged.length}, Diff: ${records.length - merged.length}`);
+    
     const validated = validateRecords(merged);
     setPreviewRecords(validated);
-    setPendingImport(records); // Keep original records for backend merge logic
+    setPendingImport(merged); // Send merged records to backend (no double merging!)
     setShowPreview(true);
   };
 
@@ -308,6 +329,13 @@ export default function AdminVocabulary() {
           >
             <Upload className="w-5 h-5" />
             Import
+          </button>
+          <button
+            onClick={() => setShowDeleteConfirm(true)}
+            className="bg-red-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-red-700"
+          >
+            <Trash2 className="w-5 h-5" />
+            Xóa Tất Cả
           </button>
         </div>
       </div>
@@ -581,6 +609,34 @@ export default function AdminVocabulary() {
 
       {vocabulary.length === 0 && (
         <div className="text-center py-8 text-gray-500">Không có từ vựng nào</div>
+      )}
+
+      {/* Delete All Confirm Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-8 max-w-sm">
+            <h2 className="text-2xl font-bold mb-4 text-red-600">Xóa Tất Cả Từ Vựng?</h2>
+            <p className="text-gray-700 mb-2">Hành động này sẽ xóa <strong>{vocabulary.length} từ vựng</strong> và không thể hoàn tác.</p>
+            <p className="text-gray-600 mb-6 text-sm">Hãy chắc chắn rằng bạn muốn tiếp tục.</p>
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={isDeleting}
+                className="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400 disabled:opacity-50"
+              >
+                Hủy
+              </button>
+              <button
+                onClick={handleDeleteAll}
+                disabled={isDeleting}
+                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 disabled:opacity-50 flex items-center gap-2"
+              >
+                {isDeleting && <Loader className="w-4 h-4 animate-spin" />}
+                {isDeleting ? 'Đang xóa...' : 'Xóa Tất Cả'}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

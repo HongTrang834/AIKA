@@ -3,7 +3,7 @@ import pool from '../db.js';
 
 const router = express.Router();
 
-// Get user flashcards (including global flashcards)
+// Get user flashcards (personal decks only, not global)
 router.get('/', async (req, res) => {
   try {
     const userId = req.userId;
@@ -31,7 +31,6 @@ router.get('/', async (req, res) => {
       LEFT JOIN vocabulary v ON f.vocab_id = v.id
       LEFT JOIN flashcard_decks d ON f.deck_id = d.id
       WHERE f.user_id = $1
-         OR (f.user_id IS NULL AND d.is_global = TRUE)
       ORDER BY COALESCE(d.name, 'No Deck'), f.next_review_date`,
       [userId]
     );
@@ -63,8 +62,42 @@ router.post('/', async (req, res) => {
     const userId = req.userId;
     const { vocab_id, grammar_id, deck_id } = req.body;
 
+    // Validate: must have either vocab_id or grammar_id (or both)
     if (!vocab_id && !grammar_id) {
+      console.warn('⚠️ Attempted to create flashcard with neither vocab_id nor grammar_id');
       return res.status(400).json({ error: 'vocab_id or grammar_id is required' });
+    }
+
+    // Validate: if vocab_id provided, it must exist in vocabulary table
+    if (vocab_id) {
+      try {
+        const vocabCheck = await pool.query(
+          'SELECT id FROM vocabulary WHERE id = $1',
+          [vocab_id]
+        );
+        if (vocabCheck.rows.length === 0) {
+          console.warn(`⚠️ vocab_id ${vocab_id} does not exist`);
+          return res.status(400).json({ error: 'Vocabulary not found' });
+        }
+      } catch (e) {
+        console.warn(`ℹ️ Could not verify vocabulary: ${e.message}`);
+      }
+    }
+
+    // Validate: if grammar_id provided, it must exist in grammar table
+    if (grammar_id) {
+      try {
+        const grammarCheck = await pool.query(
+          'SELECT id FROM grammar WHERE id = $1',
+          [grammar_id]
+        );
+        if (grammarCheck.rows.length === 0) {
+          console.warn(`⚠️ grammar_id ${grammar_id} does not exist`);
+          return res.status(400).json({ error: 'Grammar not found' });
+        }
+      } catch (e) {
+        console.warn(`ℹ️ Could not verify grammar: ${e.message}`);
+      }
     }
 
     let finalDeckId = deck_id;
@@ -78,6 +111,7 @@ router.post('/', async (req, res) => {
         );
 
         if (deckCheck.rows.length === 0) {
+          console.warn(`⚠️ Deck ${finalDeckId} not found or doesn't belong to user ${userId}`);
           return res.status(403).json({ error: 'Deck not found' });
         }
       } catch (e) {
@@ -92,6 +126,7 @@ router.post('/', async (req, res) => {
       [userId, vocab_id || null, grammar_id || null, finalDeckId || null]
     );
 
+    console.log(`✅ Flashcard created: vocab_id=${vocab_id}, grammar_id=${grammar_id}, deck_id=${finalDeckId}`);
     res.status(201).json(result.rows[0]);
   } catch (error) {
     console.error('Create flashcard error:', error);
@@ -174,6 +209,27 @@ router.delete('/:id', async (req, res) => {
     res.json({ message: 'Deleted' });
   } catch (error) {
     console.error('Delete flashcard error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Cleanup: Delete flashcards with null vocab_id and grammar_id (corrupted records)
+router.post('/cleanup/null-entries', async (req, res) => {
+  try {
+    const userId = req.userId;
+    
+    const result = await pool.query(
+      'DELETE FROM flashcards WHERE user_id = $1 AND vocab_id IS NULL AND grammar_id IS NULL RETURNING id',
+      [userId]
+    );
+
+    console.log(`🧹 Cleaned up ${result.rows.length} null flashcard entries for user ${userId}`);
+    res.json({ 
+      message: `Deleted ${result.rows.length} corrupted entries`,
+      deleted_count: result.rows.length 
+    });
+  } catch (error) {
+    console.error('Cleanup error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });

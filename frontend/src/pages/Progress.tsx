@@ -115,7 +115,7 @@ export default function Progress() {
     <div className="p-8 max-w-7xl mx-auto space-y-12">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2">📊 Tiến Độ Học Tập</h1>
+        <h1 className="text-4xl font-bold text-gray-900 mb-2"> Tiến Độ Học Tập</h1>
         <p className="text-gray-600">
           Theo dõi tiến độ học tập N2 của bạn trong hệ thống
         </p>
@@ -269,7 +269,7 @@ export default function Progress() {
 
       {/* Quick Stats */}
       <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow-lg p-8 text-white">
-        <h2 className="text-2xl font-bold mb-6">📈 Tóm Tắt Tiến Độ</h2>
+        <h2 className="text-2xl font-bold mb-6">Tóm T ắt Tiến Độ</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <div>
             <p className="text-blue-100 text-sm">Tổng Từ Vựng</p>
@@ -294,10 +294,10 @@ export default function Progress() {
       <div className="bg-green-50 border border-green-200 rounded-lg p-6">
         <h3 className="font-bold text-green-900 mb-3">💡 Mẹo Tăng Tiến Độ</h3>
         <ul className="text-green-800 text-sm space-y-2">
-          <li>✅ Hàng ngày ôn tập 10-15 flashcard để tối ưu Spaced Repetition</li>
-          <li>✅ Luyện kaiwa ít nhất 3 lần/tuần để cải thiện giao tiếp</li>
-          <li>✅ Học 3-5 từ vựng mới mỗi ngày</li>
-          <li>✅ Kết hợp học ngữ pháp với từ vựng để nhớ lâu hơn</li>
+          <li>Hàng ngày ôn tập 10-15 flashcard để tối ưu Spaced Repetition</li>
+          <li>Luyện kaiwa ít nhất 3 lần/tuần để cải thiện giao tiếp</li>
+          <li>Học 3-5 từ vựng mới mỗi ngày</li>
+          <li>Kết hợp học ngữ pháp với từ vựng để nhớ lâu hơn</li>
         </ul>
       </div>
     </div>

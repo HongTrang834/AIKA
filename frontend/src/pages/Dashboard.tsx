@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { PlayCircle, Flame, TrendingUp, BookOpen, Compass, MessageSquare, AlarmClock, Award } from 'lucide-react';
+import { PlayCircle, Flame, TrendingUp, BookOpen, Compass, MessageSquare, AlarmClock, Award, Search, X } from 'lucide-react';
 import { motion } from 'motion/react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 interface StreakData {
@@ -57,6 +57,13 @@ export default function Dashboard() {
   const [nextBadge, setNextBadge] = useState<any>(null);
   const [recentlyLearned, setRecentlyLearned] = useState<RecentlyLearned[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  // Search states
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  
+  const navigate = useNavigate();
 
   // Fetch dashboard data
   useEffect(() => {
@@ -137,8 +144,155 @@ export default function Dashboard() {
     }
   }, [user]);
 
+  // Search handler
+  const handleSearch = async (query: string) => {
+    setSearchQuery(query);
+
+    if (!query || query.length < 1) {
+      setSearchResults([]);
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      const token = localStorage.getItem('token');
+      const results: any[] = [];
+
+      // Search vocabulary
+      const vocabRes = await fetch(`/api/vocabulary/search/query?q=${encodeURIComponent(query)}&limit=5`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      console.log('🔍 Vocab search:', { query, status: vocabRes.status, ok: vocabRes.ok });
+      if (vocabRes.ok) {
+        const vocabData = await vocabRes.json();
+        console.log('✅ Vocab results:', vocabData.results?.length);
+        results.push(...vocabData.results.map((v: any) => ({ ...v, type: 'vocabulary' })));
+      } else {
+        console.warn('❌ Vocab search failed:', vocabRes.status, await vocabRes.text());
+      }
+
+      // Search grammar
+      const grammarRes = await fetch(`/api/grammar/search/query?q=${encodeURIComponent(query)}&limit=5`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      console.log('🔍 Grammar search:', { query, status: grammarRes.status, ok: grammarRes.ok });
+      if (grammarRes.ok) {
+        const grammarData = await grammarRes.json();
+        console.log('✅ Grammar results:', grammarData.results?.length);
+        results.push(...grammarData.results.map((g: any) => ({ ...g, type: 'grammar' })));
+      } else {
+        console.warn('❌ Grammar search failed:', grammarRes.status, await grammarRes.text());
+      }
+
+      console.log('📊 Total results:', results.length);
+      setSearchResults(results);
+    } catch (error) {
+      console.error('❌ Search error:', error);
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+  // Handle search result click - navigate to the item
+  const handleResultClick = (result: any) => {
+    if (result.type === 'vocabulary') {
+      navigate(`/learn/vocabulary/${result.id}`);
+    } else if (result.type === 'grammar') {
+      navigate(`/learn/grammar/${result.id}`);
+    }
+  };
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-12">
+      {/* Search Section */}
+      {searchQuery && (
+        <section className="relative">
+          <div className="bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold text-slate-900">Search Results for "{searchQuery}"</h3>
+              <button
+                onClick={() => {
+                  setSearchQuery('');
+                  setSearchResults([]);
+                }}
+                className="text-slate-400 hover:text-slate-600"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {isSearching ? (
+              <div className="text-center py-8">
+                <p className="text-slate-500">Searching...</p>
+              </div>
+            ) : searchResults.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-slate-500">No results found</p>
+              </div>
+            ) : (
+              <div className="grid gap-4">
+                {searchResults.map((result, idx) => (
+                  <motion.div
+                    key={`${result.type}-${result.id}`}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                    onClick={() => handleResultClick(result)}
+                    className={`p-4 rounded-xl border-l-4 ${
+                      result.type === 'vocabulary'
+                        ? 'border-blue-500 bg-blue-50 hover:bg-blue-100'
+                        : 'border-purple-500 bg-purple-50 hover:bg-purple-100'
+                    } transition-colors cursor-pointer`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3">
+                          <span className="inline-block px-2 py-1 text-xs font-bold rounded bg-white/50">
+                            {result.type === 'vocabulary' ? 'VOCAB' : 'GRAMMAR'}
+                          </span>
+                          {result.type === 'vocabulary' ? (
+                            <>
+                              <p className="text-xl font-bold text-slate-900">{result.word}</p>
+                              {result.reading && <p className="text-sm text-slate-600">{result.reading}</p>}
+                            </>
+                          ) : (
+                            <p className="text-lg font-bold text-slate-900">{result.pattern}</p>
+                          )}
+                        </div>
+                        <p className="text-sm text-slate-700 mt-1">
+                          {result.type === 'vocabulary' ? result.meaning : result.explanation || result.meaning}
+                        </p>
+                        {result.example_sentence && (
+                          <p className="text-xs text-slate-600 mt-2 italic">例: {result.example_sentence}</p>
+                        )}
+                      </div>
+                      {result.level && (
+                        <span className="ml-4 px-3 py-1 bg-white rounded-full text-sm font-semibold text-slate-700">
+                          Level {result.level}
+                        </span>
+                      )}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* Search Bar (appears at top, always) */}
+      <section className="relative">
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+          <input
+            type="text"
+            placeholder="Search vocabulary or grammar..."
+            value={searchQuery}
+            onChange={(e) => handleSearch(e.target.value)}
+            className="w-full pl-12 pr-4 py-3 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-slate-900 placeholder-slate-400"
+          />
+        </div>
+      </section>
+
       {/* Hero Section */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
         <motion.div 

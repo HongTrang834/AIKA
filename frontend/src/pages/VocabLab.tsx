@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { WordCard } from '@/src/components/WordCard';
-import { WordDetailModal } from '@/src/components/WordDetailModal';
 import DeckSelectionModal from '@/src/components/DeckSelectionModal';
 import TestTakerModal from '@/src/components/TestTakerModal';
 import { Loader, ArrowLeft, BookOpen, Lightbulb } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../lib/api';
 import { useAuth } from '../context/AuthContext';import { useToast } from '../context/ToastContext';
 export default function VocabLab() {
   const { token } = useAuth();
   const { showToast } = useToast();
+  const navigate = useNavigate();
   const [vocabulary, setVocabulary] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [addingId, setAddingId] = useState<number | null>(null);
-  const [selectedVocab, setSelectedVocab] = useState<any>(null);
   
   // Deck selection modal states
   const [showDeckSelection, setShowDeckSelection] = useState(false);
@@ -30,7 +30,7 @@ export default function VocabLab() {
   useEffect(() => {
     const fetchVocabulary = async () => {
       try {
-        const data = await api.getVocabulary(100, 0);
+        const data = await api.getVocabulary(5000, 0);
         setVocabulary(data.rows || []);
         
         // Extract unique categories as topics
@@ -126,18 +126,8 @@ export default function VocabLab() {
   };
 
   const handleSelectVocab = (vocab: any) => {
-    // Track when user clicks on vocabulary card
-    if (token) {
-      try {
-        console.log('📚 Updating vocab progress +1 (clicked card)');
-        api.updateProgress(token, 'vocab', 1).catch(err => 
-          console.error('Failed to update vocab progress:', err)
-        );
-      } catch (error) {
-        console.error('Error tracking vocab view:', error);
-      }
-    }
-    setSelectedVocab(vocab);
+    // Navigate to vocabulary detail page
+    navigate(`/learn/vocabulary/${vocab.id}`);
   };
 
   const handleDeckSelected = async (deckId: number) => {
@@ -255,7 +245,7 @@ export default function VocabLab() {
           className="flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 disabled:opacity-50"
         >
           {loadingTest ? <Loader className="w-4 h-4 animate-spin" /> : <Lightbulb className="w-4 h-4" />}
-          📝 Làm Bài Test
+          Làm Bài Test
         </button>
       </div>
 
@@ -280,14 +270,6 @@ export default function VocabLab() {
             />
           ))}
         </div>
-      )}
-
-      {/* Detail Modal */}
-      {selectedVocab && (
-        <WordDetailModal
-          vocab={selectedVocab}
-          onClose={() => setSelectedVocab(null)}
-        />
       )}
 
       {/* Deck Selection Modal */}

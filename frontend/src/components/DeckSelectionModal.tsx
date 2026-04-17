@@ -154,6 +154,7 @@ export default function DeckSelectionModal({ isOpen, onClose, onSelectDeck, isLo
 
         try {
             setLoading(true);
+            console.log(`🎯 Adding to deck: ${selectedDeckId}`);
             await onSelectDeck(selectedDeckId);
             onClose();
         } catch (err: any) {

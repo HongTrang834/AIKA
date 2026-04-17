@@ -1,20 +1,30 @@
-import pool from './db.js';
+﻿import pool from "./db.js";
 
 export async function runMigrations() {
   try {
-    console.log('🔄 Running database migrations...');
-    
+    console.log("🔄 Running database migrations...");
+    // FIRST: Clean up old data and reset sequences
+    try {
+      await pool.query('DELETE FROM vocabulary;');
+      await pool.query('DELETE FROM grammar;');
+      console.log("🗑️ Cleaned up old vocabulary and grammar records");
+      
+      // Reset sequences
+      await pool.query(`ALTER SEQUENCE vocabulary_id_seq RESTART WITH 1;`);
+      await pool.query(`ALTER SEQUENCE grammar_id_seq RESTART WITH 1;`);
+      console.log("🔄 Reset ID sequences to 1");
+    } catch (err) {
+      console.log("ℹ️ Cleanup note:", err.message.substring(0, 50));
+    }
     // Drop and recreate flashcard_decks table properly
     try {
-      await pool.query('DROP TABLE IF EXISTS flashcard_decks CASCADE;');
-      console.log('🔄 Dropped old flashcard_decks table');
-      // Wait a moment to ensure drop is complete
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await pool.query("DROP TABLE IF EXISTS flashcard_decks CASCADE;");
+      console.log("🔄 Dropped old flashcard_decks table");
+      await new Promise((resolve) => setTimeout(resolve, 100));
     } catch (err) {
-      console.log('ℹ️ Error dropping flashcard_decks:', err.message.substring(0, 50));
+      console.log("ℹ️ Error dropping flashcard_decks:", err.message.substring(0, 50));
     }
-    
-    // Create flashcard_decks table fresh with IF NOT EXISTS as fallback
+
     const decksTableSQL = `
       CREATE TABLE IF NOT EXISTS flashcard_decks (
         id SERIAL PRIMARY KEY,
@@ -27,58 +37,68 @@ export async function runMigrations() {
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `;
-    
-    // Create indexes separately (they can be created after table exists)
+
     const decksIndexesSQL = `
       CREATE INDEX IF NOT EXISTS idx_deck_user_id ON flashcard_decks(user_id);
       CREATE INDEX IF NOT EXISTS idx_deck_is_global ON flashcard_decks(is_global);
       CREATE UNIQUE INDEX IF NOT EXISTS idx_deck_user_id_name_unique ON flashcard_decks(user_id, name) WHERE user_id IS NOT NULL;
     `;
-    
+
     await pool.query(decksTableSQL);
-    console.log('✅ flashcard_decks table ready');
-    
-    // Add indexes
+    console.log("✅ flashcard_decks table ready");
+
     try {
       await pool.query(decksIndexesSQL);
-      console.log('✅ flashcard_decks indexes created');
+      console.log("✅ flashcard_decks indexes created");
     } catch (indexErr) {
-      console.log('ℹ️ Index creation note:', indexErr.message.substring(0, 50));
+      console.log("ℹ️ Index creation note:", indexErr.message.substring(0, 50));
     }
 
-    // Add deck_id column to flashcards (now that flashcard_decks exists)
     const flashcardsAlterSQL = `
-      ALTER TABLE flashcards 
+      ALTER TABLE flashcards
       ADD COLUMN IF NOT EXISTS deck_id INTEGER REFERENCES flashcard_decks(id) ON DELETE SET NULL;
-      
       CREATE INDEX IF NOT EXISTS idx_flashcard_deck_id ON flashcards(deck_id);
     `;
 
-    // Make user_id nullable for global flashcards
     const flashcardsUserIdAlterSQL = `
-      ALTER TABLE flashcards 
+      ALTER TABLE flashcards
       ALTER COLUMN user_id DROP NOT NULL;
     `;
-    
-    try {
-      await pool.query(flashcardsAlterSQL);
-      console.log('✅ flashcards.deck_id column ready');
-    } catch (err) {
-      console.log('ℹ️ flashcards.deck_id column note:', err.message.substring(0, 50));
-    }
 
-    // Add examples column to vocabulary for storing multiple examples
     const vocabularyAlterSQL = `
-      ALTER TABLE vocabulary 
-      ADD COLUMN IF NOT EXISTS examples TEXT;
-      
+      ALTER TABLE vocabulary
+      ADD COLUMN IF NOT EXISTS examples TEXT,
+      ADD COLUMN IF NOT EXISTS example_translation TEXT;
       COMMENT ON COLUMN vocabulary.examples IS 'JSON array of example objects: [{"japanese":"...", "vietnamese":"..."}, ...]';
+      COMMENT ON COLUMN vocabulary.example_translation IS 'Vietnamese translation of example_sentence';
     `;
 
-    // Add category and examples columns to grammar table for topic grouping and multiple examples
+    const vocabularyCategoryAlterSQL = `
+      ALTER TABLE vocabulary
+      ALTER COLUMN category TYPE TEXT;
+      ALTER TABLE vocabulary
+      ALTER COLUMN reading TYPE TEXT;
+      ALTER TABLE vocabulary
+      ALTER COLUMN word TYPE TEXT;
+      ALTER TABLE vocabulary
+      ALTER COLUMN meaning TYPE TEXT;
+      ALTER TABLE vocabulary
+      ALTER COLUMN example_sentence TYPE TEXT;
+    `;
+
     const grammarAlterSQL = `
-      ALTER TABLE grammar 
-      ADD COLUMN IF NOT EXISTS category VARCHAR(100);
+      ALTER TABLE grammar
+      ADD COLUMN IF NOT EXISTS category VARCHAR(100),
+      ADD COLUMN IF NOT EXISTS example_translation TEXT;
+    `;
+
+    const grammarCategoryAlterSQL = `
+      ALTER TABLE grammar
+      ALTER COLUMN category TYPE TEXT;
+      ALTER TABLE grammar
+      ALTER COLUMN pattern TYPE TEXT;
+      ALTER TABLE grammar
+      ALTER COLUMN title TYPE TEXT;
     `;
 
     const grammarExamplesSQL = `
@@ -86,13 +106,11 @@ export async function runMigrations() {
       ADD COLUMN IF NOT EXISTS examples TEXT;
     `;
 
-    // Alter avatar_url column to support large base64 images
     const avatarUrlAlterSQL = `
       ALTER TABLE users
       ALTER COLUMN avatar_url TYPE TEXT;
     `;
 
-    // Tests table for mini assessments
     const testsTableSQL = `
       CREATE TABLE IF NOT EXISTS tests (
         id SERIAL PRIMARY KEY,
@@ -107,7 +125,6 @@ export async function runMigrations() {
       );
     `;
 
-    // Test questions table
     const testQuestionsTableSQL = `
       CREATE TABLE IF NOT EXISTS test_questions (
         id SERIAL PRIMARY KEY,
@@ -121,11 +138,9 @@ export async function runMigrations() {
         grammar_id INT REFERENCES grammar(id) ON DELETE SET NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
-      
       CREATE INDEX IF NOT EXISTS idx_test_questions_test_id ON test_questions(test_id);
     `;
 
-    // User test results
     const testResultsTableSQL = `
       CREATE TABLE IF NOT EXISTS test_results (
         id SERIAL PRIMARY KEY,
@@ -137,77 +152,86 @@ export async function runMigrations() {
         completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         answers JSONB
       );
-      
       CREATE INDEX IF NOT EXISTS idx_test_results_user_id ON test_results(user_id);
       CREATE INDEX IF NOT EXISTS idx_test_results_test_id ON test_results(test_id);
     `;
-    
-    // Execute migrations - proper table and column order
+
     await pool.query(decksTableSQL);
-    console.log('✅ flashcard_decks table ready');
-    
+    console.log("✅ flashcard_decks table ready");
+
     await pool.query(flashcardsAlterSQL);
-    console.log('✅ flashcards.deck_id column ready');
+    console.log("✅ flashcards.deck_id column ready");
 
     try {
       await pool.query(flashcardsUserIdAlterSQL);
-      console.log('✅ flashcards.user_id now nullable for global flashcards');
+      console.log("✅ flashcards.user_id now nullable for global flashcards");
     } catch (err) {
-      console.log('ℹ️ flashcards.user_id nullable migration note:', err.message.substring(0, 50));
+      console.log("ℹ️ flashcards.user_id nullable migration note:", err.message.substring(0, 50));
     }
 
     try {
       await pool.query(vocabularyAlterSQL);
-      console.log('✅ vocabulary.examples column ready');
+      console.log("✅ vocabulary.example_translation column ready");
     } catch (err) {
-      console.log('ℹ️ vocabulary.examples column note:', err.message.substring(0, 50));
+      console.log("ℹ️ vocabulary.examples column note:", err.message.substring(0, 50));
+    }
+
+    try {
+      await pool.query(vocabularyCategoryAlterSQL);
+      console.log("✅ vocabulary.category and reading columns upgraded to TEXT");
+    } catch (err) {
+      console.log("ℹ️ vocabulary category/reading type change note:", err.message.substring(0, 50));
     }
 
     try {
       await pool.query(grammarAlterSQL);
-      console.log('✅ grammar.category column ready');
+      console.log("✅ grammar.example_translation column ready");
     } catch (err) {
-      console.log('ℹ️ grammar.category column note:', err.message.substring(0, 50));
+      console.log("ℹ️ grammar.category column note:", err.message.substring(0, 50));
+    }
+
+    try {
+      await pool.query(grammarCategoryAlterSQL);
+      console.log("✅ grammar.category, pattern, title columns upgraded to TEXT");
+    } catch (err) {
+      console.log("ℹ️ grammar column type change note:", err.message.substring(0, 50));
     }
 
     try {
       await pool.query(grammarExamplesSQL);
-      console.log('✅ grammar.examples column ready');
+      console.log("✅ grammar.examples column ready");
     } catch (err) {
-      console.log('ℹ️ grammar.examples column note:', err.message.substring(0, 50));
+      console.log("ℹ️ grammar.examples column note:", err.message.substring(0, 50));
     }
 
     try {
       await pool.query(avatarUrlAlterSQL);
-      console.log('✅ users.avatar_url column upgraded to TEXT');
+      console.log("✅ users.avatar_url column upgraded to TEXT");
     } catch (err) {
-      // Column might already be TEXT or not exist, ignore
-      console.log('ℹ️ avatar_url column type check:', err.message.substring(0, 50));
+      console.log("ℹ️ avatar_url column type check:", err.message.substring(0, 50));
     }
 
     try {
       await pool.query(testsTableSQL);
-      console.log('✅ tests table ready');
+      console.log("✅ tests table ready");
     } catch (err) {
-      console.log('ℹ️ tests table note:', err.message.substring(0, 50));
+      console.log("ℹ️ tests table note:", err.message.substring(0, 50));
     }
 
     try {
       await pool.query(testQuestionsTableSQL);
-      console.log('✅ test_questions table ready');
+      console.log("✅ test_questions table ready");
     } catch (err) {
-      console.log('ℹ️ test_questions table note:', err.message.substring(0, 50));
+      console.log("ℹ️ test_questions table note:", err.message.substring(0, 50));
     }
 
     try {
       await pool.query(testResultsTableSQL);
-      console.log('✅ test_results table ready');
+      console.log("✅ test_results table ready");
     } catch (err) {
-      console.log('ℹ️ test_results table note:', err.message.substring(0, 50));
+      console.log("ℹ️ test_results table note:", err.message.substring(0, 50));
     }
-    
   } catch (error) {
-    console.error('❌ Migration error:', error.message);
-    // Continue anyway - app can work with mock decks
+    console.error("❌ Migration failed:", error);
   }
 }

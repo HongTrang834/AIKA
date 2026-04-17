@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Bell, Flame, LogOut, User } from 'lucide-react';
+import { Flame, LogOut, User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
+import NotificationPanel from './NotificationPanel';
 
 export function TopBar() {
   const { user, logout } = useAuth();
@@ -71,14 +72,6 @@ export function TopBar() {
   return (
     <header className="sticky top-0 z-40 bg-white/60 backdrop-blur-xl border-b border-slate-200/50 px-8 py-4 flex justify-between items-center w-full">
       <div className="flex items-center gap-8">
-        <div className="hidden lg:flex items-center bg-slate-100 px-4 py-2 rounded-full gap-3 group focus-within:ring-2 ring-primary/20 transition-all">
-          <Search className="w-4 h-4 text-slate-400" />
-          <input 
-            type="text" 
-            placeholder="Search lessons..." 
-            className="bg-transparent border-none focus:ring-0 text-sm w-48 font-medium"
-          />
-        </div>
       </div>
 
       <div className="flex items-center gap-6">
@@ -89,10 +82,7 @@ export function TopBar() {
           </span>
         </div>
         
-        <button className="p-2 rounded-full hover:bg-slate-100 text-slate-500 transition-all relative">
-          <Bell className="w-5 h-5" />
-          <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-        </button>
+        <NotificationPanel />
 
         <div className="flex items-center gap-3 pl-4 border-l border-slate-200 relative">
           <div className="text-right hidden sm:block">

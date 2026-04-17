@@ -3,19 +3,26 @@ import pool from '../db.js';
 
 const router = express.Router();
 
-// Get all decks for a user (global + personal)
+// Get all decks for a user (personal decks only)
 router.get('/', async (req, res) => {
     try {
         const userId = req.userId;
         try {
             const result = await pool.query(
                 `SELECT id, name, description, color, is_global,
-                        (SELECT COUNT(*) FROM flashcards WHERE deck_id = flashcard_decks.id) as card_count
+                        (SELECT COUNT(*) FROM flashcards WHERE deck_id = flashcard_decks.id AND user_id = $1) as card_count
                  FROM flashcard_decks 
-                 WHERE is_global = TRUE OR user_id = $1 
-                 ORDER BY is_global DESC, created_at DESC`,
+                 WHERE user_id = $1 
+                 ORDER BY created_at DESC`,
                 [userId]
             );
+            
+            // Debug logging
+            console.log(`📦 GET /decks for user ${userId}:`);
+            result.rows.forEach(deck => {
+              console.log(`  • Deck "${deck.name}" (id=${deck.id}): ${deck.card_count} cards`);
+            });
+            
             res.json({ rows: result.rows });
         } catch (tableError) {
             // flashcard_decks table might not exist yet
@@ -139,3 +146,46 @@ router.put('/:id', async (req, res) => {
 });
 
 export default router;
+
+// Debug endpoint - inspect deck and flashcard data
+router.get('/debug/inspect', async (req, res) => {
+    try {
+        const userId = req.userId;
+        
+        // Get all decks for this user
+        const decksResult = await pool.query(
+            'SELECT id, name, user_id FROM flashcard_decks WHERE user_id = $1',
+            [userId]
+        );
+        
+        // Get all flashcards for this user
+        const flashcardsResult = await pool.query(
+            `SELECT f.id, f.vocab_id, f.grammar_id, f.deck_id, f.user_id, 
+                    COALESCE(v.word, '(null vocab)') as word,
+                    COALESCE(d.name, '(no deck)') as deck_name
+             FROM flashcards f
+             LEFT JOIN vocabulary v ON f.vocab_id = v.id
+             LEFT JOIN flashcard_decks d ON f.deck_id = d.id
+             WHERE f.user_id = $1`,
+            [userId]
+        );
+        
+        res.json({
+            user_id: userId,
+            decks: decksResult.rows,
+            flashcards: flashcardsResult.rows,
+            stats: {
+                deck_count: decksResult.rows.length,
+                flashcard_count: flashcardsResult.rows.length,
+                flashcards_per_deck: decksResult.rows.map(deck => ({
+                    deck_id: deck.id,
+                    deck_name: deck.name,
+                    card_count: flashcardsResult.rows.filter(f => f.deck_id === deck.id).length
+                }))
+            }
+        });
+    } catch (error) {
+        console.error('Debug error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});

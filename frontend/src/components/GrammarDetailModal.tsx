@@ -1,5 +1,6 @@
 import React from 'react';
-import { X } from 'lucide-react';
+import { X, BookOpen, Lightbulb } from 'lucide-react';
+import { motion } from 'motion/react';
 
 interface GrammarDetailModalProps {
   grammar: {
@@ -14,9 +15,10 @@ interface GrammarDetailModalProps {
     level?: number;
   };
   onClose: () => void;
+  onAddFlashcard?: (grammarId: number) => void;
 }
 
-export function GrammarDetailModal({ grammar, onClose }: GrammarDetailModalProps) {
+export function GrammarDetailModal({ grammar, onClose, onAddFlashcard }: GrammarDetailModalProps) {
   const meaning = grammar.meaning || grammar.vietnamese_meaning || 'N/A';
   
   // Parse examples from JSON string or fallback to example_sentence
@@ -40,10 +42,15 @@ export function GrammarDetailModal({ grammar, onClose }: GrammarDetailModalProps
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-auto">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        className="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-auto"
+      >
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-slate-100 flex items-center justify-between p-6">
-          <h2 className="text-2xl font-bold text-slate-900">Grammar Pattern</h2>
+        <div className="sticky top-0 bg-white border-b border-slate-200 flex items-center justify-between p-6">
+          <h2 className="text-2xl font-bold text-slate-900">Grammar Details</h2>
           <button 
             onClick={onClose}
             className="text-slate-400 hover:text-slate-600 transition-colors"
@@ -53,43 +60,57 @@ export function GrammarDetailModal({ grammar, onClose }: GrammarDetailModalProps
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-6">
-          {/* Pattern */}
-          <div className="text-center">
-            <div className="text-sm text-slate-500 mb-2">Pattern</div>
-            <div className="text-3xl font-mono font-bold text-slate-900 break-words">{grammar.pattern}</div>
+        <div className="p-8 space-y-6">
+          {/* Pattern Display */}
+          <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-8">
+            <p className="text-slate-500 text-sm mb-2">Grammar Pattern</p>
+            <div className="space-y-4">
+              <div>
+                <p className="text-4xl font-black text-purple-600 font-mono break-words">{grammar.pattern}</p>
+              </div>
+              <div>
+                <p className="text-slate-600 text-sm">Meaning</p>
+                <p className="text-xl text-slate-900">{meaning}</p>
+              </div>
+            </div>
           </div>
 
-          {/* Meaning */}
-          <div className="bg-blue-50 rounded-xl p-4">
-            <div className="text-xs font-bold text-blue-600 mb-2 uppercase tracking-wider">Meaning</div>
-            <div className="text-lg font-semibold text-slate-900">{meaning}</div>
-          </div>
+          {/* Level */}
+          {grammar.level && (
+            <div className="bg-purple-50 p-6 rounded-xl hidden">
+              <p className="text-slate-600 text-sm font-semibold mb-2">JLPT Level</p>
+              <p className="text-2xl text-purple-600 font-bold">Level {grammar.level}</p>
+            </div>
+          )}
 
-          {/* Explanation */}
+          {/* Explanation - Quick Tip */}
           {grammar.explanation && (
-            <div className="bg-slate-50 rounded-xl p-4">
-              <div className="text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">Explanation</div>
-              <div className="text-sm text-slate-700 leading-relaxed">{grammar.explanation}</div>
+            <div className="bg-yellow-50 p-6 rounded-xl border-2 border-yellow-200">
+              <p className="text-slate-600 text-xs font-semibold mb-2 flex items-center gap-2">
+                <Lightbulb className="w-4 h-4 text-yellow-600" />
+                Quick Tip
+              </p>
+              <p className="text-slate-900">{grammar.explanation}</p>
             </div>
           )}
 
           {/* Example Sentences */}
           {examples.length > 0 && (
-            <div className="bg-slate-50 rounded-xl p-4">
-              <div className="text-xs font-bold text-slate-600 mb-3 uppercase tracking-wider">
-                Examples ({examples.length})
-              </div>
+            <div className="mt-8 pt-8 border-t border-slate-200">
+              <h3 className="font-bold text-lg text-slate-900 mb-4 flex items-center gap-2">
+                <BookOpen className="w-5 h-5 text-slate-600" />
+                Example Sentences ({examples.length})
+              </h3>
               <div className="space-y-4">
                 {examples.map((example, idx) => (
-                  <div key={idx} className="border-l-2 border-slate-300 pl-3">
-                    <div className="text-sm text-slate-900 leading-relaxed font-medium mb-1">
+                  <div key={idx} className="bg-slate-50 p-4 rounded-xl border-l-4 border-purple-300">
+                    <p className="text-lg text-slate-900 leading-relaxed font-medium mb-2">
                       {example.japanese}
-                    </div>
+                    </p>
                     {example.vietnamese && (
-                      <div className="text-sm text-slate-600 italic mb-2">
+                      <p className="text-sm text-slate-600 italic">
                         {example.vietnamese}
-                      </div>
+                      </p>
                     )}
                   </div>
                 ))}
@@ -97,20 +118,20 @@ export function GrammarDetailModal({ grammar, onClose }: GrammarDetailModalProps
             </div>
           )}
 
-          {/* Level */}
-          {grammar.level && (
-            <div className="bg-slate-50 rounded-xl p-4">
-              <div className="text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">Level</div>
-              <div className="text-sm font-semibold text-slate-900">N{grammar.level}</div>
-            </div>
-          )}
-
-          {/* Metadata */}
-          <div className="text-xs text-slate-400 text-center">
-            Pattern ID: {grammar.id}
+          {/* Add to Flashcard Button */}
+          <div className="mt-8 pt-8 border-t border-slate-200">
+            <button
+              onClick={() => {
+                onAddFlashcard?.(grammar.id);
+                onClose();
+              }}
+              className="w-full px-6 py-4 bg-purple-500 text-white rounded-xl hover:bg-purple-600 transition-colors font-semibold text-lg"
+            >
+              + Add to Flashcard
+            </button>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

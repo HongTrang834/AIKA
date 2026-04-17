@@ -1,5 +1,6 @@
 import React from 'react';
-import { X } from 'lucide-react';
+import { X, BookOpen } from 'lucide-react';
+import { motion } from 'motion/react';
 
 interface WordDetailModalProps {
   vocab: {
@@ -14,9 +15,10 @@ interface WordDetailModalProps {
     level?: number;
   };
   onClose: () => void;
+  onAddFlashcard?: (vocabId: number) => void;
 }
 
-export function WordDetailModal({ vocab, onClose }: WordDetailModalProps) {
+export function WordDetailModal({ vocab, onClose, onAddFlashcard }: WordDetailModalProps) {
   const meaning = vocab.meaning || vocab.vietnamese_meaning || 'N/A';
   
   // Parse examples from JSON string or fallback to example_sentence
@@ -42,10 +44,15 @@ export function WordDetailModal({ vocab, onClose }: WordDetailModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-auto">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        className="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-auto"
+      >
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-slate-100 flex items-center justify-between p-6">
-          <h2 className="text-2xl font-bold text-slate-900">Word Details</h2>
+        <div className="sticky top-0 bg-white border-b border-slate-200 flex items-center justify-between p-6">
+          <h2 className="text-2xl font-bold text-slate-900">Vocabulary Details</h2>
           <button 
             onClick={onClose}
             className="text-slate-400 hover:text-slate-600 transition-colors"
@@ -55,36 +62,52 @@ export function WordDetailModal({ vocab, onClose }: WordDetailModalProps) {
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-6">
-          {/* Word & Reading */}
-          <div className="text-center">
-            <div className="text-sm text-slate-500 mb-2">Reading</div>
-            <div className="text-sm text-slate-600 font-medium mb-4">{vocab.reading}</div>
-            <div className="text-5xl font-bold text-slate-900 mb-2">{vocab.word}</div>
+        <div className="p-8 space-y-6">
+          {/* Main Display - Word & Reading */}
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-8">
+            <p className="text-slate-500 text-sm mb-2">Vocabulary Item</p>
+            <div className="space-y-4">
+              <div>
+                <p className="text-5xl font-black text-blue-600">{vocab.word}</p>
+              </div>
+              <div>
+                <p className="text-slate-600 text-sm">Reading</p>
+                <p className="text-2xl text-slate-900">{vocab.reading}</p>
+              </div>
+            </div>
           </div>
 
           {/* Meaning */}
-          <div className="bg-blue-50 rounded-xl p-4">
-            <div className="text-xs font-bold text-blue-600 mb-2 uppercase tracking-wider">Meaning</div>
-            <div className="text-lg font-semibold text-slate-900">{meaning}</div>
+          <div className="bg-slate-50 p-6 rounded-xl">
+            <p className="text-slate-600 text-sm font-semibold mb-2">Meaning</p>
+            <p className="text-xl text-slate-900">{meaning}</p>
           </div>
+
+          {/* Category */}
+          {vocab.category && (
+            <div className="bg-slate-50 p-6 rounded-xl">
+              <p className="text-slate-600 text-sm font-semibold mb-2">Category</p>
+              <p className="text-lg text-slate-900">{vocab.category}</p>
+            </div>
+          )}
 
           {/* Example Sentences */}
           {examples.length > 0 && (
-            <div className="bg-slate-50 rounded-xl p-4">
-              <div className="text-xs font-bold text-slate-600 mb-3 uppercase tracking-wider">
-                Examples ({examples.length})
-              </div>
+            <div className="mt-8 pt-8 border-t border-slate-200">
+              <h3 className="font-bold text-lg text-slate-900 mb-4 flex items-center gap-2">
+                <BookOpen className="w-5 h-5 text-slate-600" />
+                Example Sentences ({examples.length})
+              </h3>
               <div className="space-y-4">
                 {examples.map((example, idx) => (
-                  <div key={idx} className="border-l-2 border-slate-300 pl-3">
-                    <div className="text-sm text-slate-900 leading-relaxed font-medium mb-1">
+                  <div key={idx} className="bg-slate-50 p-4 rounded-xl border-l-4 border-blue-300">
+                    <p className="text-lg text-slate-900 leading-relaxed font-medium mb-2">
                       {example.japanese}
-                    </div>
+                    </p>
                     {example.vietnamese && (
-                      <div className="text-sm text-slate-600 italic mb-2">
+                      <p className="text-sm text-slate-600 italic">
                         {example.vietnamese}
-                      </div>
+                      </p>
                     )}
                   </div>
                 ))}
@@ -92,28 +115,20 @@ export function WordDetailModal({ vocab, onClose }: WordDetailModalProps) {
             </div>
           )}
 
-          {/* Category & Level */}
-          <div className="grid grid-cols-2 gap-4">
-            {vocab.category && (
-              <div className="bg-slate-50 rounded-xl p-4">
-                <div className="text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">Category</div>
-                <div className="text-sm font-semibold text-slate-900">{vocab.category}</div>
-              </div>
-            )}
-            {vocab.level && (
-              <div className="bg-slate-50 rounded-xl p-4">
-                <div className="text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">Level</div>
-                <div className="text-sm font-semibold text-slate-900">N{vocab.level}</div>
-              </div>
-            )}
-          </div>
-
-          {/* Metadata */}
-          <div className="text-xs text-slate-400 text-center">
-            Word ID: {vocab.id}
+          {/* Add to Flashcard Button */}
+          <div className="mt-8 pt-8 border-t border-slate-200">
+            <button
+              onClick={() => {
+                onAddFlashcard?.(vocab.id);
+                onClose();
+              }}
+              className="w-full px-6 py-4 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors font-semibold text-lg"
+            >
+              + Add to Flashcard
+            </button>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

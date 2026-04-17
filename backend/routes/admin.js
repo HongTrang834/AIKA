@@ -45,90 +45,44 @@ router.post('/vocabulary/import', adminMiddleware, async (req, res) => {
     console.log(`📥 Importing ${records.length} records...`);
     console.log('First record:', JSON.stringify(records[0], null, 2));
 
-    // Group records by word+reading+meaning to merge multiple examples
-    const groupedRecords = {};
-    
-    for (const record of records) {
-      const word = record.word?.trim();
-      const reading = record.reading?.trim();
-      const meaning = record.meaning?.trim();
-      const category = record.category?.trim() || null;
-      const level = parseInt(record.level) || 2;
-      const example_sentence = record.example_sentence?.trim() || null;
-      const example_translation = record.example_translation?.trim() || null;
+    // Delete all existing records first (clean slate)
+    await pool.query('DELETE FROM vocabulary');
+    console.log('🗑️  Cleared all existing vocabulary records');
 
-      // Validate required fields
-      if (!word || !reading || !meaning) {
-        skipped++;
-        errors.push(`Missing required fields (word="${word}", reading="${reading}", meaning="${meaning}")`);
-        continue;
-      }
-
-      const key = `${word}|${reading}|${meaning}`;
-      
-      if (!groupedRecords[key]) {
-        groupedRecords[key] = {
-          word,
-          reading,
-          meaning,
-          category,
-          level,
-          examples: [],
-        };
-      }
-      
-      // Add example to the group if it exists and is not a duplicate
-      if (example_sentence) {
-        // Check if this exact example already exists
-        const existingExample = groupedRecords[key].examples.find(
-          e => e.japanese === example_sentence
-        );
-        
-        if (!existingExample) {
-          groupedRecords[key].examples.push({
-            japanese: example_sentence,
-            vietnamese: example_translation || '',
-          });
-        }
-      }
-    }
-
-    // Delete existing records that will be replaced by merged ones
-    const wordsToDelete = Object.values(groupedRecords).map(r => ({
-      word: r.word,
-      reading: r.reading,
-      meaning: r.meaning,
-    }));
-
-    console.log(`🗑️  Deleting old entries for ${wordsToDelete.length} words...`);
-    
-    for (const item of wordsToDelete) {
-      await pool.query(
-        'DELETE FROM vocabulary WHERE word = $1 AND reading = $2 AND meaning = $3',
-        [item.word, item.reading, item.meaning]
-      );
-    }
-
-    // Insert grouped records into database
-    for (const [key, record] of Object.entries(groupedRecords)) {
+    // Insert records directly without merging (frontend already merged)
+    for (let i = 0; i < records.length; i++) {
       try {
-        const examplesJSON = record.examples.length > 0 ? JSON.stringify(record.examples) : null;
+        const record = records[i];
+        const word = record.word?.trim();
+        const reading = record.reading?.trim();
+        const meaning = record.meaning?.trim();
+        const category = record.category?.trim() || null;
+        const level = parseInt(record.level) || 2;
+        const example_sentence = record.example_sentence?.trim() || null;
+        const example_translation = record.example_translation?.trim() || null;
 
-        console.log(`Record: word="${record.word}", reading="${record.reading}", examples=${record.examples.length}`);
+        // Validate required fields
+        if (!word || !reading || !meaning) {
+          skipped++;
+          errors.push(`Row ${i + 1}: Missing required fields (word="${word}", reading="${reading}", meaning="${meaning}")`);
+          continue;
+        }
 
-        // Insert record with examples
+        // Insert record
         const result = await pool.query(
-          'INSERT INTO vocabulary (word, reading, meaning, category, level, example_sentence, examples) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id',
-          [record.word, record.reading, record.meaning, record.category, record.level, record.examples[0]?.japanese || null, examplesJSON]
+          'INSERT INTO vocabulary (word, reading, meaning, category, level, example_sentence, example_translation) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id',
+          [word, reading, meaning, category, level, example_sentence, example_translation]
         );
 
         if (result.rows.length > 0) {
           imported++;
-          console.log(`✅ Imported: ${record.word} (${record.examples.length} examples}`);
+          if (i % 100 === 0) {
+            console.log(`✅ Progress: ${imported} imported, ${skipped} skipped`);
+          }
         }
       } catch (err) {
         skipped++;
-        errors.push(`${record.word}: ${err.message}`);
+        errors.push(`Row ${i + 1}: ${err.message}`);
         console.error(`❌ Error importing record ${i + 1}:`, err.message);
       }
     }
@@ -150,15 +104,15 @@ router.post('/vocabulary/import', adminMiddleware, async (req, res) => {
 // CREATE vocabulary
 router.post('/vocabulary', adminMiddleware, async (req, res) => {
   try {
-    const { word, reading, meaning, category, level, example_sentence } = req.body;
+    const { word, reading, meaning, category, level, example_sentence, example_translation } = req.body;
 
     if (!word || !reading || !meaning) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
     const result = await pool.query(
-      'INSERT INTO vocabulary (word, reading, meaning, category, level, example_sentence) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [word, reading, meaning, category || null, level || 2, example_sentence || null]
+      'INSERT INTO vocabulary (word, reading, meaning, category, level, example_sentence, example_translation) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      [word, reading, meaning, category || null, level || 2, example_sentence || null, example_translation || null]
     );
 
     res.status(201).json(result.rows[0]);
@@ -172,11 +126,11 @@ router.post('/vocabulary', adminMiddleware, async (req, res) => {
 router.put('/vocabulary/:id', adminMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
-    const { word, reading, meaning, category, level, example_sentence } = req.body;
+    const { word, reading, meaning, category, level, example_sentence, example_translation } = req.body;
 
     const result = await pool.query(
-      'UPDATE vocabulary SET word = $1, reading = $2, meaning = $3, category = $4, level = $5, example_sentence = $6 WHERE id = $7 RETURNING *',
-      [word, reading, meaning, category, level, example_sentence, id]
+      'UPDATE vocabulary SET word = $1, reading = $2, meaning = $3, category = $4, level = $5, example_sentence = $6, example_translation = $7 WHERE id = $8 RETURNING *',
+      [word, reading, meaning, category, level, example_sentence, example_translation, id]
     );
 
     if (result.rows.length === 0) {
@@ -190,7 +144,18 @@ router.put('/vocabulary/:id', adminMiddleware, async (req, res) => {
   }
 });
 
-// DELETE vocabulary
+// DELETE all vocabulary (must be before :id route)
+router.delete('/vocabulary/all', adminMiddleware, async (req, res) => {
+  try {
+    const result = await pool.query('DELETE FROM vocabulary');
+    res.json({ message: `Deleted ${result.rowCount} vocabulary items` });
+  } catch (error) {
+    console.error('Error deleting all vocabulary:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// DELETE vocabulary by ID
 router.delete('/vocabulary/:id', adminMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
@@ -245,85 +210,50 @@ router.post('/grammar/import', adminMiddleware, async (req, res) => {
     let imported = 0;
     let skipped = 0;
     const errors = [];
-    const groupedRecords = {};
 
-    // Group records by pattern|meaning key, aggregate examples
+    console.log(`📥 Importing ${records.length} grammar records...`);
+    console.log('First record:', JSON.stringify(records[0], null, 2));
+
+    // Delete all existing records first (clean slate)
+    await pool.query('DELETE FROM grammar');
+    console.log('🗑️  Cleared all existing grammar records');
+
+    // Insert records directly without merging (frontend already merged)
     for (let i = 0; i < records.length; i++) {
-      const record = records[i];
-      const { pattern, meaning, explanation, category, level, example_sentence, example_translation, title } = record;
-
-      // Validate required fields
-      if (!pattern || !meaning) {
-        skipped++;
-        errors.push(`Missing required fields (pattern="${pattern}", meaning="${meaning}")`);
-        continue;
-      }
-
-      const key = `${pattern}|${meaning}`;
-      
-      if (!groupedRecords[key]) {
-        groupedRecords[key] = {
-          title: title || pattern,
-          pattern,
-          meaning,
-          explanation: explanation || '',
-          category: category || null,
-          level: level || 2,
-          examples: [],
-        };
-      }
-      
-      // Add example to the group if it exists and is not a duplicate
-      if (example_sentence) {
-        const existingExample = groupedRecords[key].examples.find(
-          e => e.japanese === example_sentence
-        );
-        
-        if (!existingExample) {
-          groupedRecords[key].examples.push({
-            japanese: example_sentence,
-            vietnamese: example_translation || '',
-          });
-        }
-      }
-    }
-
-    // Delete existing records that will be replaced by merged ones
-    const patternsToDelete = Object.values(groupedRecords).map(r => ({
-      pattern: r.pattern,
-      meaning: r.meaning,
-    }));
-
-    console.log(`🗑️  Deleting old entries for ${patternsToDelete.length} patterns...`);
-    
-    for (const item of patternsToDelete) {
-      await pool.query(
-        'DELETE FROM grammar WHERE pattern = $1 AND meaning = $2',
-        [item.pattern, item.meaning]
-      );
-    }
-
-    // Insert grouped records into database
-    for (const [key, record] of Object.entries(groupedRecords)) {
       try {
-        const examplesJSON = record.examples.length > 0 ? JSON.stringify(record.examples) : null;
+        const record = records[i];
+        const title = record.title?.trim();
+        const pattern = record.pattern?.trim();
+        const meaning = record.meaning?.trim();
+        const explanation = record.explanation?.trim() || '';
+        const category = record.category?.trim() || null;
+        const level = parseInt(record.level) || 2;
+        const example_sentence = record.example_sentence?.trim() || null;
+        const example_translation = record.example_translation?.trim() || null;
 
-        console.log(`Record: pattern="${record.pattern}", meaning="${record.meaning}", examples=${record.examples.length}`);
+        // Validate required fields
+        if (!pattern || !meaning) {
+          skipped++;
+          errors.push(`Row ${i + 1}: Missing required fields (pattern="${pattern}", meaning="${meaning}")`);
+          continue;
+        }
 
-        // Insert record with examples
+        // Insert record
         const result = await pool.query(
-          'INSERT INTO grammar (title, pattern, explanation, meaning, category, level, example_sentence, examples) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id',
-          [record.title, record.pattern, record.explanation, record.meaning, record.category, record.level, record.examples[0]?.japanese || null, examplesJSON]
+          'INSERT INTO grammar (title, pattern, explanation, meaning, category, level, example_sentence, example_translation) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id',
+          [title || pattern, pattern, explanation, meaning, category, level, example_sentence, example_translation]
         );
 
         if (result.rows.length > 0) {
           imported++;
-          console.log(`✅ Imported: ${record.pattern} (${record.examples.length} examples)`);
+          if (i % 100 === 0) {
+            console.log(`✅ Progress: ${imported} imported, ${skipped} skipped`);
+          }
         }
       } catch (err) {
         skipped++;
-        errors.push(`${record.pattern}: ${err.message}`);
-        console.error(`❌ Error importing record:`, err.message);
+        errors.push(`Row ${i + 1}: ${err.message}`);
+        console.error(`❌ Error importing record ${i + 1}:`, err.message);
       }
     }
 
@@ -344,15 +274,15 @@ router.post('/grammar/import', adminMiddleware, async (req, res) => {
 // CREATE grammar
 router.post('/grammar', adminMiddleware, async (req, res) => {
   try {
-    const { title, pattern, explanation, meaning, category, example_sentence, level } = req.body;
+    const { title, pattern, explanation, meaning, category, example_sentence, example_translation, level } = req.body;
 
     if (!title || !pattern || !explanation || !meaning) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
     const result = await pool.query(
-      'INSERT INTO grammar (title, pattern, explanation, meaning, category, example_sentence, level) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-      [title, pattern, explanation, meaning, category || null, example_sentence || null, level || 2]
+      'INSERT INTO grammar (title, pattern, explanation, meaning, category, example_sentence, example_translation, level) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+      [title, pattern, explanation, meaning, category || null, example_sentence || null, example_translation || null, level || 2]
     );
 
     res.status(201).json(result.rows[0]);
@@ -366,11 +296,11 @@ router.post('/grammar', adminMiddleware, async (req, res) => {
 router.put('/grammar/:id', adminMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, pattern, explanation, meaning, category, example_sentence, level } = req.body;
+    const { title, pattern, explanation, meaning, category, example_sentence, example_translation, level } = req.body;
 
     const result = await pool.query(
-      'UPDATE grammar SET title = $1, pattern = $2, explanation = $3, meaning = $4, category = $5, example_sentence = $6, level = $7 WHERE id = $8 RETURNING *',
-      [title, pattern, explanation, meaning, category, example_sentence, level, id]
+      'UPDATE grammar SET title = $1, pattern = $2, explanation = $3, meaning = $4, category = $5, example_sentence = $6, example_translation = $7, level = $8 WHERE id = $9 RETURNING *',
+      [title, pattern, explanation, meaning, category, example_sentence, example_translation, level, id]
     );
 
     if (result.rows.length === 0) {
@@ -384,7 +314,18 @@ router.put('/grammar/:id', adminMiddleware, async (req, res) => {
   }
 });
 
-// DELETE grammar
+// DELETE all grammar (must be before :id route)
+router.delete('/grammar/all', adminMiddleware, async (req, res) => {
+  try {
+    const result = await pool.query('DELETE FROM grammar');
+    res.json({ message: `Deleted ${result.rowCount} grammar items` });
+  } catch (error) {
+    console.error('Error deleting all grammar:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// DELETE grammar by ID
 router.delete('/grammar/:id', adminMiddleware, async (req, res) => {
   try {
     const { id } = req.params;

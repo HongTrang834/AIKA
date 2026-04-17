@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { GrammarCard } from '@/src/components/GrammarCard';
-import { GrammarDetailModal } from '@/src/components/GrammarDetailModal';
 import DeckSelectionModal from '@/src/components/DeckSelectionModal';
 import TestTakerModal from '@/src/components/TestTakerModal';
 import { Loader, ArrowLeft, BookOpen, Lightbulb } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -11,10 +11,10 @@ import { useToast } from '../context/ToastContext';
 export default function GrammarLab() {
   const { token } = useAuth();
   const { showToast } = useToast();
+  const navigate = useNavigate();
   const [grammar, setGrammar] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [addingId, setAddingId] = useState<number | null>(null);
-  const [selectedGrammar, setSelectedGrammar] = useState<any>(null);
   
   // Deck selection modal states
   const [showDeckSelection, setShowDeckSelection] = useState(false);
@@ -32,7 +32,7 @@ export default function GrammarLab() {
   useEffect(() => {
     const fetchGrammar = async () => {
       try {
-        const data = await api.getGrammar(100, 0);
+        const data = await api.getGrammar(5000, 0);
         const grammarArray = Array.isArray(data) ? data : (data.rows || []);
         setGrammar(grammarArray);
         
@@ -59,18 +59,8 @@ export default function GrammarLab() {
   };
 
   const handleSelectGrammar = (gram: any) => {
-    // Track when user clicks on grammar card
-    if (token) {
-      try {
-        console.log('📚 Updating grammar progress +1 (clicked card)');
-        api.updateProgress(token, 'grammar', 1).catch(err => 
-          console.error('Failed to update grammar progress:', err)
-        );
-      } catch (error) {
-        console.error('Error tracking grammar view:', error);
-      }
-    }
-    setSelectedGrammar(gram);
+    // Navigate to grammar detail page
+    navigate(`/learn/grammar/${gram.id}`);
   };
 
   const handleTakeTest = async (category: string) => {
@@ -256,7 +246,7 @@ export default function GrammarLab() {
           className="flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 disabled:opacity-50"
         >
           {loadingTest ? <Loader className="w-4 h-4 animate-spin" /> : <Lightbulb className="w-4 h-4" />}
-          📝 Làm Bài Test
+          Làm Bài Test
         </button>
       </div>
 
@@ -280,14 +270,6 @@ export default function GrammarLab() {
             />
           ))}
         </div>
-      )}
-
-      {/* Detail Modal */}
-      {selectedGrammar && (
-        <GrammarDetailModal
-          grammar={selectedGrammar}
-          onClose={() => setSelectedGrammar(null)}
-        />
       )}
 
       {/* Deck Selection Modal */}

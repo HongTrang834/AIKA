@@ -15,6 +15,8 @@ import Flashcards from './pages/Flashcards';
 import Progress from './pages/Progress';
 import Profile from './pages/Profile';
 import Lesson from './pages/Lesson';
+import VocabularyDetail from './pages/VocabularyDetail';
+import GrammarDetail from './pages/GrammarDetail';
 import AdminVocabulary from './pages/AdminVocabulary';
 import AdminGrammar from './pages/AdminGrammar';
 import AdminTests from './pages/AdminTests';
@@ -62,6 +64,8 @@ function AppContent() {
                 <Route path="/grammar" element={<GrammarLab />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/learn/lesson/:id" element={<Lesson />} />
+                <Route path="/learn/vocabulary/:id" element={<VocabularyDetail />} />
+                <Route path="/learn/grammar/:id" element={<GrammarDetail />} />
                 <Route path="*" element={<Dashboard />} />
               </Routes>
             </Layout>
