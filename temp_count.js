@@ -1,1 +1,0 @@
-﻿import pkg from "pg"; const { Pool } = pkg; const pool = new Pool({ connectionString: "postgresql://postgres@localhost:5432/aika_db" }); pool.query("SELECT COUNT(*) FROM vocabulary").then(res => { console.log("Result:", res.rows[0].count); pool.end(); }).catch(err => { console.error(err); pool.end(); });
