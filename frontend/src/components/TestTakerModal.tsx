@@ -36,6 +36,7 @@ export default function TestTaker({ testId, onBack }: { testId: number; onBack: 
   }, [testId]);
 
   const fetchTest = async () => {
+    if (!token) return;
     try {
       const data = await api.getTest(testId, token);
       setTest(data.test);

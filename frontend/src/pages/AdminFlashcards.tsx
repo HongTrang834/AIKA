@@ -72,9 +72,9 @@ export default function AdminFlashcards() {
         vocab_id: formData.vocab_id ? parseInt(formData.vocab_id) : null,
         grammar_id: formData.grammar_id ? parseInt(formData.grammar_id) : null,
         deck_id: formData.deck_id ? parseInt(formData.deck_id) : null,
-        interval: parseInt(formData.interval) || 0,
-        repetitions: parseInt(formData.repetitions) || 0,
-        ease_factor: parseFloat(formData.ease_factor) || 2.5,
+        interval: parseInt(String(formData.interval) || '0') || 0,
+        repetitions: parseInt(String(formData.repetitions) || '0') || 0,
+        ease_factor: parseFloat(String(formData.ease_factor) || '2.5') || 2.5,
       };
 
       const method = editingId ? 'PUT' : 'POST';

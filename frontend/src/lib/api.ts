@@ -178,8 +178,8 @@ export const api = {
     return res.json();
   },
 
-  getTest: async (id: number, token?: string) => {
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  getTest: async (id: number, token?: string | null) => {
+    const headers: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {};
     const res = await fetch(`${API_BASE_URL}/tests/${id}`, { headers });
     return res.json();
   },
