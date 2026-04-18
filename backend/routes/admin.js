@@ -174,6 +174,11 @@ router.post('/vocabulary/import', adminMiddleware, async (req, res) => {
       total: records.length,
       errors: errors.slice(0, 10),
     });
+  } catch (error) {
+    console.error('Error importing vocabulary:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 // CREATE vocabulary
 router.post('/vocabulary', adminMiddleware, async (req, res) => {
@@ -417,6 +422,11 @@ router.post('/grammar/import', adminMiddleware, async (req, res) => {
       total: records.length,
       errors: errors.slice(0, 10),
     });
+  } catch (error) {
+    console.error('Error importing grammar:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 // CREATE grammar
 router.post('/grammar', adminMiddleware, async (req, res) => {
