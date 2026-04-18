@@ -51,10 +51,13 @@ export default function Flashcards() {
       
       setFlashcards(allFlashcards);
       
-      // Group by deck
+      // Group by deck (only include flashcards with deck_id)
       const deckMap = new Map<string, any>();
       allFlashcards.forEach((card: any) => {
-        const deckName = card.deck_name || 'No Deck';
+        // Skip cards without a deck
+        if (!card.deck_id || !card.deck_name) return;
+        
+        const deckName = card.deck_name;
         if (!deckMap.has(deckName)) {
           deckMap.set(deckName, {
             name: deckName,
@@ -82,16 +85,24 @@ export default function Flashcards() {
   };
 
   const handleCreateFlashcard = async () => {
-    if (!vocabId || !token) return;
+    if (!vocabId || !token || !selectedDeckId) {
+      setError('Please select a deck first');
+      return;
+    }
     setSubmitLoading(true);
     setError('');
     try {
-      await api.createFlashcard(token, { vocab_id: parseInt(vocabId) });
+      await api.createFlashcard(token, { 
+        vocab_id: parseInt(vocabId),
+        deck_id: selectedDeckId 
+      });
       setVocabId('');
       setShowNewFlashcardForm(false);
       await fetchFlashcards();
+      showToast('Flashcard added to deck!', 'success');
     } catch (err: any) {
       setError(err.message || 'Failed to create flashcard');
+      showToast(err.message || 'Failed to create flashcard', 'error');
     } finally {
       setSubmitLoading(false);
     }
@@ -205,7 +216,7 @@ export default function Flashcards() {
 
     // Show Decks List
     return (
-      <div className="flex-1 p-10 max-w-5xl mx-auto w-full">
+      <div className="p-10 max-w-7xl mx-auto">
         <div className="mb-10">
           <div className="flex items-center gap-3 mb-2">
             <Layers className="w-6 h-6 text-primary" />
@@ -265,18 +276,21 @@ export default function Flashcards() {
         </button>
         <Lightbulb className="w-16 h-16 text-slate-300 mb-4" />
         <h2 className="text-2xl font-bold text-slate-900 mb-2">No Flashcards in This Deck</h2>
-        <p className="text-slate-500 mb-6">Add vocabularies to get started!</p>
+        <p className="text-slate-500 mb-6">Add vocabulary or grammar items to this deck to start studying!</p>
         <button
           onClick={() => setShowNewFlashcardForm(true)}
           className="bg-primary text-white px-6 py-3 rounded-xl font-semibold hover:bg-primary/90 flex items-center gap-2"
         >
           <Plus className="w-5 h-5" />
-          Add Flashcard
+          Add to This Deck
         </button>
 
         {showNewFlashcardForm && (
           <div className="mt-8 bg-white p-6 rounded-xl border border-slate-200 w-full max-w-md">
-            <h3 className="font-bold text-lg mb-4">Add Flashcard from Vocabulary</h3>
+            <h3 className="font-bold text-lg mb-4">Add Flashcard</h3>
+            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-sm text-blue-700">This card will be added to the selected deck</p>
+            </div>
             {error && <div className="bg-red-50 text-red-600 px-4 py-3 rounded-lg mb-4 text-sm">{error}</div>}
             <div className="flex gap-2">
               <input

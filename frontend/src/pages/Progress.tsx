@@ -192,7 +192,7 @@ export default function Progress() {
               { name: 'Hội Thoại (Kaiwa)', current: progress?.total_kaiwas || 0, max: 50 },
               { name: 'Ôn Tập', current: progress?.total_flashcard_reviews || 0, max: 500 },
             ].map((item) => {
-              const pct = Math.min((item.current / item.max) * 100, 100);
+              const pct = Math.min  ((item.current / item.max) * 100, 100);
               return (
                 <div key={item.name} className="space-y-2">
                   <div className="flex justify-between">
@@ -223,7 +223,7 @@ export default function Progress() {
           <div className="space-y-6">
             {/* Total Learning Time */}
             <div className="border-b pb-6">
-              <p className="text-sm text-gray-600 mb-2">📚 Tổng Thời Gian Học</p>
+              <p className="text-sm text-gray-600 mb-2">Tổng Thời Gian Học</p>
               <p className="text-2xl font-bold text-gray-900">
                 {progress?.total_flashcard_reviews
                   ? Math.round(progress.total_flashcard_reviews / 2)

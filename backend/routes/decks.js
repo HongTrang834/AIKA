@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
         const userId = req.userId;
         try {
             const result = await pool.query(
-                `SELECT id, name, description, color, is_global,
+                `SELECT id, name, description, color, is_global, created_at,
                         (SELECT COUNT(*) FROM flashcards WHERE deck_id = flashcard_decks.id AND user_id = $1) as card_count
                  FROM flashcard_decks 
                  WHERE user_id = $1 

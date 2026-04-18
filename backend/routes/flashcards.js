@@ -24,14 +24,14 @@ router.get('/', async (req, res) => {
         v.word,
         v.reading,
         v.meaning,
-        COALESCE(d.name, 'No Deck') as deck_name,
-        COALESCE(d.color, 'blue') as deck_color,
-        COALESCE(d.is_global, FALSE) as deck_is_global
+        d.name as deck_name,
+        d.color as deck_color,
+        d.is_global as deck_is_global
       FROM flashcards f
       LEFT JOIN vocabulary v ON f.vocab_id = v.id
       LEFT JOIN flashcard_decks d ON f.deck_id = d.id
-      WHERE f.user_id = $1
-      ORDER BY COALESCE(d.name, 'No Deck'), f.next_review_date`,
+      WHERE f.user_id = $1 AND f.deck_id IS NOT NULL
+      ORDER BY d.name, f.next_review_date`,
       [userId]
     );
 
@@ -66,6 +66,12 @@ router.post('/', async (req, res) => {
     if (!vocab_id && !grammar_id) {
       console.warn('⚠️ Attempted to create flashcard with neither vocab_id nor grammar_id');
       return res.status(400).json({ error: 'vocab_id or grammar_id is required' });
+    }
+
+    // Validate: deck_id is required
+    if (!deck_id) {
+      console.warn('⚠️ Attempted to create flashcard without deck_id');
+      return res.status(400).json({ error: 'deck_id is required - please select or create a deck' });
     }
 
     // Validate: if vocab_id provided, it must exist in vocabulary table

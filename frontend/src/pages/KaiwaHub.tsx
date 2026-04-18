@@ -136,10 +136,10 @@ export default function KaiwaHub() {
   return (
     <div className="h-screen flex flex-col bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 shadow-sm p-6">
-        <h1 className="text-3xl font-bold text-gray-900">Kaiwa Hub 🗣️</h1>
-        <p className="text-gray-600 mt-1">会話練習 - Learn Japanese through AI conversations</p>
-      </div>
+      {/* <div className="bg-white border-b border-gray-200 shadow-sm p-6"> */}
+        {/* <h1 className="text-3xl font-bold text-gray-900">Kaiwa Hub</h1> */}
+        {/* <p className="text-gray-600 mt-1">会話練習 - Learn Japanese through AI conversations</p>
+      </div> */}
 
       {/* Main Content */}
       <div className="flex-1 flex gap-6 p-6 overflow-hidden">
@@ -310,7 +310,7 @@ export default function KaiwaHub() {
                 )}
               </button>
             </div>
-            <p className="text-xs text-gray-500 mt-2">💡 AI sẽ chỉ ra lỗi ngữ pháp nếu có</p>
+            <p className="text-xs text-gray-500 mt-2">AI sẽ chỉ ra lỗi ngữ pháp nếu có</p>
           </div>
         </div>
       </div>
