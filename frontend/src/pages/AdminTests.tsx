@@ -271,11 +271,32 @@ export default function AdminTests() {
     });
   };
 
-  return (
-    <div className="p-8 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold mb-8 text-gray-900">Quản Lý Bài Test</h1>
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20 h-full">
+        <Loader className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+  return (
+    <div className="p-8">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold mb-8 text-gray-900">Quản Lý Bài Test</h1>
+        <button
+          onClick={() => {
+            setCreating(true);
+            setFormData({ name: '', category: '', total_questions: 5 });
+          }}
+          className="text-blue-600 hover:bg-blue-50 p-2 rounded"
+        >
+          <Plus className="w-4 h-4" />
+          Tạo Test
+        </button>
+      </div>
+
+      {/* Main Content */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Left Panel: Create Test */}
         <div className="bg-white rounded-lg shadow-lg p-6">
           <h2 className="text-xl font-bold mb-4">Tạo Bài Test Mới</h2>
@@ -346,11 +367,7 @@ export default function AdminTests() {
           <h2 className="text-xl font-bold mb-4">Danh Sách Tests</h2>
 
           <div className="space-y-2" style={{ maxHeight: '600px', overflowY: 'auto' }}>
-            {loading ? (
-              <div className="flex justify-center py-4">
-                <Loader className="w-6 h-6 animate-spin" />
-              </div>
-            ) : tests.length === 0 ? (
+            {tests.length === 0 ? (
               <p className="text-gray-500 text-sm">Chưa có test</p>
             ) : (
               tests.map(test => (

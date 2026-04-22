@@ -6,12 +6,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-surface">
       <Sidebar />
-      <main className="ml-72 min-h-screen flex flex-col">
+      <div className="ml-72 flex flex-col flex-1">
         <TopBar />
-        <div className="flex-1">
+        <main className="flex-1 p-8 p-8">
           {children}
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 }

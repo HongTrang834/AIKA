@@ -26,7 +26,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-900 text-white p-6">
+      <aside className="w-64 bg-white shadow-md flex flex-col">
         <h1 className="text-3xl font-bold mb-8">AIKa Admin</h1>
         <nav className="space-y-4">
           {menuItems.map((item) => {
@@ -57,15 +57,14 @@ export function AdminLayout({ children }: AdminLayoutProps) {
             <span>Đăng Xuất</span>
           </button>
         </div>
-      </div>
+      </aside>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
-        <div className="bg-white shadow-sm p-6 mb-6">
-          <h2 className="text-2xl font-bold">Admin Dashboard</h2>
+      <main className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 overflow-x-hidden overflow-y-auto">
+          {children}
         </div>
-        {children}
-      </div>
+      </main>
     </div>
   );
 }
