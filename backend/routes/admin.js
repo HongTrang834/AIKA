@@ -881,7 +881,7 @@ router.get('/decks', adminMiddleware, async (req, res) => {
         d.created_at,
         COALESCE(COUNT(f.id), 0) as card_count
       FROM flashcard_decks d
-      LEFT JOIN flashcards f ON f.deck_id = d.id
+      LEFT JOIN flashcards f ON f.deck_id = d.id AND f.user_id IS NULL
       WHERE d.is_global = TRUE
       GROUP BY d.id
       ORDER BY d.created_at DESC
@@ -929,7 +929,7 @@ router.get('/decks/:id', adminMiddleware, async (req, res) => {
         v.meaning
       FROM flashcards f
       LEFT JOIN vocabulary v ON f.vocab_id = v.id
-      WHERE f.deck_id = $1
+      WHERE f.deck_id = $1 AND f.user_id IS NULL
       ORDER BY f.id`,
       [id]
     );
@@ -954,8 +954,8 @@ router.post('/decks', adminMiddleware, async (req, res) => {
     }
 
     const result = await pool.query(
-      'INSERT INTO flashcard_decks (user_id, name, description, color, is_global) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [null, name, description || '', color || 'blue', true]
+      'INSERT INTO flashcard_decks (name, description, color, is_global) VALUES ($1, $2, $3, $4) RETURNING *',
+      [name, description || '', color || 'blue', true]
     );
 
     res.status(201).json(result.rows[0]);
@@ -968,11 +968,14 @@ router.post('/decks', adminMiddleware, async (req, res) => {
 
 // UPDATE global deck
 router.put('/decks/:id', adminMiddleware, async (req, res) => {
+  const client = await pool.connect();
   try {
     const { id } = req.params;
-    const { name, description, color } = req.body;
+    const { name, description, color, vocab_ids } = req.body;
 
-    const result = await pool.query(
+    await client.query('BEGIN');
+
+    const result = await client.query(
       `UPDATE flashcard_decks 
        SET name = COALESCE($1, name), 
            description = COALESCE($2, description),
@@ -984,13 +987,44 @@ router.put('/decks/:id', adminMiddleware, async (req, res) => {
     );
 
     if (result.rows.length === 0) {
+      await client.query('ROLLBACK');
       return res.status(404).json({ error: 'Deck not found' });
     }
 
-    res.json(result.rows[0]);
+    if (Array.isArray(vocab_ids)) {
+      // Sync flashcards: delete old global ones, insert new ones
+      await client.query('DELETE FROM flashcards WHERE deck_id = $1 AND user_id IS NULL', [id]);
+      
+      const uniqueVocabIds = Array.from(new Set(vocab_ids));
+      if (uniqueVocabIds.length > 0) {
+        // Use a more robust insert to handle many IDs
+        const insertValues = [];
+        const valueParams = [];
+        uniqueVocabIds.forEach((vId, index) => {
+          insertValues.push(`(NULL, $${index + 2}, $1)`);
+          valueParams.push(vId);
+        });
+
+        const insertQuery = `INSERT INTO flashcards (user_id, vocab_id, deck_id) VALUES ${insertValues.join(', ')}`;
+        await client.query(insertQuery, [id, ...valueParams]);
+      }
+    }
+
+    await client.query('COMMIT');
+    
+    // Get updated card count
+    const countRes = await pool.query('SELECT COUNT(*) FROM flashcards WHERE deck_id = $1 AND user_id IS NULL', [id]);
+    
+    res.json({
+      ...result.rows[0],
+      card_count: parseInt(countRes.rows[0].count)
+    });
   } catch (error) {
+    await client.query('ROLLBACK');
     console.error('Error updating deck:', error);
     res.status(500).json({ error: 'Internal Server Error' });
+  } finally {
+    client.release();
   }
 });
 
@@ -1019,14 +1053,10 @@ router.delete('/decks/:id', adminMiddleware, async (req, res) => {
 router.post('/decks/:deckId/flashcards/bulk', adminMiddleware, async (req, res) => {
   try {
     const { deckId } = req.params;
-    const { flashcards } = req.body; // Array of {word, reading, meaning}
+    const { flashcards, vocab_ids = [], categories = [] } = req.body;
 
     console.log(`📝 Bulk creating flashcards for deck ${deckId}`);
-    console.log(`📦 Received ${flashcards?.length || 0} flashcards:`, JSON.stringify(flashcards, null, 2));
-
-    if (!Array.isArray(flashcards) || flashcards.length === 0) {
-      return res.status(400).json({ error: 'No flashcards provided' });
-    }
+    console.log(`📦 Received vocab_ids=${vocab_ids?.length || 0}, categories=${categories?.length || 0}`);
 
     // Verify deck exists and is global
     const deckCheck = await pool.query(
@@ -1038,36 +1068,63 @@ router.post('/decks/:deckId/flashcards/bulk', adminMiddleware, async (req, res) 
       return res.status(404).json({ error: 'Deck not found or not global' });
     }
 
+    let targetVocabIds = [];
+
+    if (Array.isArray(vocab_ids) && vocab_ids.length > 0) {
+      targetVocabIds.push(...vocab_ids.map((id) => Number(id)).filter(Boolean));
+    }
+
+    if (Array.isArray(categories) && categories.length > 0) {
+      const categoryResult = await pool.query(
+        'SELECT id FROM vocabulary WHERE category = ANY($1::text[])',
+        [categories]
+      );
+      targetVocabIds.push(...categoryResult.rows.map((row) => row.id));
+    }
+
+    // Backward-compatible path for old payload format
+    if (Array.isArray(flashcards) && flashcards.length > 0) {
+      for (const fc of flashcards) {
+        try {
+          const { word, reading, meaning } = fc;
+          if (!word || !meaning) continue;
+
+          const vocabResult = await pool.query(
+            'INSERT INTO vocabulary (word, reading, meaning, level) VALUES ($1, $2, $3, $4) RETURNING id',
+            [word, reading || word, meaning, 2]
+          );
+          targetVocabIds.push(vocabResult.rows[0].id);
+        } catch (itemErr) {
+          console.error('❌ Error creating backward-compatible vocab item:', itemErr.message);
+        }
+      }
+    }
+
+    targetVocabIds = Array.from(new Set(targetVocabIds));
+
+    if (targetVocabIds.length === 0) {
+      return res.status(400).json({ error: 'No vocabulary selected' });
+    }
+
+    const existingResult = await pool.query(
+      `SELECT vocab_id 
+       FROM flashcards 
+       WHERE deck_id = $1 AND user_id IS NULL AND vocab_id = ANY($2::int[])`,
+      [deckId, targetVocabIds]
+    );
+    const existingSet = new Set(existingResult.rows.map((row) => row.vocab_id));
+
+    const idsToInsert = targetVocabIds.filter((id) => !existingSet.has(id));
     let created = 0;
     const errors = [];
 
-    for (const fc of flashcards) {
+    for (const vocabId of idsToInsert) {
       try {
-        const { word, reading, meaning } = fc;
-
-        console.log(`  📌 Processing: word="${word}", reading="${reading}", meaning="${meaning}"`);
-
-        if (!word || !meaning) {
-          console.log(`  ⏭️  Skipped: missing word or meaning`);
-          continue;
-        }
-
-        // Create vocabulary item
-        const vocabResult = await pool.query(
-          'INSERT INTO vocabulary (word, reading, meaning, level) VALUES ($1, $2, $3, $4) RETURNING id',
-          [word, reading || word, meaning, 2]
-        );
-
-        const vocabId = vocabResult.rows[0].id;
-        console.log(`  ✅ Created vocab id=${vocabId}`);
-
-        // Create flashcard with user_id = null for global deck
         await pool.query(
           'INSERT INTO flashcards (user_id, vocab_id, deck_id) VALUES ($1, $2, $3)',
           [null, vocabId, deckId]
         );
 
-        console.log(`  ✅ Created flashcard for deck ${deckId}`);
         created++;
       } catch (itemErr) {
         console.error('❌ Error creating flashcard item:', itemErr.message);
@@ -1075,11 +1132,12 @@ router.post('/decks/:deckId/flashcards/bulk', adminMiddleware, async (req, res) 
       }
     }
 
-    console.log(`✅ Bulk creation complete: ${created}/${flashcards.length} created`);
+    console.log(`✅ Bulk creation complete: ${created}/${targetVocabIds.length} created`);
 
     res.json({
       message: `Created ${created} flashcards`,
       created,
+      skipped: targetVocabIds.length - created,
       errors: errors.length > 0 ? errors : undefined,
     });
   } catch (error) {

@@ -1,14 +1,63 @@
-import express from 'express';
-import pool from '../db.js';
+import express from "express";
+import pool from "../db.js";
 
 const router = express.Router();
 
-// Get user flashcards (personal decks only, not global)
-router.get('/', async (req, res) => {
+/**
+ * FLASHCARD SYSTEM: USER PROGRESS ON GLOBAL DECKS
+ * Users do not create cards or decks. 
+ * Instead, the Admin populates Global Decks.
+ * When a user studies a card, we track their personal progress (repetitions, interval, ease_factor).
+ */
+
+// Get flashcards for a specific deck (User Specific Progress)
+router.get("/deck/:deckId", async (req, res) => {
   try {
     const userId = req.userId;
-    console.log(`📚 Fetching flashcards for user ${userId}`);
-    
+    const { deckId } = req.params;
+
+    const deckResult = await pool.query(
+      `SELECT id, is_global FROM flashcard_decks
+       WHERE id = $1 AND (is_global = true OR user_id = $2)`,
+      [deckId, userId]
+    );
+
+    if (deckResult.rows.length === 0) {
+      return res.status(404).json({ error: "Deck not found" });
+    }
+
+    const deck = deckResult.rows[0];
+
+    // If this is a global deck, ensure the user has progress rows for all template cards.
+    // Template cards are stored as flashcards with user_id IS NULL.
+    if (deck.is_global) {
+      await pool.query(
+        `
+        INSERT INTO flashcards (user_id, vocab_id, grammar_id, deck_id)
+        SELECT
+          $1 as user_id,
+          t.vocab_id,
+          t.grammar_id,
+          t.deck_id
+        FROM flashcards t
+        WHERE t.deck_id = $2
+          AND t.user_id IS NULL
+          AND NOT EXISTS (
+            SELECT 1
+            FROM flashcards f
+            WHERE f.user_id = $1
+              AND f.deck_id = t.deck_id
+              AND (
+                (t.vocab_id IS NOT NULL AND f.vocab_id = t.vocab_id)
+                OR
+                (t.grammar_id IS NOT NULL AND f.grammar_id = t.grammar_id)
+              )
+          )
+        `,
+        [userId, deckId]
+      );
+    }
+
     const result = await pool.query(
       `SELECT 
         f.id,
@@ -20,152 +69,101 @@ router.get('/', async (req, res) => {
         f.repetitions,
         f.ease_factor,
         f.next_review_date,
-        f.created_at,
         v.word,
         v.reading,
         v.meaning,
-        d.name as deck_name,
-        d.color as deck_color,
-        d.is_global as deck_is_global
+        v.example_sentence as example,
+        g.pattern as grammar_point,
+        g.explanation,
+        g.meaning as grammar_meaning,
+        d.name as deck_name
       FROM flashcards f
       LEFT JOIN vocabulary v ON f.vocab_id = v.id
+      LEFT JOIN grammar g ON f.grammar_id = g.id
       LEFT JOIN flashcard_decks d ON f.deck_id = d.id
-      WHERE f.user_id = $1 AND f.deck_id IS NOT NULL
-      ORDER BY d.name, f.next_review_date`,
-      [userId]
+      WHERE f.user_id = $1 AND f.deck_id = $2
+      ORDER BY f.next_review_date`,
+      [userId, deckId]
     );
-
-    console.log(`✅ Found ${result.rows.length} flashcards for user ${userId}`);
-    result.rows.forEach((fc) => {
-      console.log(`  • ${fc.word} (${fc.meaning}) - deck: ${fc.deck_name}, user_id: ${fc.user_id}`);
-    });
 
     res.json({ rows: result.rows });
   } catch (error) {
-    console.error('❌ Flashcards error:', error);
-    // Fallback for when flashcard_decks table doesn't exist
-    try {
-      const fallbackResult = await pool.query(
-        'SELECT * FROM flashcards WHERE user_id = $1 ORDER BY next_review_date',
-        [userId]
-      );
-      res.json({ rows: fallbackResult.rows });
-    } catch (fallbackError) {
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
+    console.error("Flashcards error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-// Create flashcard from vocabulary or grammar
-router.post('/', async (req, res) => {
+// Add a word/grammar to a deck (Personal progress entry)
+router.post("/add", async (req, res) => {
   try {
     const userId = req.userId;
     const { vocab_id, grammar_id, deck_id } = req.body;
 
-    // Validate: must have either vocab_id or grammar_id (or both)
-    if (!vocab_id && !grammar_id) {
-      console.warn('⚠️ Attempted to create flashcard with neither vocab_id nor grammar_id');
-      return res.status(400).json({ error: 'vocab_id or grammar_id is required' });
-    }
-
-    // Validate: deck_id is required
     if (!deck_id) {
-      console.warn('⚠️ Attempted to create flashcard without deck_id');
-      return res.status(400).json({ error: 'deck_id is required - please select or create a deck' });
+      return res.status(400).json({ error: "deck_id is required" });
     }
 
-    // Validate: if vocab_id provided, it must exist in vocabulary table
-    if (vocab_id) {
-      try {
-        const vocabCheck = await pool.query(
-          'SELECT id FROM vocabulary WHERE id = $1',
-          [vocab_id]
-        );
-        if (vocabCheck.rows.length === 0) {
-          console.warn(`⚠️ vocab_id ${vocab_id} does not exist`);
-          return res.status(400).json({ error: 'Vocabulary not found' });
-        }
-      } catch (e) {
-        console.warn(`ℹ️ Could not verify vocabulary: ${e.message}`);
-      }
+    if (!vocab_id && !grammar_id) {
+      return res.status(400).json({ error: "vocab_id or grammar_id is required" });
     }
 
-    // Validate: if grammar_id provided, it must exist in grammar table
-    if (grammar_id) {
-      try {
-        const grammarCheck = await pool.query(
-          'SELECT id FROM grammar WHERE id = $1',
-          [grammar_id]
-        );
-        if (grammarCheck.rows.length === 0) {
-          console.warn(`⚠️ grammar_id ${grammar_id} does not exist`);
-          return res.status(400).json({ error: 'Grammar not found' });
-        }
-      } catch (e) {
-        console.warn(`ℹ️ Could not verify grammar: ${e.message}`);
-      }
+    const deckResult = await pool.query(
+      `SELECT id FROM flashcard_decks
+       WHERE id = $1 AND (is_global = true OR user_id = $2)`,
+      [deck_id, userId]
+    );
+
+    if (deckResult.rows.length === 0) {
+      return res.status(404).json({ error: "Deck not found" });
     }
 
-    let finalDeckId = deck_id;
+    // Check if it already exists for this user in this deck
+    const existing = await pool.query(
+      `SELECT id FROM flashcards WHERE user_id = $1 AND deck_id = $2 AND 
+       (vocab_id = $3 OR grammar_id = $4)`,
+      [userId, deck_id, vocab_id || null, grammar_id || null]
+    );
 
-    // If deck_id provided, verify it belongs to user
-    if (finalDeckId) {
-      try {
-        const deckCheck = await pool.query(
-          'SELECT id FROM flashcard_decks WHERE id = $1 AND user_id = $2',
-          [finalDeckId, userId]
-        );
-
-        if (deckCheck.rows.length === 0) {
-          console.warn(`⚠️ Deck ${finalDeckId} not found or doesn't belong to user ${userId}`);
-          return res.status(403).json({ error: 'Deck not found' });
-        }
-      } catch (e) {
-        // flashcard_decks table might not exist yet
-        console.log('Note: flashcard_decks table might not exist yet');
-        finalDeckId = null;
-      }
+    if (existing.rows.length > 0) {
+      return res.status(400).json({ error: "Already in this deck" });
     }
 
     const result = await pool.query(
-      'INSERT INTO flashcards (user_id, vocab_id, grammar_id, deck_id) VALUES ($1, $2, $3, $4) RETURNING *',
-      [userId, vocab_id || null, grammar_id || null, finalDeckId || null]
+      `INSERT INTO flashcards (user_id, vocab_id, grammar_id, deck_id) 
+       VALUES ($1, $2, $3, $4) 
+       RETURNING *`,
+      [userId, vocab_id || null, grammar_id || null, deck_id]
     );
 
-    console.log(`✅ Flashcard created: vocab_id=${vocab_id}, grammar_id=${grammar_id}, deck_id=${finalDeckId}`);
-    res.status(201).json(result.rows[0]);
+    res.status(201).json({ flashcard: result.rows[0] });
   } catch (error) {
-    console.error('Create flashcard error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Add flashcard error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-// Update flashcard review (Spaced Repetition Algorithm)
-router.patch('/:id', async (req, res) => {
+// Update flashcard review (SM-2 Algorithm)
+router.patch("/:id", async (req, res) => {
   try {
     const userId = req.userId;
     const { id } = req.params;
-    const { quality } = req.body; // 0-5 (0=wrong, 5=perfect)
+    const { quality } = req.body; // 0-5
 
-    // SM-2 Algorithm
     const card = await pool.query(
-      'SELECT * FROM flashcards WHERE id = $1 AND user_id = $2',
+      "SELECT * FROM flashcards WHERE id = $1 AND user_id = $2",
       [id, userId]
     );
 
     if (card.rows.length === 0) {
-      return res.status(404).json({ error: 'Flashcard not found' });
+      return res.status(404).json({ error: "Flashcard not found" });
     }
 
-    const flashcard = card.rows[0];
-    let { interval, repetitions, ease_factor } = flashcard;
+    let { interval, repetitions, ease_factor } = card.rows[0];
 
     if (quality < 3) {
-      // Wrong answer
       repetitions = 0;
       interval = 1;
     } else {
-      // Correct answer
       repetitions += 1;
       if (repetitions === 1) {
         interval = 1;
@@ -176,67 +174,36 @@ router.patch('/:id', async (req, res) => {
       }
     }
 
-    // Update EF
-    ease_factor = Math.max(
-      1.3,
-      ease_factor + 0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)
-    );
+    ease_factor = Math.max(1.3, ease_factor + 0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
 
     const nextReview = new Date();
     nextReview.setDate(nextReview.getDate() + interval);
 
     const result = await pool.query(
-      'UPDATE flashcards SET interval = $1, repetitions = $2, ease_factor = $3, next_review_date = $4 WHERE id = $5 RETURNING *',
-      [interval, repetitions, ease_factor, nextReview, id]
+      `UPDATE flashcards 
+       SET interval = $1, repetitions = $2, ease_factor = $3, next_review_date = $4
+       WHERE id = $5 AND user_id = $6
+       RETURNING *`,
+      [interval, repetitions, ease_factor, nextReview, id, userId]
     );
 
     res.json(result.rows[0]);
   } catch (error) {
-    console.error('Update flashcard error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Update flashcard error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
 // Delete flashcard
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const userId = req.userId;
     const { id } = req.params;
-
-    const result = await pool.query(
-      'DELETE FROM flashcards WHERE id = $1 AND user_id = $2 RETURNING id',
-      [id, userId]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Flashcard not found' });
-    }
-
-    res.json({ message: 'Deleted' });
+    await pool.query("DELETE FROM flashcards WHERE id = $1 AND user_id = $2", [id, userId]);
+    res.json({ message: "Flashcard removed from deck" });
   } catch (error) {
-    console.error('Delete flashcard error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-// Cleanup: Delete flashcards with null vocab_id and grammar_id (corrupted records)
-router.post('/cleanup/null-entries', async (req, res) => {
-  try {
-    const userId = req.userId;
-    
-    const result = await pool.query(
-      'DELETE FROM flashcards WHERE user_id = $1 AND vocab_id IS NULL AND grammar_id IS NULL RETURNING id',
-      [userId]
-    );
-
-    console.log(`🧹 Cleaned up ${result.rows.length} null flashcard entries for user ${userId}`);
-    res.json({ 
-      message: `Deleted ${result.rows.length} corrupted entries`,
-      deleted_count: result.rows.length 
-    });
-  } catch (error) {
-    console.error('Cleanup error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Delete flashcard error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

@@ -52,7 +52,7 @@ export default function GrammarDetail() {
       if (!id) return;
       try {
         setLoading(true);
-        const data = await api.getGrammarById(id, token);
+        const data = await api.getGrammarById(Number(id));
         // Mock missing data for now
         setGrammar({
           ...data,
@@ -73,7 +73,7 @@ export default function GrammarDetail() {
       }
     };
     fetchGrammar();
-  }, [id, token]);
+  }, [id]);
 
   const handleAddFlashcard = () => {
     if (grammar) {

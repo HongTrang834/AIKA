@@ -1,5 +1,34 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
+const requestJson = async (url: string, options?: RequestInit) => {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+  let res: Response;
+  try {
+    res = await fetch(url, { ...options, signal: controller.signal });
+  } catch (error) {
+    clearTimeout(timeout);
+    throw new Error('Cannot connect to server. Please start backend API.');
+  }
+  clearTimeout(timeout);
+
+  const text = await res.text();
+  let payload: any = {};
+  if (text) {
+    try {
+      payload = JSON.parse(text);
+    } catch {
+      payload = { error: text };
+    }
+  }
+
+  if (!res.ok) {
+    throw new Error(payload.error || `Request failed (${res.status})`);
+  }
+
+  return payload;
+};
+
 export const api = {
   // Auth
   register: async (data: { username: string; email: string; password: string; full_name: string }) => {
@@ -88,12 +117,11 @@ export const api = {
   },
 
   createFlashcard: async (token: string, data: { vocab_id?: number; grammar_id?: number; deck_id?: number }) => {
-    const res = await fetch(`${API_BASE_URL}/flashcards`, {
+    return requestJson(`${API_BASE_URL}/flashcards/add`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify(data),
     });
-    return res.json();
   },
 
   updateFlashcard: async (token: string, id: number, quality: number) => {
@@ -109,6 +137,22 @@ export const api = {
     const res = await fetch(`${API_BASE_URL}/flashcards/${id}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.json();
+  },
+
+  getFlashcardsInDeck: async (token: string, deckId: number) => {
+    const res = await fetch(`${API_BASE_URL}/flashcards/deck/${deckId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.json();
+  },
+
+  addFlashcardToDeck: async (token: string, data: { vocab_id?: number; grammar_id?: number; deck_id: number }) => {
+    const res = await fetch(`${API_BASE_URL}/flashcards/add`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify(data),
     });
     return res.json();
   },
@@ -138,19 +182,23 @@ export const api = {
 
   // Flashcard Decks
   getDecks: async (token: string) => {
-    const res = await fetch(`${API_BASE_URL}/decks`, {
+    return requestJson(`${API_BASE_URL}/decks`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    return res.json();
+  },
+
+  getMyDecks: async (token: string) => {
+    return requestJson(`${API_BASE_URL}/decks/my`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
   },
 
   createDeck: async (token: string, data: { name: string; description?: string; color?: string }) => {
-    const res = await fetch(`${API_BASE_URL}/decks`, {
+    return requestJson(`${API_BASE_URL}/decks`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify(data),
     });
-    return res.json();
   },
 
   updateDeck: async (token: string, id: number, data: { name?: string; description?: string; color?: string }) => {

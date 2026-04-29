@@ -1,110 +1,82 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Flame, Bell, Lightbulb, History, RotateCcw, Frown, Smile, Rocket, Loader, Plus, ArrowLeft, Layers } from 'lucide-react';
-import { api } from '../lib/api';
-import { useAuth } from '../context/AuthContext';
-import { useToast } from '../context/ToastContext';
-import { getMockDecks, getMockDeck } from '../lib/deckStorage';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { RotateCcw, Frown, Smile, Rocket, Loader, ArrowLeft, Bookmark, UserSquare2 } from "lucide-react";
+import { api } from "../lib/api";
+import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 
 export default function Flashcards() {
   const { token } = useAuth();
   const { showToast } = useToast();
   const [flashcards, setFlashcards] = useState<any[]>([]);
-  const [decks, setDecks] = useState<any[]>([]);
-  const [selectedDeckId, setSelectedDeckId] = useState<number | null>(null);
+  const [globalDecks, setGlobalDecks] = useState<any[]>([]);
+  const [myDecks, setMyDecks] = useState<any[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [showNewFlashcardForm, setShowNewFlashcardForm] = useState(false);
-  const [vocabId, setVocabId] = useState('');
-  const [submitLoading, setSubmitLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [studyMode, setStudyMode] = useState(false); // false = deck selection, true = study
+  const [error, setError] = useState("");
+  const [studyMode, setStudyMode] = useState(false);
 
   useEffect(() => {
-    fetchFlashcards();
+    fetchDecks();
   }, [token]);
 
-  const fetchFlashcards = async () => {
+  const fetchDecks = async () => {
     try {
       if (!token) return;
-      const data = await api.getFlashcards(token);
-      let allFlashcards = data.rows || [];
-      
-      // Check if we have mock decks and enrich flashcards with their info
-      const mockDecks = getMockDecks();
-      if (mockDecks.length > 0) {
-        allFlashcards = allFlashcards.map((card: any) => {
-          if (card.deck_id) {
-            const mockDeck = getMockDeck(card.deck_id);
-            if (mockDeck) {
-              return {
-                ...card,
-                deck_name: mockDeck.name,
-                deck_color: mockDeck.color
-              };
-            }
-          }
-          return card;
-        });
+      setLoading(true);
+      setError("");
+
+      const [globalRes, myRes] = await Promise.allSettled([
+        api.getDecks(token),
+        api.getMyDecks(token),
+      ]);
+
+      if (globalRes.status === "fulfilled") {
+        setGlobalDecks(globalRes.value.rows || []);
+      } else {
+        console.error("Error fetching global decks:", globalRes.reason);
+        setGlobalDecks([]);
       }
-      
-      setFlashcards(allFlashcards);
-      
-      // Group by deck (only include flashcards with deck_id)
-      const deckMap = new Map<string, any>();
-      allFlashcards.forEach((card: any) => {
-        // Skip cards without a deck
-        if (!card.deck_id || !card.deck_name) return;
-        
-        const deckName = card.deck_name;
-        if (!deckMap.has(deckName)) {
-          deckMap.set(deckName, {
-            name: deckName,
-            color: card.deck_color || 'blue',
-            id: card.deck_id,
-            cards: [],
-            count: 0
-          });
-        }
-        const deck = deckMap.get(deckName)!;
-        deck.cards.push(card);
-        deck.count++;
-      });
-      
-      setDecks(Array.from(deckMap.values()));
-      setCurrentIndex(0);
-      setIsFlipped(false);
-      setStudyMode(false);
-    } catch (err) {
-      console.error('Error fetching flashcards:', err);
-      setError('Failed to load flashcards');
+
+      if (myRes.status === "fulfilled") {
+        setMyDecks(myRes.value.rows || []);
+      } else {
+        console.error("Error fetching my decks:", myRes.reason);
+        setMyDecks([]);
+      }
+
+      if (globalRes.status === "rejected" && myRes.status === "rejected") {
+        setError("Cannot load decks right now. Please check backend server.");
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCreateFlashcard = async () => {
-    if (!vocabId || !token || !selectedDeckId) {
-      setError('Please select a deck first');
-      return;
-    }
-    setSubmitLoading(true);
-    setError('');
+  const startStudy = async (deckId: number) => {
     try {
-      await api.createFlashcard(token, { 
-        vocab_id: parseInt(vocabId),
-        deck_id: selectedDeckId 
-      });
-      setVocabId('');
-      setShowNewFlashcardForm(false);
-      await fetchFlashcards();
-      showToast('Flashcard added to deck!', 'success');
-    } catch (err: any) {
-      setError(err.message || 'Failed to create flashcard');
-      showToast(err.message || 'Failed to create flashcard', 'error');
+      if (!token) return;
+      setLoading(true);
+      
+      const res = await api.getFlashcardsInDeck(token, deckId);
+      const cards = res.rows || [];
+      
+      if (cards.length === 0) {
+        showToast("This deck has no cards to study.", "info");
+        setLoading(false);
+        return;
+      }
+      
+      setFlashcards(cards);
+      setCurrentIndex(0);
+      setIsFlipped(false);
+      setStudyMode(true);
+    } catch (err) {
+      console.error("Error starting study:", err);
+      showToast("Failed to load flashcards", "error");
     } finally {
-      setSubmitLoading(false);
+      setLoading(false);
     }
   };
 
@@ -112,59 +84,23 @@ export default function Flashcards() {
     if (!token || !flashcards[currentIndex]) return;
     try {
       const currentCard = flashcards[currentIndex];
-      
-      // Update flashcard review progress
       await api.updateFlashcard(token, currentCard.id, quality);
-      
-      // Mark as learned in user learning history (if it's a vocabulary card)
-      if (currentCard.vocab_id) {
-        try {
-          console.log('📚 Marking vocabulary as learned:', currentCard.vocab_id);
-          
-          // Map quality score to learning status:
-          // 0-2 = still learning, 3-5 = mastered
-          const status = quality >= 3 ? 2 : 1; // 1=LEARNING, 2=MASTERED
-          
-          await fetch(`/api/progress/vocab-learned/${currentCard.vocab_id}`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ status })
-          });
-          
-          console.log('✅ Vocabulary marked as learned');
-        } catch (learnError) {
-          console.error('Failed to mark vocabulary as learned:', learnError);
-        }
-      }
-      
-      // Update overall flashcard progress
-      try {
-        console.log('📚 Updating flashcard progress +1');
-        await api.updateProgress(token, 'flashcard', 1);
-        console.log('✅ Flashcard progress updated');
-      } catch (progressError) {
-        console.error('Failed to update flashcard progress:', progressError);
-      }
       
       const newIndex = currentIndex + 1;
       if (newIndex < flashcards.length) {
         setCurrentIndex(newIndex);
         setIsFlipped(false);
       } else {
-        showToast('Hoàn thành phiên học flashcards!', 'success');
+        showToast("Session completed!", "success");
         setStudyMode(false);
-        setSelectedDeckId(null);
-        await fetchFlashcards();
+        fetchDecks();
       }
     } catch (err) {
-      console.error('Error updating flashcard:', err);
+      console.error("Error updating flashcard:", err);
     }
   };
 
-  if (loading) {
+  if (loading && !studyMode) {
     return (
       <div className="flex-1 flex items-center justify-center min-h-screen">
         <Loader className="w-8 h-8 animate-spin text-primary" />
@@ -172,283 +108,170 @@ export default function Flashcards() {
     );
   }
 
-  // DECK SELECTION VIEW
   if (!studyMode) {
-    if (decks.length === 0) {
-      return (
-        <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
-          <Lightbulb className="w-16 h-16 text-slate-300 mb-4" />
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">No Flashcards Yet</h2>
-          <p className="text-slate-500 mb-6">Create your first flashcard to start learning!</p>
-          <button
-            onClick={() => setShowNewFlashcardForm(true)}
-            className="bg-primary text-white px-6 py-3 rounded-xl font-semibold hover:bg-primary/90 flex items-center gap-2"
-          >
-            <Plus className="w-5 h-5" />
-            Create Flashcard
-          </button>
-
-          {showNewFlashcardForm && (
-            <div className="mt-8 bg-white p-6 rounded-xl border border-slate-200 w-full max-w-md">
-              <h3 className="font-bold text-lg mb-4">Add Flashcard from Vocabulary</h3>
-              {error && <div className="bg-red-50 text-red-600 px-4 py-3 rounded-lg mb-4 text-sm">{error}</div>}
-              <div className="flex gap-2">
-                <input
-                  type="number"
-                  value={vocabId}
-                  onChange={(e) => setVocabId(e.target.value)}
-                  placeholder="Enter vocabulary ID"
-                  className="flex-1 px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-                <button
-                  onClick={handleCreateFlashcard}
-                  disabled={submitLoading}
-                  className="bg-primary text-white px-4 py-2 rounded-lg font-semibold hover:bg-primary/90 disabled:opacity-50"
-                >
-                  {submitLoading ? 'Adding...' : 'Add'}
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    // Show Decks List
     return (
-      <div className="p-10 max-w-7xl mx-auto">
-        <div className="mb-10">
-          <div className="flex items-center gap-3 mb-2">
-            <Layers className="w-6 h-6 text-primary" />
-            <h2 className="text-3xl font-bold text-slate-900">My Decks</h2>
-          </div>
-          <p className="text-slate-500">Select a deck to start studying</p>
-        </div>
+      <div className="flex-1 p-8">
+        <div className="max-w-6xl mx-auto">
+          <header className="mb-10">
+            <h1 className="text-4xl font-extrabold text-slate-900 mb-2">Flashcard Decks</h1>
+            <p className="text-slate-500 text-lg">Study from admin decks or your own personal decks.</p>
+          </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {decks.map((deck, idx) => {
-            const colorMap: any = {
-              blue: { bg: 'bg-blue-50', border: 'border-blue-300', button: 'bg-blue-600 hover:bg-blue-700' },
-              red: { bg: 'bg-red-50', border: 'border-red-300', button: 'bg-red-600 hover:bg-red-700' },
-              green: { bg: 'bg-green-50', border: 'border-green-300', button: 'bg-green-600 hover:bg-green-700' },
-              purple: { bg: 'bg-purple-50', border: 'border-purple-300', button: 'bg-purple-600 hover:bg-purple-700' },
-              yellow: { bg: 'bg-yellow-50', border: 'border-yellow-300', button: 'bg-yellow-600 hover:bg-yellow-700' },
-            };
-            const colors = colorMap[deck.color] || colorMap.blue;
+          {error && <p className="text-red-600 mb-4">{error}</p>}
 
-            return (
-              <div key={idx} className={`${colors.bg} border-2 ${colors.border} rounded-lg p-6`}>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">{deck.name}</h3>
-                <p className="text-slate-600 mb-4 font-semibold text-lg">{deck.count} cards</p>
-                <button
-                  onClick={() => {
-                  setSelectedDeckId(idx);
-                    setFlashcards(deck.cards);
-                    setCurrentIndex(0);
-                    setIsFlipped(false);
-                    setStudyMode(true);
-                  }}
-                  className={`w-full ${colors.button} text-white py-2 rounded-lg font-semibold transition`}
-                >
-                  Study
-                </button>
+          <section className="mb-10">
+            <h2 className="text-2xl font-bold text-slate-900 mb-4">Official Decks</h2>
+            {globalDecks.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
+                <Bookmark className="w-14 h-14 text-slate-300 mb-3" />
+                <h3 className="text-lg font-bold text-slate-700">No official decks available yet</h3>
+                <p className="text-slate-500">Admin can create these decks in the admin page.</p>
               </div>
-            );
-          })}
+            ) : (
+              <DeckGrid decks={globalDecks} onStartStudy={startStudy} />
+            )}
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <UserSquare2 className="w-6 h-6 text-primary" />
+              My Flashcards
+            </h2>
+            {myDecks.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
+                <Bookmark className="w-14 h-14 text-slate-300 mb-3" />
+                <h3 className="text-lg font-bold text-slate-700">You do not have any decks yet</h3>
+                <p className="text-slate-500">Use the + button in Vocabulary/Grammar to create and add cards.</p>
+              </div>
+            ) : (
+              <DeckGrid decks={myDecks} onStartStudy={startStudy} />
+            )}
+          </section>
         </div>
       </div>
     );
   }
 
-  // STUDY MODE
-  if (studyMode && flashcards.length === 0) {
-    return (
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
-        <button
-          onClick={() => {
-            setStudyMode(false);
-            setSelectedDeckId(null);
-          }}
-          className="absolute top-24 left-6 flex items-center gap-2 text-slate-600 hover:text-slate-900 font-semibold transition"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          Back to Decks
-        </button>
-        <Lightbulb className="w-16 h-16 text-slate-300 mb-4" />
-        <h2 className="text-2xl font-bold text-slate-900 mb-2">No Flashcards in This Deck</h2>
-        <p className="text-slate-500 mb-6">Add vocabulary or grammar items to this deck to start studying!</p>
-        <button
-          onClick={() => setShowNewFlashcardForm(true)}
-          className="bg-primary text-white px-6 py-3 rounded-xl font-semibold hover:bg-primary/90 flex items-center gap-2"
-        >
-          <Plus className="w-5 h-5" />
-          Add to This Deck
-        </button>
+  const currentCard = flashcards[currentIndex];
+  if (!currentCard) return null;
 
-        {showNewFlashcardForm && (
-          <div className="mt-8 bg-white p-6 rounded-xl border border-slate-200 w-full max-w-md">
-            <h3 className="font-bold text-lg mb-4">Add Flashcard</h3>
-            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm text-blue-700">This card will be added to the selected deck</p>
-            </div>
-            {error && <div className="bg-red-50 text-red-600 px-4 py-3 rounded-lg mb-4 text-sm">{error}</div>}
-            <div className="flex gap-2">
-              <input
-                type="number"
-                value={vocabId}
-                onChange={(e) => setVocabId(e.target.value)}
-                placeholder="Enter vocabulary ID"
-                className="flex-1 px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-              <button
-                onClick={handleCreateFlashcard}
-                disabled={submitLoading}
-                className="bg-primary text-white px-4 py-2 rounded-lg font-semibold hover:bg-primary/90 disabled:opacity-50"
-              >
-                {submitLoading ? 'Adding...' : 'Add'}
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  // STUDY MODE - Active
-  if (studyMode && flashcards.length > 0) {
-    const current = flashcards[currentIndex];
-    const progress = ((currentIndex + 1) / flashcards.length) * 100;
-    const currentDeck = decks[selectedDeckId || 0];
-
-    return (
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 max-w-5xl mx-auto w-full min-h-[calc(100vh-80px)]">
-        {/* Progress Header */}
-        <div className="w-full max-w-2xl mb-12">
-          <button
-            onClick={() => {
-              setStudyMode(false);
-              setSelectedDeckId(null);
-            }}
-            className="flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-4 font-semibold transition"
+  return (
+    <div className="flex-1 flex flex-col items-center py-12 px-6 bg-slate-50 min-h-screen">
+      <div className="w-full max-w-2xl">
+        <div className="mb-8 flex items-center gap-4">
+          <button 
+            onClick={() => { setStudyMode(false); fetchDecks(); }}
+            className="p-2 hover:bg-slate-200 rounded-lg transition"
           >
-            <ArrowLeft className="w-5 h-5" />
-            Back to Decks
+            <ArrowLeft className="w-6 h-6 text-slate-600" />
           </button>
-
-          <div className="flex justify-between items-end mb-4">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                {currentDeck?.name || 'Flashcards'}
-              </span>
-              <h3 className="text-2xl font-black font-headline text-slate-900">Learning Session</h3>
-            </div>
-            <div className="text-right">
-              <span className="text-2xl font-black font-headline text-primary">{currentIndex + 1}<span className="text-slate-300 text-lg font-medium">/{flashcards.length}</span></span>
-            </div>
-          </div>
-          <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
+          <div className="flex-1 h-3 bg-slate-200 rounded-full overflow-hidden">
             <motion.div 
+              className="h-full bg-primary"
               initial={{ width: 0 }}
-              animate={{ width: `${progress}%` }}
-              className="h-full bg-secondary rounded-full"
+              animate={{ width: `${((currentIndex + 1) / flashcards.length) * 100}%` }}
             />
           </div>
+          <span className="text-sm font-bold text-slate-500">
+            {currentIndex + 1} / {flashcards.length}
+          </span>
         </div>
 
-        {/* The Flashcard */}
-        <div 
-          className="w-full max-w-xl aspect-[5/3.5] relative cursor-pointer group"
-          onClick={() => setIsFlipped(!isFlipped)}
-          style={{ perspective: '2000px' }}
-        >
-          <motion.div 
-            className="w-full h-full relative"
-            initial={false}
-            animate={{ rotateY: isFlipped ? 180 : 0 }}
-            transition={{ duration: 0.6, type: 'spring', stiffness: 260, damping: 20 }}
-            style={{ transformStyle: 'preserve-3d' }}
-          >
-            {/* Front */}
-            <div 
-              className="absolute inset-0 bg-white rounded-[2.5rem] flex flex-col items-center justify-center p-12 border border-slate-100 shadow-2xl shadow-primary/5"
-              style={{ backfaceVisibility: 'hidden' }}
+        <div className="relative h-[450px] w-full [perspective:1000px]">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentCard.id}
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -50 }}
+              className="w-full h-full"
             >
-              <div className="absolute top-8 left-8">
-                <span className="bg-tertiary/10 text-tertiary text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Vocabulary</span>
-              </div>
-              <p className="text-slate-400 text-xs font-bold uppercase mb-4 tracking-widest">Click to reveal meaning</p>
-              <div className="text-7xl font-headline font-extrabold text-primary mb-4">{current?.word}</div>
-              <div className="text-xl text-slate-500">{current?.reading}</div>
-            </div>
+              <div
+                className={`w-full h-full relative transition-all duration-500 [transform-style:preserve-3d] cursor-pointer ${isFlipped ? "[transform:rotateY(180deg)]" : ""}`}
+                onClick={() => setIsFlipped(!isFlipped)}
+              >
+                <div className="absolute inset-0 w-full h-full bg-white rounded-3xl shadow-xl p-10 flex flex-col items-center justify-center [backface-visibility:hidden]">
+                  <div className="text-primary text-sm font-bold uppercase tracking-widest mb-6">Vocabulary</div>
+                  <h2 className="text-7xl font-bold text-slate-900 mb-4">{currentCard.word || currentCard.grammar_point}</h2>
+                  <p className="text-2xl text-slate-400">{currentCard.reading}</p>
+                  <p className="mt-12 text-slate-400 text-sm">Click to flip</p>
+                </div>
 
-            {/* Back */}
-            <div 
-              className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 rounded-[2.5rem] flex flex-col items-center justify-center p-12 border border-slate-100 shadow-2xl shadow-primary/5"
-              style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
-            >
-              <div className="text-center space-y-6">
-                <div className="text-4xl font-bold text-primary">{current?.vietnamese_meaning || current?.meaning}</div>
-                {current?.level && (
-                  <p className="text-slate-500 text-sm">Level: {current.level}</p>
-                )}
+                <div className="absolute inset-0 w-full h-full bg-white rounded-3xl shadow-xl p-10 flex flex-col [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-y-auto">
+                  <div className="text-primary text-sm font-bold uppercase tracking-widest mb-4">Meaning</div>
+                  <h3 className="text-3xl font-bold text-slate-900 mb-6">{currentCard.meaning || currentCard.explanation}</h3>
+                  
+                  {currentCard.example && (
+                    <div className="mt-6 p-6 bg-slate-50 rounded-2xl">
+                      <div className="text-xs font-bold text-slate-400 uppercase mb-2">Example</div>
+                      <p className="text-lg text-slate-800 mb-2">{currentCard.example}</p>
+                      <p className="text-sm text-slate-500">{currentCard.example_reading}</p>
+                      <p className="text-slate-600 mt-2">{currentCard.example_meaning}</p>
+                    </div>
+                  )}
+
+                  <div className="mt-auto pt-6 text-center text-slate-400 text-sm">Click to flip back</div>
+                </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </AnimatePresence>
         </div>
 
-        {/* Rating Buttons */}
-        <div className="mt-16 w-full max-w-2xl grid grid-cols-4 gap-4">
+        <div className="mt-10 grid grid-cols-4 gap-4">
           {[
-            { label: 'Failed', quality: 0, color: 'text-red-500', bg: 'bg-red-50' },
-            { label: 'Hard', quality: 2, color: 'text-orange-500', bg: 'bg-orange-50' },
-            { label: 'Good', quality: 4, color: 'text-green-500', bg: 'bg-green-50' },
-            { label: 'Easy', quality: 5, color: 'text-blue-500', bg: 'bg-blue-50' },
+            { q: 1, label: "Again", icon: RotateCcw, color: "text-red-500 hover:bg-red-50" },
+            { q: 3, label: "Hard", icon: Frown, color: "text-orange-500 hover:bg-orange-50" },
+            { q: 4, label: "Good", icon: Smile, color: "text-green-500 hover:bg-green-50" },
+            { q: 5, label: "Easy", icon: Rocket, color: "text-primary hover:bg-primary/5" },
           ].map((btn) => (
-            <button 
-              key={btn.quality}
-              onClick={() => handleUpdateFlashcard(btn.quality)}
-              className="group flex flex-col items-center gap-3 scale-95 active:scale-90 transition-transform"
+            <button
+              key={btn.q}
+              onClick={() => handleUpdateFlashcard(btn.q)}
+              className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 border-transparent transition-all ${btn.color}`}
             >
-              <div className={`w-full h-16 rounded-2xl flex items-center justify-center transition-colors ${btn.bg} hover:opacity-80`}>
-                <span className={`font-bold text-xl ${btn.color}`}>{btn.label}</span>
-              </div>
-              <span className={`text-[10px] font-black uppercase tracking-tighter ${btn.color}`}>{btn.quality}</span>
+              <btn.icon className="w-6 h-6" />
+              <span className="font-bold text-sm">{btn.label}</span>
             </button>
           ))}
         </div>
+      </div>
+    </div>
+  );
+}
 
-        {/* Create New Flashcard Button */}
-        <button
-          onClick={() => setShowNewFlashcardForm(!showNewFlashcardForm)}
-          className="mt-12 bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-3 rounded-xl font-semibold transition-colors flex items-center gap-2"
-        >
-          <Plus className="w-5 h-5" />
-          Add Another Flashcard
-        </button>
+function DeckGrid({ decks, onStartStudy }: { decks: any[]; onStartStudy: (deckId: number) => void }) {
+  const colors: Record<string, string> = {
+    blue: "bg-blue-50 border-blue-200 text-blue-700",
+    red: "bg-red-50 border-red-200 text-red-700",
+    green: "bg-green-50 border-green-200 text-green-700",
+    purple: "bg-purple-50 border-purple-200 text-purple-700",
+    yellow: "bg-yellow-50 border-yellow-200 text-yellow-700",
+  };
 
-        {showNewFlashcardForm && (
-          <div className="mt-6 bg-white p-6 rounded-xl border border-slate-200 w-full max-w-md">
-            <h3 className="font-bold text-lg mb-4">Add Flashcard</h3>
-            {error && <div className="bg-red-50 text-red-600 px-4 py-3 rounded-lg mb-4 text-sm">{error}</div>}
-            <div className="flex gap-2">
-              <input
-                type="number"
-                value={vocabId}
-                onChange={(e) => setVocabId(e.target.value)}
-                placeholder="Vocabulary ID"
-                className="flex-1 px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              />
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {decks.map((deck) => {
+        const colorClass = colors[deck.color] || colors.blue;
+        return (
+          <motion.div
+            key={deck.id}
+            whileHover={{ y: -4 }}
+            className={`p-8 rounded-2xl border-2 shadow-sm flex flex-col ${colorClass}`}
+          >
+            <h3 className="text-2xl font-bold mb-2">{deck.name}</h3>
+            <p className="opacity-80 mb-6 flex-1">{deck.description || "No description available."}</p>
+            <div className="flex items-center justify-between mt-auto">
+              <span className="font-bold">{deck.card_count || 0} cards</span>
               <button
-                onClick={handleCreateFlashcard}
-                disabled={submitLoading}
-                className="bg-primary text-white px-4 py-2 rounded-lg font-semibold hover:bg-primary/90 disabled:opacity-50"
+                onClick={() => onStartStudy(deck.id)}
+                className="bg-white px-6 py-2 rounded-xl font-bold shadow-sm hover:shadow-md transition"
               >
-                {submitLoading ? '...' : 'Add'}
+                Study Now
               </button>
             </div>
-          </div>
-        )}
-      </div>
-    );
-  }
+          </motion.div>
+        );
+      })}
+    </div>
+  );
 }

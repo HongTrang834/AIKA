@@ -52,7 +52,7 @@ export default function VocabularyDetail() {
       if (!id) return;
       try {
         setLoading(true);
-        const data = await api.getVocabularyById(id, token);
+        const data = await api.getVocabularyById(Number(id));
         setVocabulary(data);
       } catch (err) {
         console.error('Error fetching vocabulary:', err);
@@ -62,7 +62,7 @@ export default function VocabularyDetail() {
       }
     };
     fetchVocabulary();
-  }, [id, token]);
+  }, [id]);
 
   const handleAddFlashcard = () => {
     if (vocabulary) {

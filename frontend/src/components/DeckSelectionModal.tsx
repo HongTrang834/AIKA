@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { X, Plus } from 'lucide-react';
 import { api } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
-import { getMockDecks, saveMockDeck, getMockDeck } from '../lib/deckStorage';
 
 const DECK_COLORS = {
     blue: { bg: 'bg-blue-50', border: 'border-blue-300', text: 'text-blue-700' },
@@ -49,32 +48,16 @@ export default function DeckSelectionModal({ isOpen, onClose, onSelectDeck, isLo
         try {
             setLoading(true);
             setError(null);
-            const response = await api.getDecks(token);
-            const decksData = response?.rows || response?.data?.rows || [];
-            
-            // Merge database decks with mock decks from localStorage
-            const mockDecks = getMockDecks();
-            const allDecks = [...decksData, ...mockDecks];
-            
-            // Remove duplicates by ID
-            const uniqueDecks = Array.from(
-                new Map(allDecks.map(d => [d.id, d])).values()
-            );
-            
-            setDecks(uniqueDecks);
-            if (uniqueDecks.length > 0) {
-                setSelectedDeckId(uniqueDecks[0].id);
+            const response = await api.getMyDecks(token);
+            const decksData = response?.rows || [];
+
+            setDecks(decksData);
+            if (decksData.length > 0) {
+                setSelectedDeckId(decksData[0].id);
             }
         } catch (err) {
             console.error('Error fetching decks:', err);
-            // On error, still show mock decks from localStorage
-            const mockDecks = getMockDecks();
-            setDecks(mockDecks);
-            if (mockDecks.length > 0) {
-                setSelectedDeckId(mockDecks[0].id);
-            } else {
-                setError('Failed to load decks');
-            }
+            setError('Failed to load decks');
         } finally {
             setLoading(false);
         }
@@ -100,21 +83,8 @@ export default function DeckSelectionModal({ isOpen, onClose, onSelectDeck, isLo
                 color: newDeckColor,
                 description: ''
             });
-            
-            // Handle both success and fallback mock response
-            const newDeck = response?.deck || {
-                id: Date.now(), // Use timestamp as ID for mock
-                name: newDeckName,
-                color: newDeckColor,
-                description: '',
-                card_count: 0,
-                created_at: new Date().toISOString()
-            };
 
-            // Save to localStorage if it's a mock deck
-            if (!response?.deck) {
-                saveMockDeck(newDeck);
-            }
+            const newDeck = response.deck;
 
             setDecks([newDeck, ...decks]);
             setSelectedDeckId(newDeck.id);
@@ -122,25 +92,7 @@ export default function DeckSelectionModal({ isOpen, onClose, onSelectDeck, isLo
             setShowCreateForm(false);
         } catch (err: any) {
             console.error('Error creating deck:', err);
-            // If table doesn't exist, create mock deck locally
-            if (err.status === 503 || err.response?.status === 503) {
-                const mockDeck = {
-                    id: Date.now(),
-                    name: newDeckName,
-                    color: newDeckColor,
-                    description: '',
-                    card_count: 0,
-                    created_at: new Date().toISOString()
-                };
-                saveMockDeck(mockDeck);
-                setDecks([mockDeck, ...decks]);
-                setSelectedDeckId(mockDeck.id);
-                setNewDeckName('');
-                setShowCreateForm(false);
-                setError('Note: Using temporary local deck (not saved to database)');
-            } else {
-                setError(err.response?.data?.error || 'Failed to create deck');
-            }
+            setError(err.message || 'Failed to create deck');
         } finally {
             setLoading(false);
         }
@@ -159,13 +111,7 @@ export default function DeckSelectionModal({ isOpen, onClose, onSelectDeck, isLo
             onClose();
         } catch (err: any) {
             console.error('Error selecting deck:', err);
-            // If it's a 503, it means database isn't ready - but allow mock decks
-            if (err.status === 503 || err.response?.status === 503) {
-                setError('Note: Deck was created locally (database not ready)');
-                setTimeout(() => onClose(), 1500);
-            } else {
-                setError('Failed to add to deck');
-            }
+            setError(err.message || 'Failed to add to deck');
         } finally {
             setLoading(false);
         }
