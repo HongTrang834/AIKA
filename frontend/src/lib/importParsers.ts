@@ -135,3 +135,36 @@ export function validateRecords(records: any[]): any[] {
     };
   });
 }
+
+/**
+ * Validate grammar record has required fields (pattern, meaning)
+ */
+export function validateGrammarRecord(record: any): { valid: boolean; error?: string } {
+  if (!record.pattern || !record.pattern.toString().trim()) {
+    return { valid: false, error: 'Missing pattern' };
+  }
+  if (!record.meaning || !record.meaning.toString().trim()) {
+    return { valid: false, error: 'Missing meaning' };
+  }
+  return { valid: true };
+}
+
+/**
+ * Validate batch of grammar records and create preview format
+ */
+export function validateGrammarRecords(records: any[]): any[] {
+  return records.map(record => {
+    const validation = validateGrammarRecord(record);
+    return {
+      title: record.title?.toString().trim() || '',
+      pattern: record.pattern?.toString().trim() || '',
+      meaning: record.meaning?.toString().trim() || '',
+      explanation: record.explanation?.toString().trim() || '',
+      category: record.category?.toString().trim() || '',
+      level: record.level ? parseInt(record.level) : 2,
+      example_sentence: record.example_sentence?.toString().trim() || '',
+      example_translation: record.example_translation?.toString().trim() || '',
+      error: validation.valid ? undefined : validation.error,
+    };
+  });
+}

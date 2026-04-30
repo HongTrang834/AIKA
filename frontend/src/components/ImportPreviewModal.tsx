@@ -2,11 +2,20 @@ import React from 'react';
 import { X } from 'lucide-react';
 
 interface PreviewRecord {
-  word: string;
-  reading: string;
+  // Vocabulary fields
+  word?: string;
+  reading?: string;
+  
+  // Grammar fields
+  title?: string;
+  pattern?: string;
+  explanation?: string;
+  example_translation?: string;
+
+  // Common fields
   meaning: string;
   category?: string;
-  level?: string;
+  level?: string | number;
   example_sentence?: string;
   example_count?: number;
   examples?: string[];
@@ -21,6 +30,7 @@ interface ImportPreviewModalProps {
   onCancel: () => void;
   isLoading?: boolean;
   title?: string;
+  type?: 'vocabulary' | 'grammar';
 }
 
 export default function ImportPreviewModal({
@@ -31,6 +41,7 @@ export default function ImportPreviewModal({
   onCancel,
   isLoading = false,
   title = 'Import Preview',
+  type = 'vocabulary',
 }: ImportPreviewModalProps) {
   if (!isOpen) return null;
 
@@ -72,8 +83,17 @@ export default function ImportPreviewModal({
               <thead className="bg-gray-100 border-b">
                 <tr>
                   <th className="px-3 py-2 text-left">Status</th>
-                  <th className="px-3 py-2 text-left">Word</th>
-                  <th className="px-3 py-2 text-left">Reading</th>
+                  {type === 'vocabulary' ? (
+                    <>
+                      <th className="px-3 py-2 text-left">Word</th>
+                      <th className="px-3 py-2 text-left">Reading</th>
+                    </>
+                  ) : (
+                    <>
+                      <th className="px-3 py-2 text-left">Title</th>
+                      <th className="px-3 py-2 text-left">Pattern</th>
+                    </>
+                  )}
                   <th className="px-3 py-2 text-left">Meaning</th>
                   <th className="px-3 py-2 text-left">Category</th>
                   <th className="px-3 py-2 text-left">Level</th>
@@ -93,8 +113,17 @@ export default function ImportPreviewModal({
                         <span className="text-green-600 font-semibold text-xs">✓ OK</span>
                       )}
                     </td>
-                    <td className="px-3 py-2 font-medium">{record.word}</td>
-                    <td className="px-3 py-2">{record.reading}</td>
+                    {type === 'vocabulary' ? (
+                      <>
+                        <td className="px-3 py-2 font-medium">{record.word}</td>
+                        <td className="px-3 py-2">{record.reading}</td>
+                      </>
+                    ) : (
+                      <>
+                        <td className="px-3 py-2 font-medium">{record.title}</td>
+                        <td className="px-3 py-2 font-mono text-blue-700">{record.pattern}</td>
+                      </>
+                    )}
                     <td className="px-3 py-2">{record.meaning}</td>
                     <td className="px-3 py-2 text-gray-600">{record.category || '—'}</td>
                     <td className="px-3 py-2 text-center">{record.level || '—'}</td>
@@ -120,7 +149,7 @@ export default function ImportPreviewModal({
               <ul className="list-disc list-inside text-red-800 space-y-1">
                 {errorRecords.slice(0, 5).map((record, idx) => (
                   <li key={idx}>
-                    <strong>{record.word || '(missing word)'}</strong>: {record.error}
+                    <strong>{type === 'vocabulary' ? record.word : record.pattern || '(missing pattern)'}</strong>: {record.error}
                   </li>
                 ))}
                 {errorRecords.length > 5 && (

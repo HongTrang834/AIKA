@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Loader, Upload, Download, FileText, List } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { parseCSVFile, parseExcelFile, validateRecords } from '../lib/importParsers';
+import { parseCSVFile, parseExcelFile, validateGrammarRecords } from '../lib/importParsers';
 import ImportPreviewModal from '../components/ImportPreviewModal';
 
 const API_BASE_URL = 'http://localhost:3000/api';
@@ -163,7 +163,7 @@ export default function AdminGrammar() {
     const merged = mergeRecords(records);
     console.log(`📊 Original records: ${records.length}, After merge: ${merged.length}, Diff: ${records.length - merged.length}`);
     
-    const validated = validateRecords(merged);
+    const validated = validateGrammarRecords(merged);
     setPreviewRecords(validated);
     setPendingImport(merged); // Send merged records to backend
     setShowPreview(true);
@@ -242,7 +242,8 @@ export default function AdminGrammar() {
       const merged = mergeRecords(records);
 
       // Show preview
-      setPreviewRecords(merged);
+      const validated = validateGrammarRecords(merged);
+      setPreviewRecords(validated);
       setPendingImport(merged); // Send merged records to backend
       setShowPreview(true);
       setImportMessage(`✅ Tìm thấy ${records.length} bản ghi (merged to ${merged.length})`);
@@ -532,6 +533,7 @@ export default function AdminGrammar() {
         }}
         isLoading={importLoading}
         title="Preview Ngữ Pháp"
+        type="grammar"
       />
 
       {/* Table */}
