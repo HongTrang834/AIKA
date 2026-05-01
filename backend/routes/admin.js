@@ -923,12 +923,14 @@ router.get('/decks/:id', adminMiddleware, async (req, res) => {
       `SELECT 
         f.id,
         f.vocab_id,
+        f.grammar_id,
         f.deck_id,
-        v.word,
-        v.reading,
-        v.meaning
+        COALESCE(v.word, g.pattern) as word,
+        COALESCE(v.reading, g.title) as reading,
+        COALESCE(v.meaning, g.meaning) as meaning
       FROM flashcards f
       LEFT JOIN vocabulary v ON f.vocab_id = v.id
+      LEFT JOIN grammar g ON f.grammar_id = g.id
       WHERE f.deck_id = $1 AND f.user_id IS NULL
       ORDER BY f.id`,
       [id]
@@ -1166,12 +1168,13 @@ router.get('/flashcards', adminMiddleware, async (req, res) => {
         f.ease_factor,
         f.next_review_date,
         f.created_at,
-        COALESCE(v.word, 'N/A') as word,
-        COALESCE(v.reading, 'N/A') as reading,
-        COALESCE(v.meaning, 'N/A') as meaning,
+        COALESCE(v.word, g.pattern, 'N/A') as word,
+        COALESCE(v.reading, g.title, 'N/A') as reading,
+        COALESCE(v.meaning, g.meaning, 'N/A') as meaning,
         COALESCE(u.username, 'Unknown') as username
       FROM flashcards f
       LEFT JOIN vocabulary v ON f.vocab_id = v.id
+      LEFT JOIN grammar g ON f.grammar_id = g.id
       LEFT JOIN users u ON f.user_id = u.id
       ORDER BY f.created_at DESC
       LIMIT $1 OFFSET $2`,

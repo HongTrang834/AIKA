@@ -69,13 +69,12 @@ router.get("/deck/:deckId", async (req, res) => {
         f.repetitions,
         f.ease_factor,
         f.next_review_date,
-        v.word,
-        v.reading,
-        v.meaning,
-        v.example_sentence as example,
-        g.pattern as grammar_point,
+        COALESCE(v.word, g.pattern) as word,
+        COALESCE(v.reading, g.title) as reading,
+        COALESCE(v.meaning, g.meaning) as meaning,
+        COALESCE(v.example_sentence, g.example_sentence) as example,
+        COALESCE(v.example_translation, g.example_translation) as example_meaning,
         g.explanation,
-        g.meaning as grammar_meaning,
         d.name as deck_name
       FROM flashcards f
       LEFT JOIN vocabulary v ON f.vocab_id = v.id

@@ -191,18 +191,27 @@ export default function Flashcards() {
                 onClick={() => setIsFlipped(!isFlipped)}
               >
                 <div className="absolute inset-0 w-full h-full bg-white rounded-3xl shadow-xl p-10 flex flex-col items-center justify-center [backface-visibility:hidden]">
-                  <div className="text-primary text-sm font-bold uppercase tracking-widest mb-6">Vocabulary</div>
-                  <h2 className="text-7xl font-bold text-slate-900 mb-4">{currentCard.word || currentCard.grammar_point}</h2>
+                  <div className="text-primary text-sm font-bold uppercase tracking-widest mb-6">
+                    {currentCard.vocab_id ? "Vocabulary" : "Grammar"}
+                  </div>
+                  <h2 className="text-7xl font-bold text-slate-900 mb-4">{currentCard.word}</h2>
                   <p className="text-2xl text-slate-400">{currentCard.reading}</p>
                   <p className="mt-12 text-slate-400 text-sm">Click to flip</p>
                 </div>
 
                 <div className="absolute inset-0 w-full h-full bg-white rounded-3xl shadow-xl p-10 flex flex-col [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-y-auto">
                   <div className="text-primary text-sm font-bold uppercase tracking-widest mb-4">Meaning</div>
-                  <h3 className="text-3xl font-bold text-slate-900 mb-6">{currentCard.meaning || currentCard.explanation}</h3>
+                  <h3 className="text-3xl font-bold text-slate-900 mb-4">{currentCard.meaning}</h3>
                   
+                  {currentCard.explanation && (
+                    <div className="mb-6 p-4 bg-blue-50 rounded-xl border border-blue-100">
+                      <div className="text-[10px] font-bold text-blue-400 uppercase mb-1">Usage / Conjugation</div>
+                      <p className="text-sm text-blue-800 font-mono">{currentCard.explanation}</p>
+                    </div>
+                  )}
+
                   {currentCard.example && (
-                    <div className="mt-6 p-6 bg-slate-50 rounded-2xl">
+                    <div className="mt-auto p-6 bg-slate-50 rounded-2xl">
                       <div className="text-xs font-bold text-slate-400 uppercase mb-2">Example</div>
                       <p className="text-lg text-slate-800 mb-2">{currentCard.example}</p>
                       <p className="text-sm text-slate-500">{currentCard.example_reading}</p>
