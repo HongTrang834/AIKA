@@ -1,21 +1,13 @@
-﻿import pool from "./db.js";
+import pool from "./db.js";
 
 export async function runMigrations() {
   try {
     console.log("🔄 Running database migrations...");
-    // FIRST: Clean up old data and reset sequences
-    try {
-      await pool.query('DELETE FROM vocabulary;');
-      await pool.query('DELETE FROM grammar;');
-      console.log("🗑️ Cleaned up old vocabulary and grammar records");
-      
-      // Reset sequences
-      await pool.query(`ALTER SEQUENCE vocabulary_id_seq RESTART WITH 1;`);
-      await pool.query(`ALTER SEQUENCE grammar_id_seq RESTART WITH 1;`);
-      console.log("🔄 Reset ID sequences to 1");
-    } catch (err) {
-      console.log("ℹ️ Cleanup note:", err.message.substring(0, 50));
-    }
+    // FIRST: Clean up old data and reset sequences (REMOVED)
+    // We no longer delete vocabulary and grammar on startup.
+    // Ensure sequences are updated if we want to add new items.
+    // For now, we leave the sequences as they are since we aren't clearing the tables.
+
     // Drop and recreate flashcard_decks table properly
     try {
       await pool.query("DROP TABLE IF EXISTS flashcard_decks CASCADE;");

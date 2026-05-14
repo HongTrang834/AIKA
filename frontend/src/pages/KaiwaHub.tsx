@@ -42,7 +42,7 @@ export default function KaiwaHub() {
   const { token } = useAuth();
   const { showToast } = useToast();
 
-  const [mode, setMode] = useState<'free' | 'scenario'>('free');
+  const [mode, setMode] = useState<'free' | 'scenario' | 'n2'>('free');
   const [selectedScenario, setSelectedScenario] = useState('restaurant');
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -178,6 +178,22 @@ export default function KaiwaHub() {
                 <div>
                   <p className="font-semibold text-gray-900">Tình Huống</p>
                   <p className="text-xs text-gray-600">Theo chủ đề cụ thể</p>
+                </div>
+              </label>
+
+              <label className="flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-all"
+                     style={{ borderColor: mode === 'n2' ? '#3b82f6' : '#e5e7eb', backgroundColor: mode === 'n2' ? '#eff6ff' : '#fff' }}>
+                <input
+                  type="radio"
+                  name="mode"
+                  value="n2"
+                  checked={mode === 'n2'}
+                  onChange={() => setMode('n2')}
+                  className="w-4 h-4 cursor-pointer"
+                />
+                <div>
+                  <p className="font-semibold text-gray-900">N2 Mastery</p>
+                  <p className="text-xs text-gray-600">Hội thoại tích hợp RAG N2</p>
                 </div>
               </label>
             </div>

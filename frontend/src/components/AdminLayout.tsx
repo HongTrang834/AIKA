@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BookOpen, BookMarked, ClipboardList, LogOut, Folder } from 'lucide-react';
+import { BookOpen, BookMarked, ClipboardList, LogOut, Folder, Bot, Layout } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 interface AdminLayoutProps {
@@ -16,6 +16,8 @@ export function AdminLayout({ children }: AdminLayoutProps) {
     { path: '/admin/grammar', label: 'Ngữ Pháp', icon: BookMarked },
     { path: '/admin/tests', label: 'Tests Mini', icon: ClipboardList },
     { path: '/admin/decks', label: 'Decks', icon: Folder },
+    { path: '/kaiwa', label: 'AI Chat', icon: Bot },
+    { path: '/', label: 'Quay lại App', icon: Layout },
   ];
 
   const handleLogout = () => {

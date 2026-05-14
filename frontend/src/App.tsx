@@ -23,7 +23,16 @@ import VocabularyDetail from './pages/VocabularyDetail';
 import GrammarDetail from './pages/GrammarDetail';
 
 function AppContent() {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, loading } = useAuth();
+  
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-indigo-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      </div>
+    );
+  }
+
   const isAdmin = user?.role === 'admin';
 
   return (
@@ -49,7 +58,7 @@ function AppContent() {
       )}
 
       {/* User Routes */}
-      {isAuthenticated && !isAdmin && (
+      {isAuthenticated && (
         <Route
           path="/*"
           element={

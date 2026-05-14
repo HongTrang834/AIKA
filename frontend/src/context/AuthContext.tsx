@@ -57,9 +57,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.error('Error loading profile:', error);
         localStorage.removeItem('token');
         setToken(null);
+      }).finally(() => {
+        setLoading(false);
       });
+    } else {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   const login = async (email: string, password: string) => {
