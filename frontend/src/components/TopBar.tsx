@@ -69,7 +69,7 @@ export function TopBar() {
   }, [user?.avatar_url, user?.username]);
 
   return (
-    <header className="sticky top-0 z-40 bg-white/60 backdrop-blur-xl border-b border-slate-200/50 px-8 py-4 flex justify-between items-center w-full">
+    <header className="sticky top-0 z-40 bg-transparent px-8 py-4 flex justify-between items-center w-full">
       <div className="flex items-center gap-8">
       </div>
 

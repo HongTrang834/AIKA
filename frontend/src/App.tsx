@@ -58,7 +58,7 @@ function AppContent() {
       )}
 
       {/* User Routes */}
-      {isAuthenticated && (
+      {isAuthenticated && !isAdmin && (
         <Route
           path="/*"
           element={
