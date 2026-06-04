@@ -42,6 +42,7 @@ export default function GrammarDetail() {
   const [activeEx, setActiveEx] = useState(0);
   const [saved, setSaved] = useState(false);
   const [showTip, setShowTip] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   // Existing logic state
   const [showDeckSelection, setShowDeckSelection] = useState(false);
@@ -89,8 +90,11 @@ export default function GrammarDetail() {
         grammar_id: grammar.id,
         deck_id: deckId
       });
-      showToast('Đã thêm vào flashcards', 'success');
+      // Bỏ Toast hiện tại
+      // showToast('Đã thêm vào flashcards', 'success');
       setSaved(true);
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 2500);
       setShowDeckSelection(false);
     } catch (error: any) {
       showToast('Lỗi: ' + (error.message || 'Không thể thêm vào flashcards'), 'error');
@@ -125,18 +129,18 @@ export default function GrammarDetail() {
         </button>
 
         {/* Hero */}
-        <div className="relative overflow-hidden rounded-3xl border-2 border-purple-200 bg-gradient-to-br from-purple-50 via-fuchsia-50 to-purple-100 p-8 md:p-10 mb-5">
-          <div className="absolute -right-12 -top-12 h-52 w-52 rounded-full bg-purple-500/5" />
+        <div className="relative overflow-hidden rounded-3xl border-2 border-sky-200 bg-gradient-to-br from-sky-50 via-blue-50 to-sky-100 p-8 md:p-10 mb-5">
+          <div className="absolute -right-12 -top-12 h-52 w-52 rounded-full bg-sky-blue/10" />
 
           <div className="flex flex-wrap gap-2 mb-5">
-            <Badge className="bg-purple-600 text-white">📖 Ngữ Pháp</Badge>
-            <Badge className="bg-white text-purple-600 border border-purple-200">{level}</Badge>
-            <Badge className="bg-fuchsia-100 text-fuchsia-800">{category}</Badge>
+            <Badge className="bg-sky-blue text-white">📖 Ngữ Pháp</Badge>
+            <Badge className="bg-white text-sky-blue border border-sky-200">{level}</Badge>
+            <Badge className="bg-sky-blue/20 text-sky-blue">{category}</Badge>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 items-start">
             <div>
-              <h1 className="font-display text-6xl md:text-7xl font-extrabold text-purple-900/90 leading-tight mb-2" style={{ textShadow: "0 4px 24px rgba(168, 85, 247, 0.15)" }}>
+              <h1 className="font-display text-6xl md:text-7xl font-extrabold text-almost-black leading-tight mb-2" style={{ textShadow: "0 4px 24px rgba(28,176,246, 0.15)" }}>
                 {pattern}
               </h1>
               <p className="text-xl font-bold text-slate-800 mb-1">{title}</p>
@@ -164,7 +168,7 @@ export default function GrammarDetail() {
         {/* Explanation */}
         <div className="rounded-2xl border-2 border-slate-200 bg-white p-7 shadow-sm mb-4">
           <div className="flex items-center gap-3 mb-4">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-100 text-lg">🧠</div>
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-100 text-lg">🧠</div>
             <p className="font-bold text-slate-800">Giải thích</p>
           </div>
           <p className="text-sm text-slate-600 leading-loose">{explanation}</p>
@@ -184,16 +188,16 @@ export default function GrammarDetail() {
                   onClick={() => setActiveEx(i)}
                   className={cn(
                     "h-2.5 rounded-full border-none transition-all duration-300",
-                    i === activeEx ? "w-7 bg-purple-600" : "w-2.5 bg-slate-300"
+                    i === activeEx ? "w-7 bg-sky-blue" : "w-2.5 bg-slate-300"
                   )}
                 />
               ))}
             </div>
           </div>
 
-          <div className="min-h-[120px] rounded-2xl border-l-4 border-purple-500 bg-gradient-to-br from-purple-50 to-fuchsia-50 p-6">
+          <div className="min-h-[120px] rounded-2xl bg-gradient-to-br from-sky-50 to-blue-50 p-6">
             <p className="font-jp text-lg font-medium text-slate-800 mb-3 leading-relaxed">{examples[activeEx].jp}</p>
-            <p className="text-sm italic text-purple-700">🇻🇳 {examples[activeEx].vn}</p>
+            <p className="text-sm italic text-sky-blue">🇻🇳 {examples[activeEx].vn}</p>
           </div>
 
           {examples.length > 1 && (
@@ -225,7 +229,7 @@ export default function GrammarDetail() {
             </div>
             <div className="flex flex-col gap-2.5">
               {compare.map((c, i) => (
-                <div key={i} className="flex items-center gap-4 rounded-xl bg-slate-50 p-4" style={{ borderLeft: `4px solid ${c.color}`}}>
+                <div key={i} className="flex items-center gap-4 rounded-xl bg-slate-50 p-4">
                   <span className="font-jp text-base font-bold min-w-[80px]" style={{ color: c.color }}>{c.pattern}</span>
                   <span className="text-sm text-slate-600">{c.meaning}</span>
                 </div>
@@ -241,8 +245,8 @@ export default function GrammarDetail() {
           className={cn(
             "flex w-full items-center justify-center gap-3 rounded-2xl p-5 text-base font-bold text-white transition-all duration-300 disabled:opacity-70",
             saved
-              ? "bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg shadow-green-200"
-              : "bg-gradient-to-br from-purple-500 to-indigo-600 shadow-lg shadow-purple-200 hover:shadow-xl hover:shadow-purple-300"
+              ? "bg-sky-blue shadow-lg shadow-sky-200"
+              : "bg-sky-blue shadow-lg shadow-sky-200 hover:shadow-xl hover:-translate-y-1"
           )}
         >
           {saved ? (
@@ -254,6 +258,23 @@ export default function GrammarDetail() {
           )}
         </button>
       </div>
+
+      {showConfetti && (
+        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+            {/* @ts-ignore */}
+            <dotlottie-wc 
+              src="https://lottie.host/49ff8b22-0628-47de-8ede-7e81dff533ce/brgUWISvFk.lottie" 
+              style={{ width: '100%', height: '100%' }} 
+              autoplay 
+            ></dotlottie-wc>
+          </div>
+          <div className="flex flex-col items-center justify-center animate-in zoom-in-75 duration-500 gap-6">
+            <Check size={100} strokeWidth={4} className="text-emerald-400 drop-shadow-2xl" />
+            <p className="font-extrabold text-3xl text-white drop-shadow-lg tracking-wide">Đã lưu thành công!</p>
+          </div>
+        </div>
+      )}
 
       <DeckSelectionModal
         isOpen={showDeckSelection}

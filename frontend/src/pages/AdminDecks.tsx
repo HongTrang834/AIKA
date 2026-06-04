@@ -16,12 +16,12 @@ interface Deck {
 }
 
 const COLORS = [
-  { name: 'blue', label: 'Xanh', bg: 'bg-blue-50', border: 'border-blue-300', ring: 'ring-blue-500' },
-  { name: 'red', label: 'Đỏ', bg: 'bg-red-50', border: 'border-red-300', ring: 'ring-red-500' },
-  { name: 'green', label: 'Xanh lá', bg: 'bg-green-50', border: 'border-green-300', ring: 'ring-green-500' },
-  { name: 'purple', label: 'Tím', bg: 'bg-purple-50', border: 'border-purple-300', ring: 'ring-purple-500' },
-  { name: 'yellow', label: 'Vàng', bg: 'bg-yellow-50', border: 'border-yellow-300', ring: 'ring-yellow-500' },
-  { name: 'pink', label: 'Hồng', bg: 'bg-pink-50', border: 'border-pink-300', ring: 'ring-pink-500' },
+  { name: 'blue', label: 'Xanh', bg: 'bg-sky-blue/10', border: 'border-sky-blue', ring: 'ring-sky-blue' },
+  { name: 'red', label: 'Đỏ', bg: 'bg-pink-50', border: 'border-bubblegum-pink', ring: 'ring-bubblegum-pink' },
+  { name: 'green', label: 'Xanh lá', bg: 'bg-sky-blue-light', border: 'border-sky-blue', ring: 'ring-sky-blue' },
+  { name: 'purple', label: 'Tím', bg: 'bg-grape-soda/10', border: 'border-grape-soda', ring: 'ring-grape-soda' },
+  { name: 'yellow', label: 'Vàng', bg: 'bg-sunshine-yellow/20', border: 'border-sunshine-yellow', ring: 'ring-[#cc9f00]' },
+  { name: 'gray', label: 'Xám', bg: 'bg-cloud-gray/30', border: 'border-silver', ring: 'ring-silver' },
 ];
 
 export default function AdminDecks() {
@@ -325,8 +325,8 @@ export default function AdminDecks() {
     <div className="p-8 max-w-6xl mx-auto space-y-8">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Quản Lý Decks Global</h1>
-          <p className="text-gray-600 mt-1">Các deck này sẽ hiển thị cho tất cả người dùng</p>
+          <h1 className="h1-feather text-almost-black">Quản Lý Decks Global</h1>
+          <p className="text-graphite font-bold mt-1 text-[15px]">Các deck này sẽ hiển thị cho tất cả người dùng</p>
         </div>
         <button
           onClick={() => {
@@ -336,7 +336,7 @@ export default function AdminDecks() {
             setSelectedCategories(new Set());
             setShowForm(true);
           }}
-          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          className="btn-3d-blue flex items-center gap-2 px-6"
         >
           <Plus className="w-5 h-5" />
           Thêm Deck
@@ -345,61 +345,61 @@ export default function AdminDecks() {
 
       {/* Search Bar */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-silver" />
         <input
           type="text"
           placeholder="Tìm kiếm tên hoặc mô tả deck..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full pl-12 pr-4 py-3 border-2 border-cloud-gray rounded-2xl focus:outline-none focus:border-sky-blue focus:bg-sky-blue/5 font-bold text-almost-black text-[15px] transition-colors"
         />
       </div>
 
       {/* Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold mb-6">{editingId ? 'Cập Nhật' : 'Thêm'} Deck</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="fixed inset-0 bg-almost-black/50 flex items-center justify-center z-50 p-4">
+          <div className="card-duo p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <h2 className="h2-feather mb-6 text-almost-black">{editingId ? 'Cập Nhật' : 'Thêm'} Deck</h2>
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label className="block text-sm font-medium mb-1">Tên Deck *</label>
+                <label className="block text-[15px] font-extrabold text-graphite mb-2">Tên Deck *</label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-5 py-4 border-2 border-cloud-gray rounded-2xl focus:outline-none focus:border-sky-blue focus:bg-sky-blue/5 font-bold text-[15px]"
                   placeholder="Ví dụ: N2 Business"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Mô Tả</label>
+                <label className="block text-[15px] font-extrabold text-graphite mb-2">Mô Tả</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-5 py-4 border-2 border-cloud-gray rounded-2xl focus:outline-none focus:border-sky-blue focus:bg-sky-blue/5 font-bold text-[15px]"
                   placeholder="Mô tả ngắn về deck này"
                   rows={3}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-3">Màu Sắc</label>
-                <div className="grid grid-cols-3 gap-2">
+                <label className="block text-[15px] font-extrabold text-graphite mb-3">Màu Sắc</label>
+                <div className="grid grid-cols-3 gap-3">
                   {COLORS.map((colorOption) => (
                     <button
                       key={colorOption.name}
                       type="button"
                       onClick={() => setFormData({ ...formData, color: colorOption.name })}
-                      className={`p-3 rounded-lg border-2 transition-all ${
+                      className={`p-4 rounded-2xl border-4 transition-all flex items-center justify-center ${
                         formData.color === colorOption.name
-                          ? `${colorOption.bg} ${colorOption.border} ring-2 ${colorOption.ring}`
-                          : `${colorOption.bg} border-gray-300 hover:border-gray-500`
+                          ? `${colorOption.bg} ${colorOption.border}`
+                          : `bg-white border-cloud-gray text-silver hover:border-silver`
                       }`}
                       title={colorOption.label}
                     >
-                      <Palette className="w-5 h-5 mx-auto" />
+                      <Palette className={`w-6 h-6 ${formData.color === colorOption.name ? 'text-almost-black' : ''}`} />
                     </button>
                   ))}
                 </div>
@@ -407,33 +407,33 @@ export default function AdminDecks() {
 
               {/* Flashcards */}
               {true && (
-                <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                  <div className="flex items-start justify-between gap-3 mb-3">
+                <div className="border-4 border-cloud-gray rounded-3xl p-6 bg-white">
+                  <div className="flex items-start justify-between gap-3 mb-4">
                     <div>
-                      <label className="block text-sm font-medium">Chọn từ vựng (từ mục Từ vựng)</label>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <label className="block text-[15px] font-extrabold text-graphite">Chọn từ vựng (từ mục Từ vựng)</label>
+                      <p className="text-[13px] font-bold text-silver mt-1">
                         Bạn có thể chọn từng từ hoặc import hàng loạt theo danh mục.
                       </p>
                     </div>
-                    <div className="text-xs text-gray-600">
-                      Đã chọn: <b>{selectedVocabIds.size}</b> từ / <b>{selectedCategories.size}</b> danh mục
+                    <div className="text-[13px] font-bold text-silver bg-sky-blue/10 px-3 py-1.5 rounded-xl border border-sky-blue/20">
+                      Đã chọn: <b className="text-sky-blue text-[15px]">{selectedVocabIds.size}</b> từ / <b className="text-sky-blue text-[15px]">{selectedCategories.size}</b> danh mục
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mb-3">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
                     <div className="md:col-span-2 relative">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-silver" />
                       <input
                         value={vocabSearch}
                         onChange={(e) => setVocabSearch(e.target.value)}
                         placeholder="Tìm theo word / reading / meaning..."
-                        className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                        className="w-full pl-10 pr-4 py-3 border-2 border-cloud-gray rounded-2xl focus:outline-none focus:border-sky-blue font-bold text-[13px]"
                       />
                     </div>
                     <select
                       value={vocabCategory}
                       onChange={(e) => setVocabCategory(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                      className="w-full px-4 py-3 border-2 border-cloud-gray rounded-2xl focus:outline-none focus:border-sky-blue font-bold text-[13px] text-graphite bg-white"
                     >
                       <option value="all">Tất cả danh mục</option>
                       {vocabCategories.map((c) => (
@@ -444,15 +444,15 @@ export default function AdminDecks() {
                     </select>
                   </div>
 
-                  <div className="flex flex-wrap gap-2 mb-3">
+                  <div className="flex flex-wrap gap-2 mb-4">
                     <button
                       type="button"
                       onClick={importCurrentCategory}
-                      className="inline-flex items-center gap-2 px-3 py-2 text-sm rounded-lg border border-blue-300 text-blue-700 bg-white hover:bg-blue-50"
+                      className="inline-flex items-center gap-2 px-4 py-2 text-[13px] font-bold rounded-xl border-2 border-sky-blue text-sky-blue bg-white hover:bg-sky-blue/10 transition-colors"
                       disabled={vocabLoading}
                       title="Import cả danh mục đang chọn"
                     >
-                      <FolderPlus className="w-4 h-4" />
+                      <FolderPlus className="w-5 h-5" />
                       Import danh mục
                     </button>
                     {Array.from(selectedCategories).map((c) => (
@@ -460,7 +460,7 @@ export default function AdminDecks() {
                         key={c}
                         type="button"
                         onClick={() => toggleCategory(c)}
-                        className="px-3 py-1.5 text-xs rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200"
+                        className="px-3 py-2 text-[13px] font-bold rounded-xl bg-sky-blue/10 border-2 border-sky-blue text-sky-blue hover:bg-sky-blue/20"
                         title="Bỏ chọn danh mục"
                       >
                         {c} ✕
@@ -468,16 +468,16 @@ export default function AdminDecks() {
                     ))}
                   </div>
 
-                  <div className="max-h-72 overflow-y-auto border border-gray-200 rounded-lg bg-white">
+                  <div className="max-h-72 overflow-y-auto border-2 border-cloud-gray rounded-2xl bg-white">
                     {vocabLoading ? (
-                      <div className="p-4 flex items-center gap-2 text-sm text-gray-600">
-                        <Loader className="w-4 h-4 animate-spin" />
+                      <div className="p-6 flex items-center justify-center gap-3 text-[15px] font-bold text-silver">
+                        <Loader className="w-5 h-5 animate-spin" />
                         Đang tải danh sách từ vựng...
                       </div>
                     ) : filteredVocab.length === 0 ? (
-                      <div className="p-4 text-sm text-gray-500">Không có từ vựng phù hợp.</div>
+                      <div className="p-6 text-center text-[15px] font-bold text-silver">Không có từ vựng phù hợp.</div>
                     ) : (
-                      <div className="divide-y divide-gray-100">
+                      <div className="divide-y-2 divide-cloud-gray">
                         {filteredVocab.map((v: any) => {
                           const checked = selectedVocabIds.has(v.id);
                           return (
@@ -485,20 +485,20 @@ export default function AdminDecks() {
                               type="button"
                               key={v.id}
                               onClick={() => toggleVocab(v.id)}
-                              className="w-full text-left p-3 hover:bg-gray-50 flex items-start gap-3"
+                              className={`w-full text-left p-4 hover:bg-sky-blue/5 flex items-start gap-4 transition-colors ${checked ? 'bg-sky-blue/10' : ''}`}
                             >
-                              <div className="mt-0.5 text-blue-600">
-                                {checked ? <CheckSquare className="w-5 h-5" /> : <Square className="w-5 h-5" />}
+                              <div className={`mt-1 ${checked ? 'text-sky-blue' : 'text-silver'}`}>
+                                {checked ? <CheckSquare className="w-6 h-6" /> : <Square className="w-6 h-6 border-2 border-cloud-gray rounded text-transparent" />}
                               </div>
                               <div className="flex-1">
-                                <div className="flex items-center justify-between gap-2">
-                                  <div className="font-semibold text-gray-900">
-                                    {v.word} <span className="text-xs text-gray-400 font-normal">#{v.id}</span>
+                                <div className="flex items-center justify-between gap-2 mb-1">
+                                  <div className="font-extrabold text-[17px] text-almost-black">
+                                    {v.word} <span className="text-[11px] font-bold text-silver ml-1">#{v.id}</span>
                                   </div>
-                                  <div className="text-xs text-gray-500">{v.category || 'General'}</div>
+                                  <div className="text-[11px] font-bold text-silver bg-cloud-gray px-2 py-1 rounded-lg uppercase">{v.category || 'General'}</div>
                                 </div>
-                                <div className="text-xs text-gray-500">{v.reading}</div>
-                                <div className="text-sm text-gray-700">{v.meaning}</div>
+                                <div className="text-[13px] font-bold text-silver mb-1">{v.reading}</div>
+                                <div className="text-[15px] font-bold text-graphite">{v.meaning}</div>
                               </div>
                             </button>
                           );
@@ -507,26 +507,26 @@ export default function AdminDecks() {
                     )}
                   </div>
 
-                  <p className="text-xs text-gray-500 mt-2">
+                  <p className="text-[13px] font-bold text-silver mt-3">
                     Gợi ý: để import nhanh cả danh mục, chọn danh mục ở dropdown rồi bấm “Import danh mục”.
                   </p>
                 </div>
               )}
 
-              <div className="flex gap-2 pt-4">
+              <div className="flex gap-4 pt-6">
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="flex-1 btn-3d-blue py-4 font-bold text-[17px] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
-                  {saving && <Loader className="w-4 h-4 animate-spin" />}
-                  {editingId ? 'Cập Nhật' : 'Thêm'}
+                  {saving && <Loader className="w-5 h-5 animate-spin" />}
+                  {editingId ? 'Cập Nhật' : 'Thêm Deck'}
                 </button>
                 <button
                   type="button"
                   onClick={handleCloseForm}
                   disabled={saving}
-                  className="flex-1 bg-gray-300 text-gray-800 py-2 rounded-lg hover:bg-gray-400 transition-colors font-medium disabled:bg-gray-200 disabled:cursor-not-allowed"
+                  className="flex-1 btn-outline-gray py-4 font-bold text-[17px] text-graphite disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Hủy
                 </button>
@@ -541,32 +541,34 @@ export default function AdminDecks() {
         {filteredDecks.map((deck) => {
           const colorOption = COLORS.find((c) => c.name === deck.color) || COLORS[0];
           return (
-            <div key={deck.id} className={`${colorOption.bg} border-2 ${colorOption.border} rounded-lg p-6`}>
-              <div className="flex justify-between items-start mb-3">
-                <h3 className="text-lg font-bold text-gray-900 flex-1">{deck.name}</h3>
+            <div key={deck.id} className={`${colorOption.bg} border-4 ${colorOption.border} rounded-2xl p-6 relative group overflow-hidden transition-all hover:-translate-y-1`}>
+              <div className="flex justify-between items-start mb-4 relative z-10">
+                <h3 className="h2-feather text-almost-black flex-1 pr-4 leading-tight">{deck.name}</h3>
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleEdit(deck)}
-                    className="text-blue-600 hover:text-blue-700 font-medium"
+                    className="p-2 rounded-xl bg-white/50 hover:bg-white border-2 border-transparent hover:border-cloud-gray transition-colors"
+                    title="Sửa deck"
                   >
-                    <Edit2 className="w-4 h-4" />
+                    <Edit2 className="w-5 h-5 text-sky-blue" />
                   </button>
                   <button
                     onClick={() => handleDelete(deck.id)}
-                    className="text-red-600 hover:text-red-700 font-medium"
+                    className="p-2 rounded-xl bg-white/50 hover:bg-white border-2 border-transparent hover:border-cloud-gray transition-colors"
+                    title="Xóa deck"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-5 h-5 text-bubblegum-pink" />
                   </button>
                 </div>
               </div>
 
               {deck.description && (
-                <p className="text-gray-700 text-sm mb-3">{deck.description}</p>
+                <p className="text-graphite font-bold text-[15px] mb-6 relative z-10">{deck.description}</p>
               )}
 
-              <div className="flex justify-between items-center text-sm text-gray-600 pt-3 border-t border-current border-opacity-20">
-                <span>📚 {deck.card_count} flashcards</span>
-                <span className="text-xs text-gray-500">
+              <div className="flex justify-between items-center text-[15px] font-extrabold text-graphite pt-4 border-t-2 border-cloud-gray relative z-10">
+                <span className="bg-white/50 px-3 py-1.5 rounded-xl border-2 border-cloud-gray/50">📚 {deck.card_count} flashcards</span>
+                <span className="text-[13px] text-silver font-bold">
                   {new Date(deck.created_at).toLocaleDateString('vi-VN')}
                 </span>
               </div>

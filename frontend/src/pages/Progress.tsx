@@ -31,7 +31,7 @@ export default function Progress() {
   const fetchProgress = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/progress`, {
-        headers: { 
+        headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
@@ -112,11 +112,11 @@ export default function Progress() {
   }
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-12">
+    <div className="w-full p-8 max-w-7xl mx-auto space-y-12">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2"> Tiến Độ Học Tập</h1>
-        <p className="text-gray-600">
+      <div className="mb-4">
+        <h1 className="h1-feather text-almost-black mb-2"> Tiến Độ Học Tập</h1>
+        <p className="text-graphite font-bold text-lg">
           Theo dõi tiến độ học tập N2 của bạn trong hệ thống
         </p>
       </div>
@@ -192,7 +192,7 @@ export default function Progress() {
               { name: 'Hội Thoại (Kaiwa)', current: progress?.total_kaiwas || 0, max: 50 },
               { name: 'Ôn Tập', current: progress?.total_flashcard_reviews || 0, max: 500 },
             ].map((item) => {
-              const pct = Math.min  ((item.current / item.max) * 100, 100);
+              const pct = Math.min((item.current / item.max) * 100, 100);
               return (
                 <div key={item.name} className="space-y-2">
                   <div className="flex justify-between">
@@ -249,11 +249,10 @@ export default function Progress() {
                 ].map((badge, idx) => (
                   <div
                     key={idx}
-                    className={`p-3 rounded-lg text-center ${
-                      badge.unlock
-                        ? 'bg-yellow-50 border border-yellow-200'
-                        : 'bg-gray-50 border border-gray-200 opacity-50'
-                    }`}
+                    className={`p-3 rounded-lg text-center ${badge.unlock
+                      ? 'bg-yellow-50 border border-yellow-200'
+                      : 'bg-gray-50 border border-gray-200 opacity-50'
+                      }`}
                   >
                     <div className="text-2xl">{badge.emoji}</div>
                     <p className="text-xs font-medium text-gray-700 mt-1">
@@ -269,9 +268,9 @@ export default function Progress() {
 
       {/* Quick Stats */}
       <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow-lg p-8 text-white">
-        <h2 className="text-2xl font-bold mb-6">Tóm T ắt Tiến Độ</h2>
+        <h2 className="text-2xl font-bold mb-6">Tóm Tắt Tiến Độ</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          <div>
+          <div>Nghĩa
             <p className="text-blue-100 text-sm">Tổng Từ Vựng</p>
             <p className="text-4xl font-bold">{progress?.total_vocab_learned || 0}</p>
           </div>
@@ -291,9 +290,9 @@ export default function Progress() {
       </div>
 
       {/* Tips */}
-      <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-        <h3 className="font-bold text-green-900 mb-3">💡 Mẹo Tăng Tiến Độ</h3>
-        <ul className="text-green-800 text-sm space-y-2">
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+        <h3 className="font-bold text-blue-900 mb-3">💡 Mẹo Tăng Tiến Độ</h3>
+        <ul className="text-blue-800 text-sm space-y-2">
           <li>Hàng ngày ôn tập 10-15 flashcard để tối ưu Spaced Repetition</li>
           <li>Luyện kaiwa ít nhất 3 lần/tuần để cải thiện giao tiếp</li>
           <li>Học 3-5 từ vựng mới mỗi ngày</li>

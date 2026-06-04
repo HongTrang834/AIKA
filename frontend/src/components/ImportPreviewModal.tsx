@@ -67,9 +67,9 @@ export default function ImportPreviewModal({
               <p className="text-sm text-gray-600">Total Records</p>
               <p className="text-2xl font-bold text-blue-600">{totalRecords}</p>
             </div>
-            <div className="bg-green-50 p-3 rounded">
+            <div className="bg-blue-50 p-3 rounded">
               <p className="text-sm text-gray-600">Valid</p>
-              <p className="text-2xl font-bold text-green-600">{validRecords.length}</p>
+              <p className="text-2xl font-bold text-blue-600">{validRecords.length}</p>
             </div>
             <div className="bg-red-50 p-3 rounded">
               <p className="text-sm text-gray-600">Errors</p>
@@ -110,7 +110,7 @@ export default function ImportPreviewModal({
                       {record.error ? (
                         <span className="text-red-600 font-semibold text-xs">❌ ERROR</span>
                       ) : (
-                        <span className="text-green-600 font-semibold text-xs">✓ OK</span>
+                        <span className="text-blue-600 font-semibold text-xs">✓ OK</span>
                       )}
                     </td>
                     {type === 'vocabulary' ? (

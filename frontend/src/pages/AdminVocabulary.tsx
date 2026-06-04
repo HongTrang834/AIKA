@@ -304,8 +304,8 @@ export default function AdminVocabulary() {
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Quản lý Từ Vựng</h1>
-        <div className="flex gap-2">
+        <h1 className="h1-feather text-almost-black">Quản lý Từ Vựng</h1>
+        <div className="flex gap-4">
           <button
             onClick={() => {
               setShowForm(!showForm);
@@ -313,7 +313,7 @@ export default function AdminVocabulary() {
               setEditingId(null);
               setFormData({ word: '', reading: '', meaning: '', category: '', level: 2, example_sentence: '' });
             }}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"
+            className="btn-3d-blue flex items-center gap-2 px-6"
           >
             <Plus className="w-5 h-5" />
             Thêm Từ Vựng
@@ -325,14 +325,14 @@ export default function AdminVocabulary() {
               setImportMessage('');
               setActiveImportTab('csv');
             }}
-            className="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-green-700"
+            className="btn-3d-blue flex items-center gap-2 px-6"
           >
             <Upload className="w-5 h-5" />
             Import
           </button>
           <button
             onClick={() => setShowDeleteConfirm(true)}
-            className="bg-red-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-red-700"
+            className="btn-3d-red flex items-center gap-2 px-6"
           >
             <Trash2 className="w-5 h-5" />
             Xóa Tất Cả
@@ -342,52 +342,52 @@ export default function AdminVocabulary() {
 
       {/* Import Section */}
       {showImport && (
-        <div className="bg-white p-6 rounded-lg shadow-lg mb-8 border border-gray-200">
-          <h2 className="text-xl font-bold mb-4">Import Từ Vựng</h2>
+        <div className="card-duo p-8 mb-8">
+          <h2 className="h2-feather mb-6">Import Từ Vựng</h2>
 
           {/* Tab Navigation */}
-          <div className="flex gap-2 mb-4 border-b">
+          <div className="flex gap-3 mb-6 border-b-2 border-cloud-gray pb-4">
             <button
               onClick={() => setActiveImportTab('csv')}
-              className={`px-4 py-2 flex items-center gap-2 ${
+              className={`px-5 py-3 rounded-xl border-2 font-bold flex items-center gap-2 transition-all ${
                 activeImportTab === 'csv'
-                  ? 'border-b-2 border-blue-600 text-blue-600 font-semibold'
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'border-sky-blue bg-sky-blue/10 text-sky-blue'
+                  : 'border-transparent text-silver hover:bg-gray-50 hover:border-cloud-gray'
               }`}
             >
-              <Upload className="w-4 h-4" />
+              <Upload className="w-5 h-5" />
               CSV File
             </button>
             <button
               onClick={() => setActiveImportTab('excel')}
-              className={`px-4 py-2 flex items-center gap-2 ${
+              className={`px-5 py-3 rounded-xl border-2 font-bold flex items-center gap-2 transition-all ${
                 activeImportTab === 'excel'
-                  ? 'border-b-2 border-blue-600 text-blue-600 font-semibold'
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'border-sky-blue bg-sky-blue/10 text-sky-blue'
+                  : 'border-transparent text-silver hover:bg-gray-50 hover:border-cloud-gray'
               }`}
             >
-              <FileText className="w-4 h-4" />
+              <FileText className="w-5 h-5" />
               Excel File
             </button>
             <button
               onClick={() => setActiveImportTab('batch')}
-              className={`px-4 py-2 flex items-center gap-2 ${
+              className={`px-5 py-3 rounded-xl border-2 font-bold flex items-center gap-2 transition-all ${
                 activeImportTab === 'batch'
-                  ? 'border-b-2 border-blue-600 text-blue-600 font-semibold'
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'border-sky-blue bg-sky-blue/10 text-sky-blue'
+                  : 'border-transparent text-silver hover:bg-gray-50 hover:border-cloud-gray'
               }`}
             >
-              <List className="w-4 h-4" />
+              <List className="w-5 h-5" />
               Quick Add
             </button>
           </div>
 
           {importMessage && (
             <div
-              className={`p-4 rounded-lg mb-4 ${
+              className={`p-5 rounded-2xl mb-6 font-bold border-2 ${
                 importMessage.includes('✅')
-                  ? 'bg-green-50 text-green-700'
-                  : 'bg-red-50 text-red-700'
+                  ? 'bg-sky-blue-light text-sky-blue border-sky-blue'
+                  : 'bg-pink-50 text-bubblegum-pink border-bubblegum-pink'
               }`}
             >
               {importMessage}
@@ -396,8 +396,8 @@ export default function AdminVocabulary() {
 
           {/* CSV Import Tab */}
           {activeImportTab === 'csv' && (
-            <div className="space-y-4">
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+            <div className="space-y-6">
+              <div className="border-4 border-dashed border-cloud-gray rounded-3xl p-10 text-center hover:border-sky-blue hover:bg-sky-blue/5 transition-all">
                 <input
                   type="file"
                   accept=".csv"
@@ -406,21 +406,19 @@ export default function AdminVocabulary() {
                   className="hidden"
                   id="csv-input"
                 />
-                <label htmlFor="csv-input" className="cursor-pointer">
-                  <div className="text-gray-600 mb-2">
-                    <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                    <p>Click to select CSV file or drag and drop</p>
-                    <p className="text-sm text-gray-500 mt-1">Only .csv files accepted</p>
-                  </div>
+                <label htmlFor="csv-input" className="cursor-pointer flex flex-col items-center">
+                  <Upload className="w-12 h-12 mb-4 text-silver" />
+                  <p className="font-extrabold text-[17px] text-almost-black">Click to select CSV file or drag and drop</p>
+                  <p className="text-[15px] font-bold text-silver mt-2">Only .csv files accepted</p>
                 </label>
               </div>
 
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <p className="text-sm text-blue-900 mb-2">
-                  <strong>CSV Format:</strong> word,reading,meaning,category,level,example_sentence
+              <div className="bg-sky-blue/10 p-6 rounded-2xl border-2 border-sky-blue/20">
+                <p className="text-[15px] text-sky-blue font-extrabold mb-3">
+                  CSV Format: word,reading,meaning,category,level,example_sentence
                 </p>
-                <p className="text-xs text-blue-700 mb-3">Example:</p>
-                <p className="font-mono text-xs whitespace-pre-wrap text-gray-700">
+                <p className="text-[13px] font-bold text-sky-blue/80 mb-2">Example:</p>
+                <p className="font-mono text-[15px] font-bold whitespace-pre-wrap text-graphite">
                   学ぶ,まなぶ,learn,Verbs,2,{'\n'}
                   日本,にほん,Japan,Geography,1,
                 </p>
@@ -428,18 +426,18 @@ export default function AdminVocabulary() {
 
               <button
                 onClick={downloadTemplate}
-                className="w-full bg-blue-100 text-blue-700 px-4 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-blue-200"
+                className="w-full btn-outline-gray px-6 py-4 flex items-center justify-center gap-2 text-sky-blue hover:text-sky-blue hover:border-sky-blue hover:bg-sky-blue/5"
               >
-                <Download className="w-5 h-5" />
-                Download Template
+                <Download className="w-6 h-6" />
+                <span className="font-bold text-[17px]">Download Template</span>
               </button>
             </div>
           )}
 
           {/* Excel Import Tab */}
           {activeImportTab === 'excel' && (
-            <div className="space-y-4">
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+            <div className="space-y-6">
+              <div className="border-4 border-dashed border-cloud-gray rounded-3xl p-10 text-center hover:border-sky-blue hover:bg-sky-blue/5 transition-all">
                 <input
                   type="file"
                   accept=".xlsx,.xls"
@@ -448,20 +446,18 @@ export default function AdminVocabulary() {
                   className="hidden"
                   id="excel-input"
                 />
-                <label htmlFor="excel-input" className="cursor-pointer">
-                  <div className="text-gray-600 mb-2">
-                    <FileText className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                    <p>Click to select Excel file or drag and drop</p>
-                    <p className="text-sm text-gray-500 mt-1">Supports .xlsx and .xls files</p>
-                  </div>
+                <label htmlFor="excel-input" className="cursor-pointer flex flex-col items-center">
+                  <FileText className="w-12 h-12 mb-4 text-silver" />
+                  <p className="font-extrabold text-[17px] text-almost-black">Click to select Excel file or drag and drop</p>
+                  <p className="text-[15px] font-bold text-silver mt-2">Supports .xlsx and .xls files</p>
                 </label>
               </div>
 
-              <div className="bg-green-50 p-4 rounded-lg">
-                <p className="text-sm text-green-900 mb-2">
-                  <strong>Excel Format:</strong> Column headers must be: word, reading, meaning
+              <div className="bg-sky-blue-light p-6 rounded-2xl border-2 border-sky-blue/20">
+                <p className="text-[15px] text-sky-blue font-extrabold mb-2">
+                  Excel Format: Column headers must be: word, reading, meaning
                 </p>
-                <p className="text-xs text-green-700">
+                <p className="text-[13px] font-bold text-sky-blue/80">
                   Optional columns: category, level, example_sentence
                 </p>
               </div>
@@ -470,7 +466,7 @@ export default function AdminVocabulary() {
 
           {/* Batch Import Tab */}
           {activeImportTab === 'batch' && (
-            <div className="mt-4">
+            <div className="mt-6">
               <BatchVocabularyForm onSubmit={handleBatchSubmit} isLoading={importLoading} />
             </div>
           )}
@@ -495,16 +491,16 @@ export default function AdminVocabulary() {
 
       {/* Form */}
       {showForm && (
-        <div className="bg-white p-6 rounded-lg shadow-lg mb-8 border border-gray-200">
-          <h2 className="text-xl font-bold mb-4">{editingId ? 'Sửa' : 'Thêm'} Từ Vựng</h2>
-          <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+        <div className="card-duo p-8 mb-8">
+          <h2 className="h2-feather mb-6">{editingId ? 'Sửa' : 'Thêm'} Từ Vựng</h2>
+          <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-5">
             <input
               type="text"
               placeholder="Từ (Word)"
               value={formData.word}
               onChange={(e) => setFormData({ ...formData, word: e.target.value })}
               required
-              className="border px-3 py-2 rounded"
+              className="border-2 border-cloud-gray px-5 py-4 rounded-2xl focus:border-sky-blue focus:bg-sky-blue/5 outline-none font-bold text-almost-black text-[15px]"
             />
             <input
               type="text"
@@ -512,7 +508,7 @@ export default function AdminVocabulary() {
               value={formData.reading}
               onChange={(e) => setFormData({ ...formData, reading: e.target.value })}
               required
-              className="border px-3 py-2 rounded"
+              className="border-2 border-cloud-gray px-5 py-4 rounded-2xl focus:border-sky-blue focus:bg-sky-blue/5 outline-none font-bold text-almost-black text-[15px]"
             />
             <input
               type="text"
@@ -520,31 +516,31 @@ export default function AdminVocabulary() {
               value={formData.meaning}
               onChange={(e) => setFormData({ ...formData, meaning: e.target.value })}
               required
-              className="border px-3 py-2 rounded col-span-2"
+              className="border-2 border-cloud-gray px-5 py-4 rounded-2xl focus:border-sky-blue focus:bg-sky-blue/5 outline-none font-bold text-almost-black text-[15px] col-span-2"
             />
             <input
               type="text"
               placeholder="Danh mục (Category)"
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="border px-3 py-2 rounded"
+              className="border-2 border-cloud-gray px-5 py-4 rounded-2xl focus:border-sky-blue focus:bg-sky-blue/5 outline-none font-bold text-almost-black text-[15px]"
             />
             <input
               type="number"
               placeholder="Level"
               value={formData.level}
               onChange={(e) => setFormData({ ...formData, level: parseInt(e.target.value) })}
-              className="border px-3 py-2 rounded"
+              className="border-2 border-cloud-gray px-5 py-4 rounded-2xl focus:border-sky-blue focus:bg-sky-blue/5 outline-none font-bold text-almost-black text-[15px]"
             />
             <textarea
               placeholder="Ví dụ (Example)"
               value={formData.example_sentence}
               onChange={(e) => setFormData({ ...formData, example_sentence: e.target.value })}
-              className="border px-3 py-2 rounded col-span-2"
+              className="border-2 border-cloud-gray px-5 py-4 rounded-2xl focus:border-sky-blue focus:bg-sky-blue/5 outline-none font-bold text-almost-black text-[15px] col-span-2"
               rows={2}
             />
-            <div className="col-span-2 flex gap-2">
-              <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+            <div className="col-span-2 flex gap-4 mt-2">
+              <button type="submit" className="btn-3d-blue px-8 text-[17px]">
                 {editingId ? 'Cập nhật' : 'Thêm'}
               </button>
               <button
@@ -553,7 +549,7 @@ export default function AdminVocabulary() {
                   setShowForm(false);
                   setEditingId(null);
                 }}
-                className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+                className="btn-outline-gray px-8 text-[17px] text-graphite"
               >
                 Hủy
               </button>
@@ -563,42 +559,42 @@ export default function AdminVocabulary() {
       )}
 
       {/* Table */}
-      <div className="overflow-x-auto bg-white rounded-lg shadow">
+      <div className="card-duo overflow-hidden">
         <table className="w-full">
-          <thead className="bg-gray-100 border-b">
+          <thead className="bg-cloud-gray border-b-2 border-cloud-gray">
             <tr>
-              <th className="px-4 py-3 text-left">ID</th>
-              <th className="px-4 py-3 text-left">Từ</th>
-              <th className="px-4 py-3 text-left">Đọc</th>
-              <th className="px-4 py-3 text-left">Nghĩa</th>
-              <th className="px-4 py-3 text-left">Danh mục</th>
-              <th className="px-4 py-3 text-left">Level</th>
-              <th className="px-4 py-3 text-left">Ví dụ</th>
-              <th className="px-4 py-3 text-center">Hành động</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">ID</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Từ</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Đọc</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Nghĩa</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Danh mục</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Level</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Ví dụ</th>
+              <th className="px-5 py-4 text-center font-extrabold text-[13px] uppercase tracking-wider text-graphite">Hành động</th>
             </tr>
           </thead>
           <tbody>
             {vocabulary.map((item) => (
-              <tr key={item.id} className="border-b hover:bg-gray-50">
-                <td className="px-4 py-3">{item.id}</td>
-                <td className="px-4 py-3 font-bold text-lg">{item.word}</td>
-                <td className="px-4 py-3">{item.reading}</td>
-                <td className="px-4 py-3">{item.meaning}</td>
-                <td className="px-4 py-3">{item.category || '-'}</td>
-                <td className="px-4 py-3">{item.level}</td>
-                <td className="px-4 py-3 text-sm text-slate-600 max-w-xs truncate">{item.example_sentence || '-'}</td>
-                <td className="px-4 py-3 flex justify-center gap-2">
+              <tr key={item.id} className="border-b-2 border-cloud-gray hover:bg-gray-50 transition-colors">
+                <td className="px-5 py-4 font-bold text-silver">{item.id}</td>
+                <td className="px-5 py-4 font-feather font-bold text-[22px] text-almost-black">{item.word}</td>
+                <td className="px-5 py-4 font-bold text-graphite">{item.reading}</td>
+                <td className="px-5 py-4 font-bold text-graphite">{item.meaning}</td>
+                <td className="px-5 py-4 font-bold text-silver">{item.category || '-'}</td>
+                <td className="px-5 py-4 font-bold text-sky-blue">{item.level}</td>
+                <td className="px-5 py-4 font-bold text-[13px] text-silver max-w-xs truncate">{item.example_sentence || '-'}</td>
+                <td className="px-5 py-4 flex justify-center gap-3">
                   <button
                     onClick={() => handleEdit(item)}
-                    className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+                    className="p-3 rounded-xl border-2 border-cloud-gray text-sky-blue hover:bg-sky-blue/10 hover:border-sky-blue transition-all"
                   >
-                    <Edit2 className="w-4 h-4" />
+                    <Edit2 className="w-5 h-5" />
                   </button>
                   <button
                     onClick={() => handleDelete(item.id)}
-                    className="bg-red-500 text-white p-2 rounded hover:bg-red-600"
+                    className="p-3 rounded-xl border-2 border-cloud-gray text-bubblegum-pink hover:bg-pink-50 hover:border-bubblegum-pink transition-all"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-5 h-5" />
                   </button>
                 </td>
               </tr>
@@ -608,30 +604,30 @@ export default function AdminVocabulary() {
       </div>
 
       {vocabulary.length === 0 && (
-        <div className="text-center py-8 text-gray-500">Không có từ vựng nào</div>
+        <div className="text-center py-12 font-bold text-silver text-[17px]">Không có từ vựng nào</div>
       )}
 
       {/* Delete All Confirm Modal */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg p-8 max-w-sm">
-            <h2 className="text-2xl font-bold mb-4 text-red-600">Xóa Tất Cả Từ Vựng?</h2>
-            <p className="text-gray-700 mb-2">Hành động này sẽ xóa <strong>{vocabulary.length} từ vựng</strong> và không thể hoàn tác.</p>
-            <p className="text-gray-600 mb-6 text-sm">Hãy chắc chắn rằng bạn muốn tiếp tục.</p>
-            <div className="flex gap-3 justify-end">
+        <div className="fixed inset-0 bg-almost-black/50 flex items-center justify-center z-50 p-4">
+          <div className="card-duo p-10 max-w-sm w-full relative">
+            <h2 className="h2-feather text-bubblegum-pink mb-4">Xóa Tất Cả Từ Vựng?</h2>
+            <p className="font-bold text-graphite mb-2">Hành động này sẽ xóa <strong>{vocabulary.length} từ vựng</strong> và không thể hoàn tác.</p>
+            <p className="text-silver font-bold text-[15px] mb-8">Hãy chắc chắn rằng bạn muốn tiếp tục.</p>
+            <div className="flex gap-4 justify-end">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
                 disabled={isDeleting}
-                className="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400 disabled:opacity-50"
+                className="btn-outline-gray px-6 py-3 font-bold text-graphite disabled:opacity-50"
               >
                 Hủy
               </button>
               <button
                 onClick={handleDeleteAll}
                 disabled={isDeleting}
-                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 disabled:opacity-50 flex items-center gap-2"
+                className="btn-3d-red px-6 py-3 disabled:opacity-50 flex items-center gap-2"
               >
-                {isDeleting && <Loader className="w-4 h-4 animate-spin" />}
+                {isDeleting && <Loader className="w-5 h-5 animate-spin" />}
                 {isDeleting ? 'Đang xóa...' : 'Xóa Tất Cả'}
               </button>
             </div>

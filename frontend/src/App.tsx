@@ -4,7 +4,6 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
 import { Layout } from './components/Layout';
 import { AdminLayout } from './components/AdminLayout';
-import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import VocabLab from './pages/VocabLab';

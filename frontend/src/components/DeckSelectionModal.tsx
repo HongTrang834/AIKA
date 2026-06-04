@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 const DECK_COLORS = {
     blue: { bg: 'bg-blue-50', border: 'border-blue-300', text: 'text-blue-700' },
     red: { bg: 'bg-red-50', border: 'border-red-300', text: 'text-red-700' },
-    green: { bg: 'bg-green-50', border: 'border-green-300', text: 'text-green-700' },
+    green: { bg: 'bg-blue-50', border: 'border-blue-300', text: 'text-blue-700' },
     purple: { bg: 'bg-purple-50', border: 'border-purple-300', text: 'text-purple-700' },
     yellow: { bg: 'bg-yellow-50', border: 'border-yellow-300', text: 'text-yellow-700' },
     pink: { bg: 'bg-pink-50', border: 'border-pink-300', text: 'text-pink-700' }

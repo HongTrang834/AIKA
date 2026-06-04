@@ -179,8 +179,8 @@ export default function Lesson() {
                   <p className="text-sm font-semibold text-blue-900 mb-1">You (Student)</p>
                   <p className="text-slate-700">こんにちは。今日は何ですか？</p>
                 </div>
-                <div className="p-4 bg-green-50 rounded-xl border border-green-100">
-                  <p className="text-sm font-semibold text-green-900 mb-1">AI Tutor</p>
+                <div className="p-4 bg-blue-50 rounded-xl border border-blue-100">
+                  <p className="text-sm font-semibold text-blue-900 mb-1">AI Tutor</p>
                   <p className="text-slate-700">こんにちは。今日は会議についてお話しします。</p>
                 </div>
               </div>

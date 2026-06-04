@@ -5,7 +5,7 @@ import TestTakerModal from '@/src/components/TestTakerModal';
 import { Loader, ArrowLeft, BookOpen, Lightbulb } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../lib/api';
-import { useAuth } from '../context/AuthContext';import { useToast } from '../context/ToastContext';
+import { useAuth } from '../context/AuthContext'; import { useToast } from '../context/ToastContext';
 export default function VocabLab() {
   const { token } = useAuth();
   const { showToast } = useToast();
@@ -13,11 +13,11 @@ export default function VocabLab() {
   const [vocabulary, setVocabulary] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [addingId, setAddingId] = useState<number | null>(null);
-  
+
   // Deck selection modal states
   const [showDeckSelection, setShowDeckSelection] = useState(false);
   const [pendingVocabId, setPendingVocabId] = useState<number | null>(null);
-  
+
   // Topic/Category states
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [topics, setTopics] = useState<string[]>([]);
@@ -32,7 +32,7 @@ export default function VocabLab() {
       try {
         const data = await api.getVocabulary(5000, 0);
         setVocabulary(data.rows || []);
-        
+
         // Extract unique categories as topics
         const uniqueTopics = Array.from(
           new Set(data.rows?.map((v: any) => v.category || 'General') || [])
@@ -56,7 +56,7 @@ export default function VocabLab() {
       // Try to get existing test for this category
       const url = `${import.meta.env.VITE_API_URL}/tests?category=${category}&type=vocabulary`;
       console.log('📌 Fetching tests from:', url);
-      
+
       const response = await fetch(url);
 
       if (!response.ok) {
@@ -94,13 +94,13 @@ export default function VocabLab() {
 
         const newTest = await createResponse.json();
         console.log('✅ Test created:', newTest);
-        
+
         // Auto-generate questions
         const genResponse = await fetch(
           `${import.meta.env.VITE_API_URL}/tests/${newTest.id}/auto-generate`,
-          { 
-            method: 'POST', 
-            headers: { Authorization: `Bearer ${token}` } 
+          {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${token}` }
           }
         );
 
@@ -132,14 +132,14 @@ export default function VocabLab() {
 
   const handleDeckSelected = async (deckId: number) => {
     if (!token || !pendingVocabId) return;
-    
+
     try {
       setAddingId(pendingVocabId);
-      const response = await api.createFlashcard(token, { 
+      const response = await api.createFlashcard(token, {
         vocab_id: pendingVocabId,
-        deck_id: deckId 
+        deck_id: deckId
       });
-      
+
       // Accept both real DB responses and temporary mock responses
       if (response || response === null) {
         setPendingVocabId(null);
@@ -176,16 +176,16 @@ export default function VocabLab() {
   // TOPICS VIEW
   if (!selectedTopic) {
     return (
-      <div className="p-10 max-w-7xl mx-auto">
+      <div className="w-full p-8 max-w-7xl mx-auto space-y-12">
         <div className="mb-10">
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">Vocabulary Topics</h1>
-          <p className="text-slate-600">Browse and study Japanese vocabulary</p>
+          <h1 className="h1-feather text-almost-black mb-2">Vocabulary</h1>
+          <p className="text-graphite font-bold text-lg">Browse and study Japanese vocabulary</p>
         </div>
 
         {/* Topics Grid */}
         {topics.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-slate-500 text-lg">No vocabulary topics available</p>
+          <div className="text-center py-12 card-duo bg-gray-50">
+            <p className="text-silver font-bold text-lg">No vocabulary topics available</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -195,12 +195,12 @@ export default function VocabLab() {
                 <button
                   key={topic}
                   onClick={() => setSelectedTopic(topic)}
-                  className="text-left p-6 bg-white rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300 border border-slate-100"
+                  className="text-left p-6 card-duo hover:-translate-y-1 hover:border-silver transition-all duration-300"
                 >
-                  <h3 className="text-2xl font-bold text-slate-900 mb-3">{topic}</h3>
-                  <p className="text-slate-600 mb-4">{vocabCount} words</p>
-                  <div className="flex items-center gap-2 text-primary font-semibold">
-                    <BookOpen className="w-4 h-4" />
+                  <h3 className="font-feather text-[24px] font-bold text-almost-black mb-3">{topic}</h3>
+                  <p className="text-silver font-bold mb-6">{vocabCount} words</p>
+                  <div className="flex items-center gap-2 text-sky-blue font-extrabold uppercase text-[15px]">
+                    <BookOpen className="w-5 h-5" />
                     Browse
                   </div>
                 </button>
@@ -224,27 +224,27 @@ export default function VocabLab() {
   }
 
   return (
-    <div className="p-10 max-w-7xl mx-auto">
+    <div className="w-full p-8 max-w-7xl mx-auto space-y-12">
       {/* Header with Back Button */}
-      <div className="flex items-center justify-between gap-3 mb-10">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between gap-3 mb-12">
+        <div className="flex items-center gap-4">
           <button
             onClick={() => setSelectedTopic(null)}
-            className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+            className="p-3 hover:bg-gray-100 rounded-2xl border-2 border-cloud-gray transition-colors text-graphite hover:border-silver"
           >
-            <ArrowLeft className="w-6 h-6 text-slate-600" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
           <div>
-            <h2 className="text-3xl font-bold text-slate-900">{selectedTopic}</h2>
-            <p className="text-slate-500">{topicVocabs.length} words</p>
+            <h2 className="h1-feather text-almost-black">{selectedTopic}</h2>
+            <p className="text-silver font-bold text-[17px]">{topicVocabs.length} words</p>
           </div>
         </div>
         <button
           onClick={() => handleTakeTest(selectedTopic!)}
           disabled={loadingTest}
-          className="flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 disabled:opacity-50"
+          className="flex items-center gap-2 btn-3d-blue px-8 py-4 text-[17px] disabled:opacity-50 disabled:active:translate-y-0 disabled:active:border-b-4 disabled:active:mt-0"
         >
-          {loadingTest ? <Loader className="w-4 h-4 animate-spin" /> : <Lightbulb className="w-4 h-4" />}
+          {loadingTest ? <Loader className="w-5 h-5 animate-spin" /> : <Lightbulb className="w-5 h-5" />}
           Làm Bài Test
         </button>
       </div>

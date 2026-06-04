@@ -310,8 +310,8 @@ export default function AdminGrammar() {
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Quản lý Ngữ Pháp</h1>
-        <div className="flex gap-2">
+        <h1 className="h1-feather text-almost-black">Quản lý Ngữ Pháp</h1>
+        <div className="flex gap-4">
           <button
             onClick={() => {
               setShowForm(!showForm);
@@ -319,7 +319,7 @@ export default function AdminGrammar() {
               setEditingId(null);
               setFormData({ title: '', pattern: '', explanation: '', meaning: '', example_sentence: '', category: '', level: 2 });
             }}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"
+            className="btn-3d-blue flex items-center gap-2 px-6"
           >
             <Plus className="w-5 h-5" />
             Thêm Ngữ Pháp
@@ -331,14 +331,14 @@ export default function AdminGrammar() {
               setImportMessage('');
               setActiveImportTab('csv');
             }}
-            className="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-green-700"
+            className="btn-3d-blue flex items-center gap-2 px-6"
           >
             <Upload className="w-5 h-5" />
             Import
           </button>
           <button
             onClick={() => setShowDeleteConfirm(true)}
-            className="bg-red-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-red-700"
+            className="btn-3d-red flex items-center gap-2 px-6"
           >
             <Trash2 className="w-5 h-5" />
             Xóa Tất Cả
@@ -348,41 +348,41 @@ export default function AdminGrammar() {
 
       {/* Import Section */}
       {showImport && (
-        <div className="bg-white p-6 rounded-lg shadow-lg mb-8 border border-gray-200">
-          <h2 className="text-xl font-bold mb-4">Import Ngữ Pháp</h2>
+        <div className="card-duo p-8 mb-8">
+          <h2 className="h2-feather mb-6">Import Ngữ Pháp</h2>
 
           {/* Tab Navigation */}
-          <div className="flex gap-2 mb-4 border-b">
+          <div className="flex gap-3 mb-6 border-b-2 border-cloud-gray pb-4">
             <button
               onClick={() => setActiveImportTab('csv')}
-              className={`px-4 py-2 flex items-center gap-2 ${
+              className={`px-5 py-3 rounded-xl border-2 font-bold flex items-center gap-2 transition-all ${
                 activeImportTab === 'csv'
-                  ? 'border-b-2 border-blue-600 text-blue-600 font-semibold'
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'border-sky-blue bg-sky-blue/10 text-sky-blue'
+                  : 'border-transparent text-silver hover:bg-gray-50 hover:border-cloud-gray'
               }`}
             >
-              <Upload className="w-4 h-4" />
+              <Upload className="w-5 h-5" />
               CSV File
             </button>
             <button
               onClick={() => setActiveImportTab('excel')}
-              className={`px-4 py-2 flex items-center gap-2 ${
+              className={`px-5 py-3 rounded-xl border-2 font-bold flex items-center gap-2 transition-all ${
                 activeImportTab === 'excel'
-                  ? 'border-b-2 border-blue-600 text-blue-600 font-semibold'
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'border-sky-blue bg-sky-blue/10 text-sky-blue'
+                  : 'border-transparent text-silver hover:bg-gray-50 hover:border-cloud-gray'
               }`}
             >
-              <FileText className="w-4 h-4" />
+              <FileText className="w-5 h-5" />
               Excel File
             </button>
           </div>
 
           {importMessage && (
             <div
-              className={`p-4 rounded-lg mb-4 ${
+              className={`p-5 rounded-2xl mb-6 font-bold border-2 ${
                 importMessage.includes('✅')
-                  ? 'bg-green-50 text-green-700'
-                  : 'bg-red-50 text-red-700'
+                  ? 'bg-sky-blue-light text-sky-blue border-sky-blue'
+                  : 'bg-pink-50 text-bubblegum-pink border-bubblegum-pink'
               }`}
             >
               {importMessage}
@@ -391,8 +391,8 @@ export default function AdminGrammar() {
 
           {/* CSV Import Tab */}
           {activeImportTab === 'csv' && (
-            <div className="space-y-4">
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+            <div className="space-y-6">
+              <div className="border-4 border-dashed border-cloud-gray rounded-3xl p-10 text-center hover:border-sky-blue hover:bg-sky-blue/5 transition-all">
                 <input
                   type="file"
                   accept=".csv"
@@ -401,12 +401,10 @@ export default function AdminGrammar() {
                   className="hidden"
                   id="csv-input"
                 />
-                <label htmlFor="csv-input" className="cursor-pointer">
-                  <div className="flex flex-col items-center gap-2">
-                    <Upload className="w-8 h-8 text-gray-600" />
-                    <p className="text-gray-600">Kéo thả hoặc <span className="text-blue-600 font-bold">chọn CSV</span></p>
-                    <p className="text-sm text-gray-500">Định dạng: pattern, meaning, title, explanation, category, level, example_sentence, example_translation</p>
-                  </div>
+                <label htmlFor="csv-input" className="cursor-pointer flex flex-col items-center">
+                  <Upload className="w-12 h-12 mb-4 text-silver" />
+                  <p className="font-extrabold text-[17px] text-almost-black">Kéo thả hoặc <span className="text-sky-blue">chọn CSV</span></p>
+                  <p className="text-[15px] font-bold text-silver mt-2">Định dạng: pattern, meaning, title, explanation, category, level, example_sentence, example_translation</p>
                 </label>
               </div>
             </div>
@@ -414,8 +412,8 @@ export default function AdminGrammar() {
 
           {/* Excel Import Tab */}
           {activeImportTab === 'excel' && (
-            <div className="space-y-4">
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+            <div className="space-y-6">
+              <div className="border-4 border-dashed border-cloud-gray rounded-3xl p-10 text-center hover:border-sky-blue hover:bg-sky-blue/5 transition-all">
                 <input
                   type="file"
                   accept=".xlsx,.xls"
@@ -424,12 +422,10 @@ export default function AdminGrammar() {
                   className="hidden"
                   id="excel-input"
                 />
-                <label htmlFor="excel-input" className="cursor-pointer">
-                  <div className="flex flex-col items-center gap-2">
-                    <FileText className="w-8 h-8 text-gray-600" />
-                    <p className="text-gray-600">Kéo thả hoặc <span className="text-blue-600 font-bold">chọn Excel</span></p>
-                    <p className="text-sm text-gray-500">Định dạng: .xlsx hoặc .xls</p>
-                  </div>
+                <label htmlFor="excel-input" className="cursor-pointer flex flex-col items-center">
+                  <FileText className="w-12 h-12 mb-4 text-silver" />
+                  <p className="font-extrabold text-[17px] text-almost-black">Kéo thả hoặc <span className="text-sky-blue">chọn Excel</span></p>
+                  <p className="text-[15px] font-bold text-silver mt-2">Định dạng: .xlsx hoặc .xls</p>
                 </label>
               </div>
             </div>
@@ -437,7 +433,7 @@ export default function AdminGrammar() {
 
           <button
             onClick={() => setShowImport(false)}
-            className="mt-4 w-full bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+            className="mt-6 w-full btn-outline-gray px-6 py-4 flex items-center justify-center font-bold text-[17px] text-graphite"
           >
             Đóng
           </button>
@@ -446,16 +442,16 @@ export default function AdminGrammar() {
 
       {/* Form */}
       {showForm && (
-        <div className="bg-white p-6 rounded-lg shadow-lg mb-8 border border-gray-200">
-          <h2 className="text-xl font-bold mb-4">{editingId ? 'Sửa' : 'Thêm'} Ngữ Pháp</h2>
-          <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+        <div className="card-duo p-8 mb-8">
+          <h2 className="h2-feather mb-6">{editingId ? 'Sửa' : 'Thêm'} Ngữ Pháp</h2>
+          <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-5">
             <input
               type="text"
               placeholder="Tiêu đề (Title)"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               required
-              className="border px-3 py-2 rounded"
+              className="border-2 border-cloud-gray px-5 py-4 rounded-2xl focus:border-sky-blue focus:bg-sky-blue/5 outline-none font-bold text-almost-black text-[15px]"
             />
             <input
               type="text"
@@ -463,14 +459,14 @@ export default function AdminGrammar() {
               value={formData.pattern}
               onChange={(e) => setFormData({ ...formData, pattern: e.target.value })}
               required
-              className="border px-3 py-2 rounded"
+              className="border-2 border-cloud-gray px-5 py-4 rounded-2xl focus:border-sky-blue focus:bg-sky-blue/5 outline-none font-bold text-almost-black text-[15px]"
             />
             <textarea
               placeholder="Giải thích (Explanation)"
               value={formData.explanation}
               onChange={(e) => setFormData({ ...formData, explanation: e.target.value })}
               required
-              className="border px-3 py-2 rounded col-span-2"
+              className="border-2 border-cloud-gray px-5 py-4 rounded-2xl focus:border-sky-blue focus:bg-sky-blue/5 outline-none font-bold text-almost-black text-[15px] col-span-2"
               rows={2}
             />
             <input
@@ -479,31 +475,31 @@ export default function AdminGrammar() {
               value={formData.meaning}
               onChange={(e) => setFormData({ ...formData, meaning: e.target.value })}
               required
-              className="border px-3 py-2 rounded col-span-2"
+              className="border-2 border-cloud-gray px-5 py-4 rounded-2xl focus:border-sky-blue focus:bg-sky-blue/5 outline-none font-bold text-almost-black text-[15px] col-span-2"
             />
             <input
               type="text"
               placeholder="Danh mục (Category)"
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="border px-3 py-2 rounded"
+              className="border-2 border-cloud-gray px-5 py-4 rounded-2xl focus:border-sky-blue focus:bg-sky-blue/5 outline-none font-bold text-almost-black text-[15px]"
             />
             <input
               type="number"
               placeholder="Level"
               value={formData.level}
               onChange={(e) => setFormData({ ...formData, level: parseInt(e.target.value) })}
-              className="border px-3 py-2 rounded"
+              className="border-2 border-cloud-gray px-5 py-4 rounded-2xl focus:border-sky-blue focus:bg-sky-blue/5 outline-none font-bold text-almost-black text-[15px]"
             />
             <input
               type="text"
               placeholder="Ví dụ (Example)"
               value={formData.example_sentence}
               onChange={(e) => setFormData({ ...formData, example_sentence: e.target.value })}
-              className="border px-3 py-2 rounded col-span-2"
+              className="border-2 border-cloud-gray px-5 py-4 rounded-2xl focus:border-sky-blue focus:bg-sky-blue/5 outline-none font-bold text-almost-black text-[15px] col-span-2"
             />
-            <div className="col-span-2 flex gap-2">
-              <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+            <div className="col-span-2 flex gap-4 mt-2">
+              <button type="submit" className="btn-3d-blue px-8 text-[17px]">
                 {editingId ? 'Cập nhật' : 'Thêm'}
               </button>
               <button
@@ -512,7 +508,7 @@ export default function AdminGrammar() {
                   setShowForm(false);
                   setEditingId(null);
                 }}
-                className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+                className="btn-outline-gray px-8 text-[17px] text-graphite"
               >
                 Hủy
               </button>
@@ -537,40 +533,40 @@ export default function AdminGrammar() {
       />
 
       {/* Table */}
-      <div className="overflow-x-auto bg-white rounded-lg shadow">
+      <div className="card-duo overflow-hidden">
         <table className="w-full">
-          <thead className="bg-gray-100 border-b">
+          <thead className="bg-cloud-gray border-b-2 border-cloud-gray">
             <tr>
-              <th className="px-4 py-3 text-left">ID</th>
-              <th className="px-4 py-3 text-left">Tiêu đề</th>
-              <th className="px-4 py-3 text-left">Dạng</th>
-              <th className="px-4 py-3 text-left">Nghĩa</th>
-              <th className="px-4 py-3 text-left">Danh mục</th>
-              <th className="px-4 py-3 text-left">Level</th>
-              <th className="px-4 py-3 text-center">Hành động</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">ID</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Tiêu đề</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Dạng</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Nghĩa</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Danh mục</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Level</th>
+              <th className="px-5 py-4 text-center font-extrabold text-[13px] uppercase tracking-wider text-graphite">Hành động</th>
             </tr>
           </thead>
           <tbody>
             {grammar.map((item) => (
-              <tr key={item.id} className="border-b hover:bg-gray-50">
-                <td className="px-4 py-3">{item.id}</td>
-                <td className="px-4 py-3 font-bold">{item.title}</td>
-                <td className="px-4 py-3 font-mono">{item.pattern}</td>
-                <td className="px-4 py-3">{item.meaning}</td>
-                <td className="px-4 py-3">{item.category || '-'}</td>
-                <td className="px-4 py-3">N{item.level}</td>
-                <td className="px-4 py-3 flex justify-center gap-2">
+              <tr key={item.id} className="border-b-2 border-cloud-gray hover:bg-gray-50 transition-colors">
+                <td className="px-5 py-4 font-bold text-silver">{item.id}</td>
+                <td className="px-5 py-4 font-feather font-bold text-[19px] text-almost-black">{item.title}</td>
+                <td className="px-5 py-4 font-bold text-sky-blue">{item.pattern}</td>
+                <td className="px-5 py-4 font-bold text-graphite">{item.meaning}</td>
+                <td className="px-5 py-4 font-bold text-silver">{item.category || '-'}</td>
+                <td className="px-5 py-4 font-bold text-graphite">N{item.level}</td>
+                <td className="px-5 py-4 flex justify-center gap-3">
                   <button
                     onClick={() => handleEdit(item)}
-                    className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+                    className="p-3 rounded-xl border-2 border-cloud-gray text-sky-blue hover:bg-sky-blue/10 hover:border-sky-blue transition-all"
                   >
-                    <Edit2 className="w-4 h-4" />
+                    <Edit2 className="w-5 h-5" />
                   </button>
                   <button
                     onClick={() => handleDelete(item.id)}
-                    className="bg-red-500 text-white p-2 rounded hover:bg-red-600"
+                    className="p-3 rounded-xl border-2 border-cloud-gray text-bubblegum-pink hover:bg-pink-50 hover:border-bubblegum-pink transition-all"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-5 h-5" />
                   </button>
                 </td>
               </tr>
@@ -580,30 +576,30 @@ export default function AdminGrammar() {
       </div>
 
       {grammar.length === 0 && (
-        <div className="text-center py-8 text-gray-500">Không có ngữ pháp nào</div>
+        <div className="text-center py-12 font-bold text-silver text-[17px]">Không có ngữ pháp nào</div>
       )}
 
       {/* Delete All Confirm Modal */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg p-8 max-w-sm">
-            <h2 className="text-2xl font-bold mb-4 text-red-600">⚠️ Xóa Tất Cả Ngữ Pháp?</h2>
-            <p className="text-gray-700 mb-2">Hành động này sẽ xóa <strong>{grammar.length} ngữ pháp</strong> và không thể hoàn tác.</p>
-            <p className="text-gray-600 mb-6 text-sm">Hãy chắc chắn rằng bạn muốn tiếp tục.</p>
-            <div className="flex gap-3 justify-end">
+        <div className="fixed inset-0 bg-almost-black/50 flex items-center justify-center z-50 p-4">
+          <div className="card-duo p-10 max-w-sm w-full relative">
+            <h2 className="h2-feather text-bubblegum-pink mb-4">⚠️ Xóa Tất Cả Ngữ Pháp?</h2>
+            <p className="font-bold text-graphite mb-2">Hành động này sẽ xóa <strong>{grammar.length} ngữ pháp</strong> và không thể hoàn tác.</p>
+            <p className="text-silver font-bold text-[15px] mb-8">Hãy chắc chắn rằng bạn muốn tiếp tục.</p>
+            <div className="flex gap-4 justify-end">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
                 disabled={isDeleting}
-                className="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400 disabled:opacity-50"
+                className="btn-outline-gray px-6 py-3 font-bold text-graphite disabled:opacity-50"
               >
                 Hủy
               </button>
               <button
                 onClick={handleDeleteAll}
                 disabled={isDeleting}
-                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 disabled:opacity-50 flex items-center gap-2"
+                className="btn-3d-red px-6 py-3 disabled:opacity-50 flex items-center gap-2"
               >
-                {isDeleting ? <Loader className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                {isDeleting ? <Loader className="w-5 h-5 animate-spin" /> : <Trash2 className="w-5 h-5" />}
                 {isDeleting ? 'Đang xóa...' : 'Xóa Tất Cả'}
               </button>
             </div>

@@ -31,11 +31,11 @@ export default function AdminTests() {
   const [creating, setCreating] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedType, setSelectedType] = useState<string>('vocabulary');
-  
+
   // Form state
   const [formData, setFormData] = useState({ name: '', category: '', total_questions: 5 });
   const [categories, setCategories] = useState<string[]>([]);
-  
+
   // Edit question state
   const [editingQuestion, setEditingQuestion] = useState<number | null>(null);
   const [editForm, setEditForm] = useState<any>(null);
@@ -132,13 +132,13 @@ export default function AdminTests() {
         setTests([...tests, newTest]);
         setFormData({ name: '', category: '', total_questions: 5 });
         showToast('Test tạo thành công', 'success');
-        
+
         // Auto-generate questions
         const genResponse = await fetch(`${import.meta.env.VITE_API_URL}/admin/tests/${newTest.id}/auto-generate`, {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}` },
         });
-        
+
         if (genResponse.ok) {
           setSelectedTest(newTest);
           fetchQuestions(newTest.id);
@@ -282,93 +282,18 @@ export default function AdminTests() {
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold mb-8 text-gray-900">Quản Lý Bài Test</h1>
-        <button
-          onClick={() => {
-            setCreating(true);
-            setFormData({ name: '', category: '', total_questions: 5 });
-          }}
-          className="text-blue-600 hover:bg-blue-50 p-2 rounded"
-        >
-          <Plus className="w-4 h-4" />
-          Tạo Test
-        </button>
+        <h1 className="h1-feather text-almost-black mb-8">Quản Lý Bài Test</h1>
       </div>
 
       {/* Main Content */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Left Panel: Create Test */}
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-xl font-bold mb-4">Tạo Bài Test Mới</h2>
+        {/* Left Panel: Tests List */}
+        <div className="card-duo p-8 md:col-span-1">
+          {/* <h2 className="h2-feather mb-6 text-almost-black">Danh Sách Tests</h2> */}
 
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-semibold mb-1">Loại</label>
-              <select
-                value={selectedType}
-                onChange={(e) => setSelectedType(e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg"
-              >
-                <option value="vocabulary">Từ Vựng</option>
-                <option value="grammar">Ngữ Pháp</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold mb-1">Category</label>
-              <select
-                value={formData.category || selectedCategory}
-                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg"
-              >
-                <option value="">Chọn Category</option>
-                {categories.map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold mb-1">Tên Test</label>
-              <input
-                type="text"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="ví dụ Business Vocabulary Test"
-                className="w-full px-3 py-2 border rounded-lg"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold mb-1">Số Câu</label>
-              <input
-                type="number"
-                value={formData.total_questions}
-                onChange={(e) => setFormData({ ...formData, total_questions: parseInt(e.target.value) })}
-                min="1"
-                max="50"
-                className="w-full px-3 py-2 border rounded-lg"
-              />
-            </div>
-
-            <button
-              onClick={handleCreateTest}
-              disabled={creating}
-              className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center gap-2"
-            >
-              {creating ? <Loader className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
-              Tạo Test
-            </button>
-          </div>
-        </div>
-
-        {/* Middle Panel: Tests List */}
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-xl font-bold mb-4">Danh Sách Tests</h2>
-
-          <div className="space-y-2" style={{ maxHeight: '600px', overflowY: 'auto' }}>
+          <div className="space-y-3 pr-2 custom-scrollbar" style={{ maxHeight: '600px', overflowY: 'auto' }}>
             {tests.length === 0 ? (
-              <p className="text-gray-500 text-sm">Chưa có test</p>
+              <p className="text-silver font-bold text-[15px] text-center mt-4">Chưa có test</p>
             ) : (
               tests.map(test => (
                 <div
@@ -377,15 +302,14 @@ export default function AdminTests() {
                     setSelectedTest(test);
                     fetchQuestions(test.id);
                   }}
-                  className={`p-3 rounded-lg cursor-pointer transition-all ${
-                    selectedTest?.id === test.id
-                      ? 'bg-blue-100 border-2 border-blue-600'
-                      : 'bg-gray-50 border border-gray-200 hover:bg-gray-100'
-                  }`}
+                  className={`p-4 rounded-2xl border-4 cursor-pointer transition-all hover:-translate-y-1 ${selectedTest?.id === test.id
+                    ? 'bg-sky-blue/10 border-sky-blue'
+                    : 'bg-white border-cloud-gray hover:border-silver hover:bg-gray-50'
+                    }`}
                 >
-                  <p className="font-semibold text-sm">{test.name}</p>
-                  <p className="text-xs text-gray-600">{test.category}</p>
-                  <p className="text-xs text-gray-500">{test.total_questions} câu</p>
+                  <p className="font-extrabold text-[17px] text-almost-black mb-1">{test.name}</p>
+                  <p className="text-[13px] font-bold text-sky-blue uppercase tracking-wide mb-1">{test.category}</p>
+                  <p className="text-[13px] font-bold text-silver bg-cloud-gray inline-block px-2 py-1 rounded-lg">{test.total_questions} câu</p>
                 </div>
               ))
             )}
@@ -393,51 +317,52 @@ export default function AdminTests() {
         </div>
 
         {/* Right Panel: Questions & Edit */}
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div className="card-duo p-8 md:col-span-2">
           {selectedTest ? (
             <>
-              <div className="flex justify-between items-start mb-4">
+              <div className="flex justify-between items-start mb-6">
                 <div>
-                  <h2 className="text-xl font-bold">{selectedTest.name}</h2>
-                  <p className="text-sm text-gray-600">{selectedTest.category}</p>
+                  <h2 className="h2-feather text-almost-black">{selectedTest.name}</h2>
+                  <p className="text-[15px] font-bold text-sky-blue uppercase tracking-wide mt-1">{selectedTest.category}</p>
                 </div>
                 <button
                   onClick={() => handleDeleteTest(selectedTest.id)}
-                  className="text-red-600 hover:bg-red-50 p-2 rounded"
+                  className="p-3 rounded-xl border-2 border-cloud-gray hover:border-bubblegum-pink text-bubblegum-pink transition-all"
+                  title="Xóa Test"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-5 h-5" />
                 </button>
               </div>
 
               <button
                 onClick={() => handleAutoGenerate(selectedTest.id)}
-                className="w-full bg-green-600 text-white py-2 rounded-lg mb-4 font-semibold hover:bg-green-700 flex items-center justify-center gap-2"
+                className="w-full btn-3d-blue py-3 text-[15px] mb-6 flex items-center justify-center gap-2"
               >
-                <RefreshCw className="w-4 h-4" />
+                <RefreshCw className="w-5 h-5" />
                 Tái tạo Câu Hỏi
               </button>
 
-              <h3 className="font-semibold mb-3">Câu Hỏi ({questions.length})</h3>
+              <h3 className="h3-feather text-graphite mb-4">Câu Hỏi ({questions.length})</h3>
 
-              <div style={{ maxHeight: '500px', overflowY: 'auto' }} className="space-y-3">
+              <div style={{ maxHeight: '500px', overflowY: 'auto' }} className="space-y-4 pr-2 custom-scrollbar">
                 {questions.map((q, idx) => (
-                  <div key={q.id} className="p-3 bg-gray-50 rounded-lg border">
+                  <div key={q.id} className="p-5 rounded-2xl border-4 border-cloud-gray bg-white hover:border-silver transition-colors">
                     {editingQuestion === q.id ? (
-                      <div className="space-y-2">
+                      <div className="space-y-3">
                         <input
                           type="text"
                           value={editForm.question_text}
                           onChange={(e) => setEditForm({ ...editForm, question_text: e.target.value })}
-                          className="w-full px-2 py-1 border rounded text-sm"
+                          className="w-full px-4 py-3 border-2 border-cloud-gray rounded-xl font-bold text-[15px] focus:border-sky-blue focus:outline-none"
                         />
                         <input
                           type="text"
                           value={editForm.correct_answer}
                           onChange={(e) => setEditForm({ ...editForm, correct_answer: e.target.value })}
                           placeholder="Đáp án đúng"
-                          className="w-full px-2 py-1 border rounded text-sm"
+                          className="w-full px-4 py-3 border-2 border-cloud-gray rounded-xl font-bold text-[15px] focus:border-sky-blue focus:outline-none text-sky-blue bg-sky-blue-light/30"
                         />
-                        <div className="space-y-1">
+                        <div className="space-y-2 pl-4 border-l-4 border-cloud-gray">
                           {editForm.options?.map((opt: string, i: number) => (
                             <input
                               key={i}
@@ -448,46 +373,51 @@ export default function AdminTests() {
                                 newOpts[i] = e.target.value;
                                 setEditForm({ ...editForm, options: newOpts });
                               }}
-                              className="w-full px-2 py-1 border rounded text-sm"
+                              className="w-full px-4 py-2 border-2 border-cloud-gray rounded-xl font-bold text-[15px] focus:border-sky-blue focus:outline-none"
+                              placeholder={`Option ${i + 1}`}
                             />
                           ))}
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-3 pt-2">
                           <button
                             onClick={handleUpdateQuestion}
-                            className="flex-1 bg-green-600 text-white py-1 rounded text-sm hover:bg-green-700 flex items-center justify-center gap-1"
+                            className="flex-1 btn-3d-blue py-3 text-[15px] flex items-center justify-center gap-2"
                           >
-                            <Check className="w-3 h-3" /> Lưu
+                            <Check className="w-5 h-5" /> Lưu
                           </button>
                           <button
                             onClick={() => {
                               setEditingQuestion(null);
                               setEditForm(null);
                             }}
-                            className="flex-1 bg-gray-400 text-white py-1 rounded text-sm hover:bg-gray-500 flex items-center justify-center gap-1"
+                            className="flex-1 btn-outline-gray py-3 text-[15px] text-graphite flex items-center justify-center gap-2"
                           >
-                            <X className="w-3 h-3" /> Hủy
+                            <X className="w-5 h-5" /> Hủy
                           </button>
                         </div>
                       </div>
                     ) : (
                       <>
-                        <p className="text-xs font-semibold mb-1">Q{idx + 1}: {q.question_text}</p>
-                        <p className="text-xs text-gray-600 mb-2">
-                          <span className="font-semibold">✓ Đúng:</span> {q.correct_answer}
+                        <p className="text-[15px] font-extrabold text-almost-black mb-3 leading-relaxed">
+                          <span className="text-sky-blue">Q{idx + 1}:</span> {q.question_text}
                         </p>
-                        <div className="flex gap-1 justify-end">
+                        <div className="bg-sky-blue-light/50 border-2 border-sky-blue p-3 rounded-xl mb-4">
+                          <p className="text-[13px] font-bold text-sky-blue">
+                            <span className="font-extrabold">✓ Đáp án:</span> {q.correct_answer}
+                          </p>
+                        </div>
+                        <div className="flex gap-2 justify-end">
                           <button
                             onClick={() => startEditQuestion(q)}
-                            className="text-blue-600 hover:bg-blue-50 p-1 rounded"
+                            className="p-2 rounded-xl border-2 border-transparent text-sky-blue hover:bg-sky-blue/10 hover:border-sky-blue transition-colors"
                           >
-                            <Edit2 className="w-3 h-3" />
+                            <Edit2 className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handleDeleteQuestion(selectedTest.id, q.id)}
-                            className="text-red-600 hover:bg-red-50 p-1 rounded"
+                            className="p-2 rounded-xl border-2 border-transparent text-bubblegum-pink hover:bg-pink-50 hover:border-bubblegum-pink transition-colors"
                           >
-                            <Trash2 className="w-3 h-3" />
+                            <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
                       </>
@@ -497,7 +427,13 @@ export default function AdminTests() {
               </div>
             </>
           ) : (
-            <p className="text-gray-500 text-center py-8">Chọn một test để xem câu hỏi</p>
+            <div className="flex flex-col items-center justify-center h-full min-h-[300px] text-center">
+              <div className="w-16 h-16 bg-cloud-gray rounded-full flex items-center justify-center mb-4 text-silver">
+                <Check className="w-8 h-8" />
+              </div>
+              <p className="text-graphite font-bold text-[17px]">Chọn một test để xem câu hỏi</p>
+              <p className="text-silver font-bold text-[13px] mt-2">Nội dung bài test sẽ hiển thị ở đây</p>
+            </div>
           )}
         </div>
       </div>

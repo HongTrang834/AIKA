@@ -8,15 +8,7 @@ export async function runMigrations() {
     // Ensure sequences are updated if we want to add new items.
     // For now, we leave the sequences as they are since we aren't clearing the tables.
 
-    // Drop and recreate flashcard_decks table properly
-    try {
-      await pool.query("DROP TABLE IF EXISTS flashcard_decks CASCADE;");
-      console.log("🔄 Dropped old flashcard_decks table");
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    } catch (err) {
-      console.log("ℹ️ Error dropping flashcard_decks:", err.message.substring(0, 50));
-    }
-
+    // Create flashcard_decks table if it doesn't exist (persistent across restarts)
     const decksTableSQL = `
       CREATE TABLE IF NOT EXISTS flashcard_decks (
         id SERIAL PRIMARY KEY,
@@ -148,9 +140,6 @@ export async function runMigrations() {
       CREATE INDEX IF NOT EXISTS idx_test_results_test_id ON test_results(test_id);
     `;
 
-    await pool.query(decksTableSQL);
-    console.log("✅ flashcard_decks table ready");
-
     await pool.query(flashcardsAlterSQL);
     console.log("✅ flashcards.deck_id column ready");
 
@@ -159,6 +148,20 @@ export async function runMigrations() {
       console.log("✅ flashcards.user_id now nullable for global flashcards");
     } catch (err) {
       console.log("ℹ️ flashcards.user_id nullable migration note:", err.message.substring(0, 50));
+    }
+
+    // Clean up orphaned flashcard rows whose deck_id references a non-existent deck
+    try {
+      const orphanCleanup = await pool.query(
+        `UPDATE flashcards SET deck_id = NULL
+         WHERE deck_id IS NOT NULL
+           AND deck_id NOT IN (SELECT id FROM flashcard_decks)`
+      );
+      if (orphanCleanup.rowCount > 0) {
+        console.log(`🧹 Cleaned up ${orphanCleanup.rowCount} orphaned flashcard deck references`);
+      }
+    } catch (err) {
+      console.log("ℹ️ Orphan cleanup note:", err.message.substring(0, 50));
     }
 
     try {

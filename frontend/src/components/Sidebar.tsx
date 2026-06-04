@@ -1,10 +1,10 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  BookOpen, 
-  Compass, 
-  Layers, 
+import {
+  LayoutDashboard,
+  BookOpen,
+  Compass,
+  Layers,
   TrendingUp,
   Bot,
   User
@@ -22,16 +22,17 @@ const navItems = [
 
 export function Sidebar() {
   return (
-    <aside className="fixed left-0 top-0 h-screen w-72 bg-slate-50 border-r border-slate-200 flex flex-col py-8 rounded-r-[3rem] shadow-xl shadow-indigo-500/5 z-50">
+    <aside className="fixed left-0 top-0 h-screen w-72 bg-snow-white border-r-2 border-cloud-gray flex flex-col py-8 z-50">
       <div className="px-8 mb-10">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
-            <Compass className="w-6 h-6" />
-          </div>
-          <div>
-            <h1 className="text-xl font-extrabold text-indigo-600 tracking-tight font-headline">AIKa</h1>
-            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">N2 Mastery Path</p>
-          </div>
+        <div className="flex items-center gap-2">
+          {/* @ts-ignore */}
+          <dotlottie-wc
+            src="https://lottie.host/9a9472ef-1df0-434f-afdc-11ec34966890/IfbINdkg8R.lottie"
+            style={{ width: '100px', height: '100px' }}
+            autoplay
+            loop
+          ></dotlottie-wc>
+          <h1 className="text-3xl font-feather font-bold text-sky-blue tracking-tight">AIKa</h1>
         </div>
       </div>
 
@@ -41,14 +42,18 @@ export function Sidebar() {
             key={item.path}
             to={item.path}
             className={({ isActive }) => cn(
-              "flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-200 font-medium group",
-              isActive 
-                ? "bg-white text-primary shadow-sm font-bold" 
-                : "text-slate-500 hover:text-primary hover:bg-white/50"
+              "flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-200 font-extrabold text-[15px] tracking-wide uppercase group border-2 border-transparent",
+              isActive
+                ? "bg-sky-blue/10 text-sky-blue"
+                : "text-graphite hover:bg-gray-100"
             )}
           >
-            <item.icon className={cn("w-5 h-5", "group-hover:scale-110 transition-transform")} />
-            <span className="text-sm">{item.label}</span>
+            {({ isActive }) => (
+              <>
+                <item.icon className={cn("w-7 h-7", isActive ? "text-sky-blue" : "text-silver", "group-hover:scale-110 transition-transform")} />
+                <span>{item.label}</span>
+              </>
+            )}
           </NavLink>
         ))}
       </nav>
@@ -57,11 +62,17 @@ export function Sidebar() {
         <NavLink
           to="/kaiwa"
           className={({ isActive }) => cn(
-            "w-full bg-primary text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all",
-            isActive && "ring-2 ring-primary ring-offset-2"
+            "w-full btn-3d-blue py-3 flex items-center justify-center gap-3 text-[17px] relative overflow-hidden",
+            isActive && "active:translate-y-1 active:border-b-0 active:mt-1"
           )}
         >
-          <Bot className="w-5 h-5" />
+          {/* @ts-ignore */}
+          <dotlottie-wc
+            src="https://lottie.host/4153b2ba-cc99-4ea8-b02d-f9bd29cc1f24/gM5iDH7gP0.lottie"
+            style={{ width: '40px', height: '40px' }}
+            autoplay
+            loop
+          ></dotlottie-wc>
           AI Sensei
         </NavLink>
       </div>

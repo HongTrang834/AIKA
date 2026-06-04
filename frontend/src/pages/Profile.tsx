@@ -31,16 +31,16 @@ export default function Profile() {
   const navigate = useNavigate();
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
-  
+
   // Edit form states
   const [fullName, setFullName] = useState('');
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState('');
   const [savingProfile, setSavingProfile] = useState(false);
-  
+
   // Password form states
   const [savingPassword, setSavingPassword] = useState(false);
-  
+
   useEffect(() => {
     loadProfile();
   }, []);
@@ -101,23 +101,23 @@ export default function Profile() {
       }
 
       const data = await api.updateProfile(token, updateData);
-      
+
       setProfile(prev => prev ? {
         ...prev,
         full_name: data.full_name || prev.full_name,
         avatar_url: data.avatar_url || prev.avatar_url,
       } : null);
       setAvatarFile(null);
-      
+
       if (data.avatar_url) {
         setAvatarPreview(data.avatar_url);
       }
-      
+
       updateUser({
         full_name: data.full_name,
         avatar_url: data.avatar_url,
       });
-      
+
       showToast('Hồ sơ đã được lưu thành công', 'success');
     } catch (error: any) {
       console.error('Error updating profile:', error);
@@ -150,7 +150,7 @@ export default function Profile() {
         showToast('Token không tồn tại', 'error');
         return;
       }
-      
+
       await api.changePassword(token, {
         old_password: passwords.old,
         new_password: passwords.new,
@@ -191,16 +191,15 @@ export default function Profile() {
   }
 
   return (
-    <div className="p-4 md:p-10 max-w-5xl mx-auto">
+    <div className="w-full p-8 max-w-7xl mx-auto space-y-12">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-8">
+      <div className="flex items-center gap-3">
         <button
           onClick={() => navigate('/')}
           className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
         >
           <ArrowLeft className="w-6 h-6 text-slate-600" />
         </button>
-        <h1 className="text-2xl md:text-3xl font-bold text-slate-900">Hồ Sơ Cá Nhân</h1>
       </div>
 
       <ProfileHeader

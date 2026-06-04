@@ -31,7 +31,7 @@ export default function VocabularyDetail() {
   const navigate = useNavigate();
   const { token } = useAuth();
   const { showToast } = useToast();
-  
+
   const [vocabulary, setVocabulary] = useState<VocabularyItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -42,6 +42,7 @@ export default function VocabularyDetail() {
   const [quizMode, setQuizMode] = useState(false);
   const [quizAnswer, setQuizAnswer] = useState("");
   const [quizResult, setQuizResult] = useState<'correct' | 'wrong' | null>(null);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   // Existing logic state
   const [showDeckSelection, setShowDeckSelection] = useState(false);
@@ -78,8 +79,11 @@ export default function VocabularyDetail() {
         vocab_id: vocabulary.id,
         deck_id: deckId
       });
-      showToast('Đã thêm vào flashcards', 'success');
+      // Bỏ Toast hiện tại
+      // showToast('Đã thêm vào flashcards', 'success');
       setSaved(true); // Sync with the new save button
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 2500);
       setShowDeckSelection(false);
     } catch (error: any) {
       showToast('Lỗi: ' + (error.message || 'Không thể thêm vào flashcards'), 'error');
@@ -125,31 +129,42 @@ export default function VocabularyDetail() {
         </button>
 
         {/* Hero */}
-        <div className="relative overflow-hidden rounded-3xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 via-blue-50 to-indigo-100 p-8 md:p-10 mb-5">
-          <div className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-indigo-500/5" />
+        <div className="relative overflow-hidden rounded-3xl border-2 border-sky-200 bg-gradient-to-br from-sky-50 via-blue-50 to-sky-100 p-8 md:p-10 mb-5">
+          <div className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-sky-blue/10" />
 
           <div className="flex flex-wrap gap-2 mb-5">
-            <Badge className="bg-indigo-600 text-white">⚡ Từ Vựng</Badge>
-            <Badge className="bg-white text-indigo-600 border border-indigo-200">{level}</Badge>
-            <Badge className="bg-green-100 text-green-800">{category}</Badge>
+            <Badge className="bg-sky-blue text-white">⚡ Từ Vựng</Badge>
+            <Badge className="bg-white text-sky-blue border border-sky-200">{level}</Badge>
+            <Badge className="bg-blue-100 text-blue-800">{category}</Badge>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
             <div>
-              <h1 className="font-display text-8xl font-extrabold text-indigo-900/90 leading-none mb-4" style={{ textShadow: "0 4px 24px rgba(99,102,241,0.2)" }}>
+              <h1 className="font-display text-8xl font-extrabold text-almost-black leading-none mb-4" style={{ textShadow: "0 4px 24px rgba(28,176,246,0.2)" }}>
                 {word}
               </h1>
               <button
                 onClick={() => setRevealed(!revealed)}
                 className={cn(
-                  "inline-flex items-center gap-2 rounded-xl px-5 py-2.5 font-semibold transition-all duration-200",
+                  "inline-flex items-center justify-center gap-2 rounded-xl px-5 h-[56px] min-w-[200px] font-semibold transition-all duration-200",
                   revealed
-                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200"
-                    : "bg-white/80 text-indigo-600 border-2 border-indigo-200"
+                    ? "bg-sky-blue text-white shadow-lg shadow-sky-200"
+                    : "bg-white/80 text-sky-blue border-2 border-sky-200"
                 )}
               >
-                <span className="font-jp text-lg">
-                  {revealed ? `👁 ${reading}` : "👆 Xem cách đọc"}
+                <span className="font-jp text-lg flex items-center justify-center gap-2">
+                  {revealed ? (
+                    <>
+                      {/* <span className="text-xl">👁</span> */}
+                      {reading}
+                    </>
+                  ) : (
+                    <>
+                      {/* @ts-ignore */}
+                      <dotlottie-wc src="https://lottie.host/9d650f31-f397-4975-a573-607bf6075bd9/IOVwsC4yPc.lottie" style={{ width: '32px', height: '32px' }} autoplay loop></dotlottie-wc>
+                      Xem cách đọc
+                    </>
+                  )}
                 </span>
               </button>
             </div>
@@ -169,7 +184,7 @@ export default function VocabularyDetail() {
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-100 text-lg">📝</div>
               <p className="font-bold text-slate-800">Câu ví dụ</p>
             </div>
-            <div className="rounded-xl border-l-4 border-indigo-500 bg-slate-50 p-4 mb-3">
+            <div className="rounded-xl bg-slate-50 p-4 mb-3">
               <p className="font-jp text-base leading-relaxed text-slate-800">{example_sentence}</p>
             </div>
             <p className="text-sm italic text-slate-500">🇻🇳 {example_translation}</p>
@@ -177,65 +192,123 @@ export default function VocabularyDetail() {
 
           {/* Mini Quiz */}
           <div className={cn(
-            "rounded-2xl border-2 p-7 shadow-sm transition-colors duration-300",
-            quizResult === 'correct' ? 'bg-green-50 border-green-200' :
-            quizResult === 'wrong' ? 'bg-red-50 border-red-200' :
-            'bg-white border-slate-200'
+            "rounded-2xl border-2 p-7 shadow-sm transition-colors duration-300 h-[280px] flex flex-col",
+            quizResult === 'correct' ? 'bg-blue-50 border-blue-200' :
+              quizResult === 'wrong' ? 'bg-red-50 border-red-200' :
+                'bg-white border-slate-200'
           )}>
             <div className="flex items-center gap-3 mb-4">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-100 text-lg">🎯</div>
               <p className="font-bold text-slate-800">Mini Quiz</p>
             </div>
 
-            {!quizMode ? (
-              <>
-                <p className="text-sm text-slate-500 mb-4 leading-relaxed">
-                  Thử gõ cách đọc của <strong className="font-jp text-lg text-indigo-600">{word}</strong>
-                </p>
-                <button
-                  onClick={() => setQuizMode(true)}
-                  className="w-full rounded-xl border-none bg-gradient-to-br from-amber-400 to-orange-500 px-4 py-3 font-bold text-white shadow-lg shadow-amber-200"
-                >
-                  ⚡ Bắt đầu Quiz!
-                </button>
-              </>
-            ) : quizResult ? (
-              <div className="text-center">
-                <p className="text-5xl mb-2">{quizResult === 'correct' ? '🎉' : '😅'}</p>
-                <p className={cn(
-                  "text-lg font-bold mb-1",
-                  quizResult === 'correct' ? 'text-green-600' : 'text-red-600'
-                )}>
-                  {quizResult === 'correct' ? 'Chính xác!' : 'Chưa đúng!'}
-                </p>
-                <p className="text-sm text-slate-500 mb-4">
-                  Đáp án: <strong className="font-jp text-indigo-600">{reading}</strong>
-                </p>
-                <button
-                  onClick={resetQuiz}
-                  className="rounded-lg border-none bg-indigo-600 px-5 py-2 text-sm font-semibold text-white"
-                >
-                  Thử lại
-                </button>
-              </div>
-            ) : (
-              <>
-                <p className="text-sm text-slate-600 mb-2">Gõ cách đọc (hiragana):</p>
-                <input
-                  value={quizAnswer}
-                  onChange={e => setQuizAnswer(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && checkQuiz()}
-                  placeholder="ひらがな..."
-                  className="w-full rounded-xl border-2 border-slate-300 p-3 mb-2 font-jp text-lg text-slate-800 outline-none focus:border-indigo-500"
-                />
-                <button
-                  onClick={checkQuiz}
-                  className="w-full rounded-xl border-none bg-indigo-600 py-3 font-bold text-white"
-                >
-                  Kiểm tra →
-                </button>
-              </>
-            )}
+            <div className="flex-1 flex flex-col">
+              {!quizMode ? (
+                // <>
+                //   <div className="flex-1 flex flex-col justify-center">
+                //     <p className="text-sm text-slate-580 mb-2 leading-relaxed text-center ">
+                //       Thử đọc từ này:
+                //     </p>
+                //     <strong className="font-jp text-lg text-sky-blue text-center">{word}</strong>
+                //   </div>
+                //   <button
+                //     onClick={() => setQuizMode(true)}
+                //     className="w-full rounded-xl border-none bg-gradient-to-br from-amber-400 to-orange-500 px-4 py-3 font-bold text-white shadow-lg shadow-amber-200 mt-auto"
+                //   >
+                //     ⚡ Bắt đầu Quiz!
+                //   </button>
+                // </>
+                <>
+                  <div className="flex-1 flex flex-col justify-center items-center py-4">
+
+                    {/* Subtitle */}
+                    <p className="text-sm text-slate-500 mb-2 tracking-wide">
+                      Thử đọc từ này
+                    </p>
+
+                    {/* Japanese Word */}
+                    <strong className="font-jp text-4xl text-sky-500 text-center drop-shadow-sm mb-4">
+                      {word}
+                    </strong>
+                  </div>
+
+                  {/* Button */}
+                  <button
+                    onClick={() => setQuizMode(true)}
+                    className="
+      w-full rounded-2xl
+      bg-gradient-to-r from-amber-400 to-orange-500
+      px-4 py-3
+      font-bold text-white text-lg
+      shadow-lg shadow-orange-200
+      transition-all duration-200
+      hover:-translate-y-1 hover:shadow-xl
+      active:scale-[0.98]
+    "
+                  >
+                    ⚡ Bắt đầu Quiz!
+                  </button>
+                </>
+              ) : quizResult ? (
+                <>
+                  <div className="flex-1 flex flex-col justify-center items-center text-center">
+                    <div className="flex justify-center items-center mb-2 h-[70px]">
+                      {quizResult === 'correct' ? (
+                        /* @ts-ignore */
+                        <dotlottie-wc
+                          src="https://lottie.host/c23b1e00-1e16-4ce9-8965-c92f7888bef6/PMcTTBWHcw.lottie"
+                          style={{ width: '80px', height: '80px' }}
+                          autoplay
+                          loop
+                        ></dotlottie-wc>
+                      ) : (
+                        /* @ts-ignore */
+                        <dotlottie-wc
+                          src="https://lottie.host/f8bc7aee-d395-444f-a60b-39f3b92ad084/pgwiMTI43a.lottie"
+                          style={{ width: '50px', height: '50px' }}
+                          autoplay
+                          loop
+                        ></dotlottie-wc>
+                      )}
+                    </div>
+                    <p className={cn(
+                      "text-lg font-bold mb-1",
+                      quizResult === 'correct' ? 'text-blue-600' : 'text-red-600'
+                    )}>
+                      {quizResult === 'correct' ? 'Chính xác!' : 'Chưa đúng!'}
+                    </p>
+                    {/* <p className="text-sm text-slate-500 mb-0">
+                      Đáp án: <strong className="font-jp text-sky-blue">{reading}</strong>
+                    </p> */}
+                  </div>
+                  <button
+                    onClick={resetQuiz}
+                    className="rounded-lg border-none bg-sky-blue px-5 py-2 text-sm font-semibold text-white mx-auto mt-auto"
+                  >
+                    Thử lại
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div className="flex-1 flex flex-col justify-center">
+                    <p className="text-sm text-slate-600 mb-2">Gõ cách đọc (hiragana):</p>
+                    <input
+                      value={quizAnswer}
+                      onChange={e => setQuizAnswer(e.target.value)}
+                      onKeyDown={e => e.key === 'Enter' && checkQuiz()}
+                      placeholder="ひらがな..."
+                      className="w-full rounded-xl border-2 border-slate-300 p-3 font-jp text-lg text-slate-800 outline-none focus:border-sky-blue"
+                    />
+                  </div>
+                  <button
+                    onClick={checkQuiz}
+                    className="w-full rounded-xl border-none bg-sky-blue py-3 font-bold text-white mt-auto"
+                  >
+                    Kiểm tra →
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
@@ -246,8 +319,8 @@ export default function VocabularyDetail() {
           className={cn(
             "flex w-full items-center justify-center gap-3 rounded-2xl p-5 text-base font-bold text-white transition-all duration-300 disabled:opacity-70",
             saved
-              ? "bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg shadow-green-200"
-              : "bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-200 hover:shadow-xl hover:shadow-indigo-300"
+              ? "bg-sky-blue shadow-lg shadow-sky-200"
+              : "bg-sky-blue shadow-lg shadow-sky-200 hover:shadow-xl hover:-translate-y-1"
           )}
         >
           {saved ? (
@@ -259,6 +332,23 @@ export default function VocabularyDetail() {
           )}
         </button>
       </div>
+
+      {showConfetti && (
+        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+            {/* @ts-ignore */}
+            <dotlottie-wc
+              src="https://lottie.host/49ff8b22-0628-47de-8ede-7e81dff533ce/brgUWISvFk.lottie"
+              style={{ width: '100%', height: '100%' }}
+              autoplay
+            ></dotlottie-wc>
+          </div>
+          <div className="flex flex-col items-center justify-center animate-in zoom-in-75 duration-500 gap-6">
+            <Check size={100} strokeWidth={4} className="text-emerald-400 drop-shadow-2xl" />
+            <p className="font-extrabold text-3xl text-white drop-shadow-lg tracking-wide">Đã lưu thành công!</p>
+          </div>
+        </div>
+      )}
 
       <DeckSelectionModal
         isOpen={showDeckSelection}

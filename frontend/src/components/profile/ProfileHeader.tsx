@@ -18,15 +18,16 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   return (
     <div className="bg-gradient-to-br from-blue-300/40 via-purple-300/40 to-pink-300/40 rounded-2xl p-8 md:p-12 text-slate-900 mb-8 border border-blue-200/50 backdrop-blur-sm">
       <div className="flex flex-col items-center gap-6">
-        <div className="relative">
+        <div className="flex flex-col items-center gap-4">
           <img
             src={avatarPreview}
             alt="Avatar"
-            className="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white object-cover shadow-lg"
+            className="rounded-full border-4 border-white object-cover shadow-lg bg-white"
+            style={{ width: '160px', height: '160px' }}
             referrerPolicy="no-referrer"
           />
-          <label className="absolute bottom-1 right-1 md:bottom-2 md:right-2 bg-white rounded-full p-3 cursor-pointer hover:bg-blue-50 transition-colors shadow-lg border-2 border-blue-200">
-            <Upload className="w-5 h-5 text-blue-600" />
+          <label className="flex items-center gap-2 bg-white rounded-full px-6 py-2 cursor-pointer hover:bg-sky-blue/10 hover:border-sky-blue transition-colors shadow-sm border-2 border-cloud-gray font-bold text-sky-blue text-[15px]">
+            <Upload className="w-5 h-5" />Tải ảnh
             <input
               type="file"
               accept="image/*"

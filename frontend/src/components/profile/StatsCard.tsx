@@ -21,8 +21,8 @@ const colorClasses = {
   },
   green: {
     bg: 'bg-gradient-to-br from-green-50 to-green-100',
-    text: 'text-green-700',
-    value: 'text-green-900',
+    text: 'text-blue-700',
+    value: 'text-blue-900',
   },
   orange: {
     bg: 'bg-gradient-to-br from-orange-50 to-orange-100',

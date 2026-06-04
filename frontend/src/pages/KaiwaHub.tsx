@@ -233,60 +233,72 @@ export default function KaiwaHub() {
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-white/40 backdrop-blur-sm rounded-3xl overflow-hidden border border-white/20 shadow-xl">
+    <div className="flex-1 flex flex-col h-full w-full max-w-[1140px] mx-auto py-6">
       {/* Main Content */}
-      <div className="flex-1 flex gap-6 p-6 overflow-hidden">
+      <div className="flex-1 flex gap-8 overflow-hidden">
         {/* Sidebar - Mode & Scenario Selection */}
-        <div className="w-72 bg-white rounded-lg shadow-md p-6 overflow-y-auto flex flex-col gap-6">
+        <div className="w-72 card-duo p-6 overflow-y-auto flex flex-col gap-6">
           {/* Mode Selection */}
           <div>
-            <h2 className="text-lg font-bold text-gray-900 mb-4">Chế Độ</h2>
+            <h2 className="text-[19px] font-bold text-almost-black mb-4">Chế Độ Học</h2>
             <div className="space-y-3">
-              <label className="flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-all"
-                style={{ borderColor: mode === 'study' ? '#3b82f6' : '#e5e7eb', backgroundColor: mode === 'study' ? '#eff6ff' : '#fff' }}>
+              <label className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                mode === 'study' ? 'border-sky-blue bg-sky-blue/10' : 'border-cloud-gray bg-white hover:bg-gray-50'
+              }`}>
                 <input
                   type="radio"
                   name="mode"
                   value="study"
                   checked={mode === 'study'}
                   onChange={() => setMode('study')}
-                  className="w-4 h-4 cursor-pointer"
+                  className="hidden"
                 />
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${mode === 'study' ? 'border-sky-blue' : 'border-silver'}`}>
+                  {mode === 'study' && <div className="w-2.5 h-2.5 rounded-full bg-sky-blue" />}
+                </div>
                 <div>
-                  <p className="font-semibold text-gray-900 text-sm">Học Từ Vựng & Ngữ Pháp</p>
-                  <p className="text-xs text-gray-600">Giải thích và ví dụ</p>
+                  <p className="font-bold text-[15px] text-almost-black">Học Từ Vựng & Ngữ Pháp</p>
+                  <p className="text-[13px] text-graphite font-medium">Giải thích và ví dụ</p>
                 </div>
               </label>
 
-              <label className="flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-all"
-                style={{ borderColor: mode === 'kaiwa' ? '#3b82f6' : '#e5e7eb', backgroundColor: mode === 'kaiwa' ? '#eff6ff' : '#fff' }}>
+              <label className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                mode === 'kaiwa' ? 'border-sky-blue bg-sky-blue-light' : 'border-cloud-gray bg-white hover:bg-gray-50'
+              }`}>
                 <input
                   type="radio"
                   name="mode"
                   value="kaiwa"
                   checked={mode === 'kaiwa'}
                   onChange={() => setMode('kaiwa')}
-                  className="w-4 h-4 cursor-pointer"
+                  className="hidden"
                 />
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${mode === 'kaiwa' ? 'border-sky-blue' : 'border-silver'}`}>
+                  {mode === 'kaiwa' && <div className="w-2.5 h-2.5 rounded-full bg-sky-blue" />}
+                </div>
                 <div>
-                  <p className="font-semibold text-gray-900 text-sm">Luyện Tập Kaiwa</p>
-                  <p className="text-xs text-gray-600">Giao tiếp tự nhiên</p>
+                  <p className="font-bold text-[15px] text-almost-black">Luyện Tập Kaiwa</p>
+                  <p className="text-[13px] text-graphite font-medium">Giao tiếp tự nhiên</p>
                 </div>
               </label>
 
-              <label className="flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-all"
-                style={{ borderColor: mode === 'n2' ? '#3b82f6' : '#e5e7eb', backgroundColor: mode === 'n2' ? '#eff6ff' : '#fff' }}>
+              <label className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                mode === 'n2' ? 'border-grape-soda bg-grape-soda/10' : 'border-cloud-gray bg-white hover:bg-gray-50'
+              }`}>
                 <input
                   type="radio"
                   name="mode"
                   value="n2"
                   checked={mode === 'n2'}
                   onChange={() => setMode('n2')}
-                  className="w-4 h-4 cursor-pointer"
+                  className="hidden"
                 />
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${mode === 'n2' ? 'border-grape-soda' : 'border-silver'}`}>
+                  {mode === 'n2' && <div className="w-2.5 h-2.5 rounded-full bg-grape-soda" />}
+                </div>
                 <div>
-                  <p className="font-semibold text-gray-900 text-sm">Kaiwa Mức Độ N2</p>
-                  <p className="text-xs text-gray-600">Hội thoại nâng cao và sửa lỗi</p>
+                  <p className="font-bold text-[15px] text-almost-black">Kaiwa N2</p>
+                  <p className="text-[13px] text-graphite font-medium">Hội thoại nâng cao</p>
                 </div>
               </label>
             </div>
@@ -297,23 +309,23 @@ export default function KaiwaHub() {
           {/* Clear History Button */}
           <button
             onClick={handleClearHistory}
-            className="w-full flex items-center justify-center gap-2 bg-red-50 text-red-600 py-2 rounded-lg hover:bg-red-100 transition-colors font-medium text-sm"
+            className="w-full mt-auto flex items-center justify-center gap-2 text-bubblegum-pink py-3 rounded-xl hover:bg-pink-50 transition-colors font-bold text-[15px] border-2 border-transparent hover:border-pink-100"
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="w-5 h-5" />
             Xóa Lịch Sử
           </button>
         </div>
 
         {/* Chat Area */}
-        <div className="flex-1 flex flex-col bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="flex-1 flex flex-col card-duo overflow-hidden relative">
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50">
+          <div className="flex-1 overflow-y-auto p-8 space-y-6 bg-snow-white">
             {messages.length === 0 ? (
               <div className="h-full flex items-center justify-center text-center">
                 <div>
-                  <p className="text-2xl mb-2">🎌</p>
-                  <p className="text-gray-600">日本語でチャットを始めましょう！</p>
-                  <p className="text-sm text-gray-500 mt-2">Bắt đầu trò chuyện bằng tiếng Nhật</p>
+                  <p className="text-6xl mb-4">🎌</p>
+                  <p className="text-[19px] font-bold text-graphite">日本語でチャットを始めましょう！</p>
+                  <p className="text-[15px] text-silver font-bold mt-2">Bắt đầu trò chuyện bằng tiếng Nhật</p>
                 </div>
               </div>
             ) : (
@@ -323,9 +335,9 @@ export default function KaiwaHub() {
                   className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-xs lg:max-w-md px-4 py-3 rounded-lg ${message.role === 'user'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 text-gray-900'
+                    className={`max-w-xs lg:max-w-xl px-5 py-4 font-bold text-[15px] ${message.role === 'user'
+                      ? 'bg-sky-blue text-white rounded-3xl rounded-tr-sm'
+                      : 'bg-cloud-gray text-almost-black rounded-3xl rounded-tl-sm'
                       }`}
                   >
                     <div className="text-sm leading-relaxed markdown-container">
@@ -349,31 +361,31 @@ export default function KaiwaHub() {
                     {message.role === 'assistant' && (
                       <button
                         onClick={() => speakText(message.content)}
-                        className="mt-2 text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-1"
+                        className="mt-3 text-silver hover:text-sky-blue transition-colors flex items-center gap-1 font-bold"
                         title="Nghe phát âm"
                       >
-                        <Volume2 className="w-4 h-4" />
-                        <span className="text-xs">Phát âm</span>
+                        <Volume2 className="w-5 h-5" />
+                        <span className="text-[13px]">Phát âm</span>
                       </button>
                     )}
 
                     {/* Error Display */}
                     {message.errors && message.errors.length > 0 && (
-                      <div className="mt-3 pt-3 border-t border-gray-300 space-y-2">
+                      <div className="mt-4 pt-4 border-t-2 border-white/20 space-y-3">
                         {message.errors.map((error, idx) => (
                           <div
                             key={idx}
-                            className={`text-xs p-2 rounded ${message.role === 'user'
-                              ? 'bg-yellow-600 bg-opacity-30'
-                              : 'bg-yellow-100'
+                            className={`text-[13px] p-3 rounded-xl border-2 ${message.role === 'user'
+                              ? 'bg-sunshine-yellow/20 border-sunshine-yellow/50 text-[#cc9f00]'
+                              : 'bg-white border-sunshine-yellow text-almost-black'
                               }`}
                           >
                             <div className="flex items-start gap-2">
-                              <AlertCircle className="w-3 h-3 flex-shrink-0 mt-0.5" />
+                              <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-[#cc9f00]" />
                               <div>
-                                <p className="font-semibold">❌ {error.original}</p>
-                                <p className="text-green-700 mt-1">✅ {error.correction}</p>
-                                <p className="text-gray-700 mt-1 italic">{error.explanation}</p>
+                                <p className="font-extrabold line-through text-bubblegum-pink">{error.original}</p>
+                                <p className="text-sky-blue font-extrabold mt-1">✅ {error.correction}</p>
+                                <p className="font-bold mt-1 opacity-80">{error.explanation}</p>
                               </div>
                             </div>
                           </div>
@@ -386,9 +398,9 @@ export default function KaiwaHub() {
             )}
             {loading && (
               <div className="flex justify-start">
-                <div className="bg-gray-200 text-gray-900 px-4 py-3 rounded-lg flex items-center gap-2">
-                  <Loader className="w-4 h-4 animate-spin" />
-                  <span className="text-sm">AI đang suy nghĩ...</span>
+                <div className="bg-cloud-gray text-almost-black px-5 py-4 rounded-3xl rounded-tl-sm flex items-center gap-2 font-bold text-[15px]">
+                  <Loader className="w-5 h-5 animate-spin" />
+                  <span>AI đang suy nghĩ...</span>
                 </div>
               </div>
             )}
@@ -396,8 +408,8 @@ export default function KaiwaHub() {
           </div>
 
           {/* Input Area */}
-          <div className="border-t border-gray-200 p-4 bg-white">
-            <div className="flex gap-2">
+          <div className="border-t-2 border-cloud-gray p-6 bg-white shrink-0">
+            <div className="flex gap-3">
               <input
                 type="text"
                 value={inputValue}
@@ -408,13 +420,13 @@ export default function KaiwaHub() {
                   }
                 }}
                 placeholder="日本語で話してください... / Nhập bằng tiếng Nhật"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 px-5 py-3 border-2 border-cloud-gray rounded-2xl focus:outline-none focus:border-sky-blue focus:bg-sky-blue/5 text-[15px] font-bold text-almost-black placeholder-silver transition-all"
                 disabled={loading || isListening}
               />
               <button
                 onClick={() => setMicLang(prev => prev === 'ja-JP' ? 'vi-VN' : 'ja-JP')}
                 disabled={loading || isListening}
-                className="px-3 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 font-bold text-sm transition-colors border border-gray-200"
+                className="px-4 py-3 rounded-2xl border-2 border-cloud-gray bg-white text-graphite hover:bg-gray-50 hover:border-silver font-extrabold text-[15px] transition-all"
                 title={micLang === 'ja-JP' ? "Đang thu âm tiếng Nhật (nhấn để đổi tiếng Việt)" : "Đang thu âm tiếng Việt (nhấn để đổi tiếng Nhật)"}
               >
                 {micLang === 'ja-JP' ? 'JA' : 'VI'}
@@ -422,27 +434,27 @@ export default function KaiwaHub() {
               <button
                 onClick={toggleListening}
                 disabled={loading}
-                className={`px-4 py-2 rounded-lg transition-colors flex items-center justify-center ${isListening
-                  ? 'bg-red-500 text-white animate-pulse'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200'
+                className={`px-4 py-3 rounded-2xl border-2 transition-all flex items-center justify-center ${isListening
+                  ? 'bg-bubblegum-pink border-bubblegum-pink text-white animate-pulse'
+                  : 'border-cloud-gray bg-white text-graphite hover:bg-gray-50 hover:border-silver'
                   }`}
                 title="Nhấn để nói (Voice input)"
               >
-                <Mic className="w-5 h-5" />
+                <Mic className="w-6 h-6" />
               </button>
               <button
                 onClick={handleSendMessage}
                 disabled={loading || !inputValue.trim()}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center gap-2"
+                className="px-8 btn-3d-blue text-[17px] flex items-center gap-2 disabled:opacity-50 disabled:active:translate-y-0 disabled:active:border-b-4 disabled:active:mt-0"
               >
                 {loading ? (
-                  <Loader className="w-4 h-4 animate-spin" />
+                  <Loader className="w-6 h-6 animate-spin" />
                 ) : (
-                  <Send className="w-4 h-4" />
+                  <Send className="w-6 h-6" />
                 )}
               </button>
             </div>
-            <p className="text-xs text-gray-500 mt-2">AI sẽ chỉ ra lỗi ngữ pháp nếu có</p>
+            <p className="text-[13px] text-silver font-bold mt-3 text-center">AI sẽ chỉ ra lỗi ngữ pháp nếu có</p>
           </div>
         </div>
       </div>

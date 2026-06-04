@@ -16,8 +16,6 @@ export function AdminLayout({ children }: AdminLayoutProps) {
     { path: '/admin/grammar', label: 'Ngữ Pháp', icon: BookMarked },
     { path: '/admin/tests', label: 'Tests Mini', icon: ClipboardList },
     { path: '/admin/decks', label: 'Decks', icon: Folder },
-    { path: '/kaiwa', label: 'AI Chat', icon: Bot },
-    { path: '/', label: 'Quay lại App', icon: Layout },
   ];
 
   const handleLogout = () => {
@@ -26,43 +24,47 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-snow-white">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-md flex flex-col">
-        <h1 className="text-3xl font-bold mb-8">AIKa Admin</h1>
-        <nav className="space-y-4">
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = location.pathname === item.path;
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                  isActive ? 'bg-blue-600' : 'hover:bg-gray-800'
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
-        </nav>
+      <aside className="w-72 bg-white border-r-2 border-cloud-gray flex flex-col relative z-10">
+        <div className="p-6">
+          <h1 className="h1-feather text-almost-black mb-8 text-[32px]">AIKa Admin</h1>
+          <nav className="space-y-3">
+            {menuItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = location.pathname === item.path;
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`flex items-center gap-3 px-5 py-4 rounded-2xl border-2 transition-all font-bold ${
+                    isActive 
+                      ? 'bg-sky-blue/10 border-sky-blue text-sky-blue' 
+                      : 'bg-white border-transparent text-graphite hover:bg-gray-50 hover:border-cloud-gray'
+                  }`}
+                >
+                  <Icon className="w-6 h-6" />
+                  <span className="text-[17px]">{item.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
 
         {/* Logout */}
         <div className="absolute bottom-6 left-6 right-6">
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 px-4 py-3 rounded-lg bg-red-600 hover:bg-red-700 transition-colors"
+            className="w-full btn-3d-red px-5 py-4 flex items-center justify-center gap-3 text-[17px] border-b-4 active:border-b-0 active:translate-y-1"
           >
-            <LogOut className="w-5 h-5" />
+            <LogOut className="w-6 h-6" />
             <span>Đăng Xuất</span>
           </button>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col overflow-hidden bg-snow-white">
         <div className="flex-1 overflow-x-hidden overflow-y-auto">
           {children}
         </div>

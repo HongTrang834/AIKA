@@ -133,26 +133,9 @@ export const api = {
     return res.json();
   },
 
-  deleteFlashcard: async (token: string, id: number) => {
-    const res = await fetch(`${API_BASE_URL}/flashcards/${id}`, {
-      method: 'DELETE',
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.json();
-  },
-
   getFlashcardsInDeck: async (token: string, deckId: number) => {
     const res = await fetch(`${API_BASE_URL}/flashcards/deck/${deckId}`, {
       headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.json();
-  },
-
-  addFlashcardToDeck: async (token: string, data: { vocab_id?: number; grammar_id?: number; deck_id: number }) => {
-    const res = await fetch(`${API_BASE_URL}/flashcards/add`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify(data),
     });
     return res.json();
   },
@@ -175,10 +158,7 @@ export const api = {
     return res.json();
   },
 
-  getScenarios: async () => {
-    const res = await fetch(`${API_BASE_URL}/conversation/scenarios`);
-    return res.json();
-  },
+
 
   // Flashcard Decks
   getDecks: async (token: string) => {
@@ -201,14 +181,7 @@ export const api = {
     });
   },
 
-  updateDeck: async (token: string, id: number, data: { name?: string; description?: string; color?: string }) => {
-    const res = await fetch(`${API_BASE_URL}/decks/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify(data),
-    });
-    return res.json();
-  },
+
 
   deleteDeck: async (token: string, id: number) => {
     const res = await fetch(`${API_BASE_URL}/decks/${id}`, {
@@ -241,12 +214,7 @@ export const api = {
     return res.json();
   },
 
-  getTestResults: async (token: string, testId: number) => {
-    const res = await fetch(`${API_BASE_URL}/tests/${testId}/results`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.json();
-  },
+
 
   // Progress tracking
   updateProgress: async (token: string, type: 'vocab' | 'grammar' | 'kaiwa' | 'flashcard', increment: number = 1) => {
@@ -262,16 +230,4 @@ export const api = {
     return res.json();
   },
 
-  updateProgressBulk: async (token: string, data: { vocab?: number; grammar?: number; kaiwa?: number; flashcard?: number }) => {
-    const res = await fetch(`${API_BASE_URL}/users/progress/bulk`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify(data),
-    });
-    if (!res.ok) {
-      const error = await res.json();
-      throw new Error(error.error || 'Failed to update progress');
-    }
-    return res.json();
-  },
 };

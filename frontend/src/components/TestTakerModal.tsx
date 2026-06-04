@@ -102,7 +102,7 @@ export default function TestTaker({ testId, onBack }: { testId: number; onBack: 
 
   if (!test || questions.length === 0) {
     return (
-      <div className="p-8">
+      <div className="w-full p-8">
         <button onClick={onBack} className="flex items-center gap-2 text-blue-600 hover:text-blue-800 mb-4">
           <ArrowLeft className="w-5 h-5" />
           Quay lại
@@ -114,7 +114,7 @@ export default function TestTaker({ testId, onBack }: { testId: number; onBack: 
 
   if (submitted && result) {
     return (
-      <div className="max-w-4xl mx-auto p-8">
+      <div className="w-full max-w-4xl mx-auto p-8">
         <button onClick={onBack} className="flex items-center gap-2 text-blue-600 hover:text-blue-800 mb-8">
           <ArrowLeft className="w-5 h-5" />
           Quay lại
@@ -128,9 +128,9 @@ export default function TestTaker({ testId, onBack }: { testId: number; onBack: 
               <p className="text-sm text-gray-600">Điểm Số</p>
               <p className="text-3xl font-bold text-blue-600">{result.score.toFixed(1)}%</p>
             </div>
-            <div className="bg-green-50 p-4 rounded-lg">
+            <div className="bg-blue-50 p-4 rounded-lg">
               <p className="text-sm text-gray-600">Đúng</p>
-              <p className="text-3xl font-bold text-green-600">{result.correctCount}/{result.totalQuestions}</p>
+              <p className="text-3xl font-bold text-blue-600">{result.correctCount}/{result.totalQuestions}</p>
             </div>
             <div className="bg-purple-50 p-4 rounded-lg">
               <p className="text-sm text-gray-600">Tổng Câu</p>
@@ -147,12 +147,10 @@ export default function TestTaker({ testId, onBack }: { testId: number; onBack: 
             const isCorrect = userAnswer?.is_correct;
 
             return (
-              <div key={q.id} className="bg-white p-6 rounded-lg shadow border-l-4" style={{
-                borderColor: isCorrect ? '#10b981' : '#ef4444'
-              }}>
+              <div key={q.id} className="bg-white p-6 rounded-lg shadow">
                 <div className="flex items-start gap-3 mb-3">
                   {isCorrect ? (
-                    <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
+                    <CheckCircle className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
                   ) : (
                     <XCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-1" />
                   )}
@@ -162,7 +160,7 @@ export default function TestTaker({ testId, onBack }: { testId: number; onBack: 
                 </div>
                 <div className="ml-9 space-y-2">
                   <p className="text-sm"><span className="font-semibold text-gray-700">Bạn chọn:</span> <span className="text-gray-900">{userAnswer?.answer || '(chưa trả lời)'}</span></p>
-                  <p className="text-sm"><span className="font-semibold text-green-700">Đáp án đúng:</span> <span className="text-green-900">{result.answers.find((a: any) => a.question_id === q.id)?.correct_answer || 'N/A'}</span></p>
+                  <p className="text-sm"><span className="font-semibold text-blue-700">Đáp án đúng:</span> <span className="text-blue-900">{result.answers.find((a: any) => a.question_id === q.id)?.correct_answer || 'N/A'}</span></p>
                 </div>
               </div>
             );
@@ -176,7 +174,7 @@ export default function TestTaker({ testId, onBack }: { testId: number; onBack: 
   const userAnswer = answers[currentQuestion.id];
 
   return (
-    <div className="max-w-4xl mx-auto p-8">
+    <div className="w-full max-w-4xl mx-auto p-8">
       <button onClick={onBack} className="flex items-center gap-2 text-blue-600 hover:text-blue-800 mb-8">
         <ArrowLeft className="w-5 h-5" />
         Quay lại
@@ -198,11 +196,13 @@ export default function TestTaker({ testId, onBack }: { testId: number; onBack: 
       </div>
 
       {/* Question */}
-      <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-        <h2 className="text-xl font-bold text-gray-900 mb-6">{currentQuestion.question_text}</h2>
+      <div className="bg-white rounded-lg shadow-lg p-8 mb-8 flex flex-col min-h-[480px]">
+        <div className="min-h-[100px] flex items-center mb-6">
+          <h2 className="text-xl font-bold text-gray-900 w-full">{currentQuestion.question_text}</h2>
+        </div>
 
         {/* Options */}
-        <div className="space-y-3 mb-8">
+        <div className="space-y-3 mb-8 flex-1">
           {currentQuestion.options.map((option: string, idx: number) => (
             <button
               key={idx}
@@ -214,14 +214,14 @@ export default function TestTaker({ testId, onBack }: { testId: number; onBack: 
               }`}
             >
               <div className="flex items-center gap-3">
-                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
                   userAnswer === option
                     ? 'border-blue-600 bg-blue-600'
                     : 'border-gray-300'
                 }`}>
                   {userAnswer === option && <div className="w-2 h-2 bg-white rounded-full" />}
                 </div>
-                <span className="font-medium text-gray-900">{option}</span>
+                <span className="font-medium text-gray-900 break-words">{option}</span>
               </div>
             </button>
           ))}
@@ -241,7 +241,7 @@ export default function TestTaker({ testId, onBack }: { testId: number; onBack: 
             <button
               onClick={handleSubmit}
               disabled={submitting}
-              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 flex items-center gap-2"
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
             >
               {submitting ? <Loader className="w-4 h-4 animate-spin" /> : null}
               Nộp Bài
@@ -269,7 +269,7 @@ export default function TestTaker({ testId, onBack }: { testId: number; onBack: 
                 idx === currentQuestionIndex
                   ? 'bg-blue-600 text-white'
                   : answers[q.id]
-                  ? 'bg-green-100 text-green-800'
+                  ? 'bg-blue-100 text-blue-800'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
