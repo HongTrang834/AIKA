@@ -35,8 +35,14 @@ pool.query("SELECT NOW()", (err) => {
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Run database migrations
-await runMigrations();
+// Run database migrations (non-blocking on Vercel to prevent startup timeouts)
+if (!process.env.VERCEL) {
+  await runMigrations();
+} else {
+  runMigrations().catch((err) => {
+    console.error("❌ Database migration failed on Vercel startup:", err.message);
+  });
+}
 
 // Middleware
 app.use(express.json({ limit: '50mb' }));
