@@ -14,7 +14,7 @@ interface UserProgress {
   created_at: string;
 }
 
-const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE_URL = '/api';
 
 export default function Progress() {
   const { token } = useAuth();

@@ -186,6 +186,15 @@ router.patch("/:id", async (req, res) => {
       [interval, repetitions, ease_factor, nextReview, id, userId]
     );
 
+    // Increment total_flashcard_reviews in user_progress
+    await pool.query(
+      `UPDATE user_progress
+       SET total_flashcard_reviews = total_flashcard_reviews + 1,
+           last_activity = CURRENT_TIMESTAMP
+       WHERE user_id = $1`,
+      [userId]
+    );
+
     res.json(result.rows[0]);
   } catch (error) {
     console.error("Update flashcard error:", error);

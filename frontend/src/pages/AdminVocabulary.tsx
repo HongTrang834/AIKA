@@ -6,7 +6,7 @@ import BatchVocabularyForm from '../components/BatchVocabularyForm';
 import ImportPreviewModal from '../components/ImportPreviewModal';
 import { parseExcelFile, parseCSVFile, validateRecords } from '../lib/importParsers';
 
-const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE_URL = '/api';
 
 type ImportTab = 'csv' | 'excel' | 'batch';
 

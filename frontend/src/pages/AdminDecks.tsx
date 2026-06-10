@@ -3,7 +3,7 @@ import { Plus, Edit2, Trash2, Loader, Search, Palette, CheckSquare, Square, Fold
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
-const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE_URL = '/api';
 
 interface Deck {
   id: number;

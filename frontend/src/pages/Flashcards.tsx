@@ -86,6 +86,24 @@ export default function Flashcards() {
       const currentCard = flashcards[currentIndex];
       await api.updateFlashcard(token, currentCard.id, quality);
 
+      // If Again (1) or Hard (3), insert the card back into the deck so the user reviews it again shortly
+      if (quality === 1 || quality === 3) {
+        setFlashcards(prev => {
+          const updated = [...prev];
+          const remainingCount = updated.length - (currentIndex + 1);
+          const cardCopy = { ...currentCard };
+          
+          if (remainingCount >= 3) {
+            // Insert 3 cards later (currentIndex + 4 because we increment currentIndex by 1 below)
+            updated.splice(currentIndex + 4, 0, cardCopy);
+          } else {
+            // Put at the end of the session
+            updated.push(cardCopy);
+          }
+          return updated;
+        });
+      }
+
       const newIndex = currentIndex + 1;
       if (newIndex < flashcards.length) {
         setCurrentIndex(newIndex);

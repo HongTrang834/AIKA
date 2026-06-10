@@ -5,7 +5,7 @@ import { useToast } from '../context/ToastContext';
 import { parseCSVFile, parseExcelFile, validateGrammarRecords } from '../lib/importParsers';
 import ImportPreviewModal from '../components/ImportPreviewModal';
 
-const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE_URL = '/api';
 
 type ImportTab = 'csv' | 'excel' | 'batch';
 

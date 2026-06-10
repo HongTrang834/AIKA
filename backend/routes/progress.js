@@ -25,6 +25,15 @@ router.get('/', authMiddleware, async (req, res) => {
       [userId]
     );
 
+    // Query actual count of cards waiting for review
+    const reviewCountResult = await pool.query(
+      `SELECT COUNT(*)::int as count 
+       FROM flashcards 
+       WHERE user_id = $1 AND next_review_date <= CURRENT_TIMESTAMP`,
+      [userId]
+    );
+    const cardsWaitingForReview = reviewCountResult.rows[0]?.count || 0;
+
     if (result.rows.length === 0) {
       // Create default progress if doesn't exist
       const createResult = await pool.query(
@@ -33,10 +42,14 @@ router.get('/', authMiddleware, async (req, res) => {
         RETURNING id, user_id, total_vocab_learned, total_grammar_learned, total_kaiwas, total_flashcard_reviews, last_activity, created_at`,
         [userId]
       );
-      return res.json(createResult.rows[0]);
+      const progress = createResult.rows[0];
+      progress.cards_waiting_for_review = cardsWaitingForReview;
+      return res.json(progress);
     }
 
-    res.json(result.rows[0]);
+    const progress = result.rows[0];
+    progress.cards_waiting_for_review = cardsWaitingForReview;
+    res.json(progress);
   } catch (error) {
     console.error('Error fetching progress:', error);
     res.status(500).json({ error: error.message });

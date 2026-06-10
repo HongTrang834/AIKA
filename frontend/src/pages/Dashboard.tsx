@@ -16,6 +16,7 @@ interface ProgressData {
   total_grammar_learned: number;
   total_kaiwas: number;
   total_flashcard_reviews: number;
+  cards_waiting_for_review: number;
 }
 
 interface CurrentLesson {
@@ -52,7 +53,7 @@ const BADGES = [
 export default function Dashboard() {
   const { user } = useAuth();
   const [streak, setStreak] = useState<StreakData>({ current_streak: 0, longest_streak: 0, last_activity_date: null });
-  const [progress, setProgress] = useState<ProgressData>({ total_vocab_learned: 0, total_grammar_learned: 0, total_kaiwas: 0, total_flashcard_reviews: 0 });
+  const [progress, setProgress] = useState<ProgressData>({ total_vocab_learned: 0, total_grammar_learned: 0, total_kaiwas: 0, total_flashcard_reviews: 0, cards_waiting_for_review: 0 });
   const [currentLesson, setCurrentLesson] = useState<CurrentLesson | null>(null);
   const [activityData, setActivityData] = useState<number[]>([]);
   const [nextBadge, setNextBadge] = useState<any>(null);
@@ -399,7 +400,7 @@ export default function Dashboard() {
             <h3 className="h2-feather text-almost-black mb-4">Review Center</h3>
 
             <div className="bg-sky-blue/10 border-2 border-sky-blue/20 rounded-2xl p-6 mb-8 inline-block w-max">
-              <span className="font-black text-3xl text-sky-blue">{loading ? '...' : progress.total_flashcard_reviews + 24}</span>
+              <span className="font-black text-3xl text-sky-blue">{loading ? '...' : (progress.cards_waiting_for_review ?? 0)}</span>
               <span className="text-sky-blue font-bold ml-2">cards</span>
               <p className="text-sky-blue/70 font-bold text-sm mt-1">Waiting for review</p>
             </div>
