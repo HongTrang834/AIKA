@@ -8,6 +8,22 @@ export async function runMigrations() {
     // Ensure sequences are updated if we want to add new items.
     // For now, we leave the sequences as they are since we aren't clearing the tables.
 
+    // Ensure users table has role column
+    try {
+      await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS role VARCHAR(20) DEFAULT 'student'`);
+      console.log("✅ users.role column ready");
+      
+      // Create admin user if not exists (password: admin123)
+      await pool.query(`
+        INSERT INTO users (username, email, password_hash, full_name, role) 
+        VALUES ('admin', 'admin@aika.com', '$2a$10$mxX6OR4XJQ/MVnjBk3RMzuoSWFzDTEhVduXccoh505nAC6mA/LRnO', 'System Admin', 'admin')
+        ON CONFLICT (email) DO NOTHING
+      `);
+      console.log("✅ default admin user ready");
+    } catch (err) {
+      console.log("ℹ️ users.role migration note:", err.message.substring(0, 50));
+    }
+
     // Create flashcard_decks table if it doesn't exist (persistent across restarts)
     const decksTableSQL = `
       CREATE TABLE IF NOT EXISTS flashcard_decks (
