@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
-import { createServer as createViteServer } from "vite";
 import dotenv from "dotenv";
 import pool from "./db.js";
 import { runMigrations } from "./migrations.js";
@@ -105,6 +104,7 @@ app.use((err, req, res, next) => {
 
 if (!process.env.VERCEL) {
   if (process.env.NODE_ENV !== "production") {
+    const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
