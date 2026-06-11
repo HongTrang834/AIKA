@@ -53,41 +53,65 @@ router.post('/vocabulary/import', adminMiddleware, async (req, res) => {
     await pool.query('DELETE FROM vocabulary WHERE category = $1', [firstCategory]);
     console.log(`🗑️  Cleared vocabulary records for category: ${firstCategory}`);
 
-    // Insert records directly without merging (frontend already merged)
+    const validRecords = [];
     for (let i = 0; i < records.length; i++) {
-      try {
-        const record = records[i];
-        const word = record.word?.trim();
-        const reading = record.reading?.trim();
-        const meaning = record.meaning?.trim();
-        const category = record.category?.trim() || null;
-        const level = parseInt(record.level) || 2;
-        const example_sentence = record.example_sentence?.trim() || null;
-        const example_translation = record.example_translation?.trim() || null;
+      const record = records[i];
+      const word = record.word?.trim();
+      const reading = record.reading?.trim();
+      const meaning = record.meaning?.trim();
+      const category = record.category?.trim() || null;
+      const level = parseInt(record.level) || 2;
+      const example_sentence = record.example_sentence?.trim() || null;
+      const example_translation = record.example_translation?.trim() || null;
 
-        // Validate required fields
-        if (!word || !reading || !meaning) {
-          skipped++;
-          errors.push(`Row ${i + 1}: Missing required fields (word="${word}", reading="${reading}", meaning="${meaning}")`);
-          continue;
-        }
-
-        // Insert record
-        const result = await pool.query(
-          'INSERT INTO vocabulary (word, reading, meaning, category, level, example_sentence, example_translation) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id',
-          [word, reading, meaning, category, level, example_sentence, example_translation]
-        );
-
-        if (result.rows.length > 0) {
-          imported++;
-          if (i % 100 === 0) {
-            console.log(`✅ Progress: ${imported} imported, ${skipped} skipped`);
-          }
-        }
-      } catch (err) {
+      // Validate required fields
+      if (!word || !reading || !meaning) {
         skipped++;
-        errors.push(`Row ${i + 1}: ${err.message}`);
-        console.error(`❌ Error importing record ${i + 1}:`, err.message);
+        errors.push(`Row ${i + 1}: Missing required fields (word="${word}", reading="${reading}", meaning="${meaning}")`);
+        continue;
+      }
+
+      validRecords.push({
+        word,
+        reading,
+        meaning,
+        category,
+        level,
+        example_sentence,
+        example_translation
+      });
+    }
+
+    if (validRecords.length > 0) {
+      try {
+        const values = [];
+        const valueStrings = [];
+        let paramIndex = 1;
+
+        for (const record of validRecords) {
+          valueStrings.push(`($${paramIndex}, $${paramIndex+1}, $${paramIndex+2}, $${paramIndex+3}, $${paramIndex+4}, $${paramIndex+5}, $${paramIndex+6})`);
+          values.push(
+            record.word,
+            record.reading,
+            record.meaning,
+            record.category,
+            record.level,
+            record.example_sentence,
+            record.example_translation
+          );
+          paramIndex += 7;
+        }
+
+        const query = `
+          INSERT INTO vocabulary (word, reading, meaning, category, level, example_sentence, example_translation)
+          VALUES ${valueStrings.join(', ')}
+          RETURNING id
+        `;
+        const result = await pool.query(query, values);
+        imported = result.rowCount;
+      } catch (insertErr) {
+        console.error('❌ Bulk insert vocabulary failed:', insertErr.message);
+        return res.status(500).json({ error: 'Bulk insert vocabulary failed', details: insertErr.message });
       }
     }
 
@@ -109,18 +133,20 @@ router.post('/vocabulary/import', adminMiddleware, async (req, res) => {
         
         // Generate up to 50 questions or all if less
         const numQuestions = Math.min(50, categoryCount);
+        const testName = `${firstCategory} Vocabulary Test`;
         
         if (testResult.rows.length > 0) {
           testId = testResult.rows[0].id;
+          // Update name and total_questions to resolve conflicts and match current count
+          await pool.query('UPDATE tests SET name = $1, total_questions = $2 WHERE id = $3', [testName, numQuestions, testId]);
         } else {
           const newTestResult = await pool.query(
             'INSERT INTO tests (name, category, topic_type, total_questions) VALUES ($1, $2, $3, $4) RETURNING id',
-            [`Test: ${firstCategory}`, firstCategory, 'vocabulary', numQuestions]
+            [testName, firstCategory, 'vocabulary', numQuestions]
           );
           testId = newTestResult.rows[0].id;
         }
         
-        await pool.query('UPDATE tests SET total_questions = $1 WHERE id = $2', [numQuestions, testId]);
         await pool.query('DELETE FROM test_questions WHERE test_id = $1', [testId]);
         
         const vocabItems = await pool.query(
@@ -131,7 +157,8 @@ router.post('/vocabulary/import', adminMiddleware, async (req, res) => {
         const maxWrongAnswers = Math.max(1, Math.min(3, items.length - 2));
         
         const questionTypes = ['fill-blank', 'choose-meaning', 'choose-reading', 'sentence'];
-        let inserted = 0;
+        const generatedQuestions = [];
+
         for (let i = 0; i < Math.min(numQuestions, items.length); i++) {
           const item = items[i];
           const questionType = questionTypes[i % 4];
@@ -156,13 +183,32 @@ router.post('/vocabulary/import', adminMiddleware, async (req, res) => {
           }
           
           opts = opts.sort(() => Math.random() - 0.5);
-          await pool.query(
-            'INSERT INTO test_questions (test_id, question_text, correct_answer, options, question_type, vocab_id) VALUES ($1, $2, $3, $4, $5, $6)',
-            [testId, q, ans, JSON.stringify(opts), questionType, item.id]
-          );
-          inserted++;
+          generatedQuestions.push({
+            q,
+            ans,
+            opts: JSON.stringify(opts),
+            questionType,
+            vocab_id: item.id
+          });
         }
-        console.log(`✅ Generated ${inserted} test questions for ${firstCategory}`);
+
+        if (generatedQuestions.length > 0) {
+          const values = [];
+          const valueStrings = [];
+          let paramIndex = 1;
+          for (const gq of generatedQuestions) {
+            valueStrings.push(`($${paramIndex}, $${paramIndex+1}, $${paramIndex+2}, $${paramIndex+3}, $${paramIndex+4}, $${paramIndex+5})`);
+            values.push(testId, gq.q, gq.ans, gq.opts, gq.questionType, gq.vocab_id);
+            paramIndex += 6;
+          }
+          const query = `
+            INSERT INTO test_questions (test_id, question_text, correct_answer, options, question_type, vocab_id)
+            VALUES ${valueStrings.join(', ')}
+          `;
+          await pool.query(query, values);
+        }
+
+        console.log(`✅ Generated ${generatedQuestions.length} test questions for ${firstCategory}`);
       } catch (err) {
         console.error('⚠️  Auto-generate failed:', err.message);
       }
@@ -301,42 +347,68 @@ router.post('/grammar/import', adminMiddleware, async (req, res) => {
     await pool.query('DELETE FROM grammar WHERE category = $1', [firstCategory]);
     console.log(`🗑️  Cleared grammar records for category: ${firstCategory}`);
 
-    // Insert records directly without merging (frontend already merged)
+    const validRecords = [];
     for (let i = 0; i < records.length; i++) {
-      try {
-        const record = records[i];
-        const title = record.title?.trim();
-        const pattern = record.pattern?.trim();
-        const meaning = record.meaning?.trim();
-        const explanation = record.explanation?.trim() || '';
-        const category = record.category?.trim() || null;
-        const level = parseInt(record.level) || 2;
-        const example_sentence = record.example_sentence?.trim() || null;
-        const example_translation = record.example_translation?.trim() || null;
+      const record = records[i];
+      const title = record.title?.trim();
+      const pattern = record.pattern?.trim();
+      const meaning = record.meaning?.trim();
+      const explanation = record.explanation?.trim() || '';
+      const category = record.category?.trim() || null;
+      const level = parseInt(record.level) || 2;
+      const example_sentence = record.example_sentence?.trim() || null;
+      const example_translation = record.example_translation?.trim() || null;
 
-        // Validate required fields
-        if (!pattern || !meaning) {
-          skipped++;
-          errors.push(`Row ${i + 1}: Missing required fields (pattern="${pattern}", meaning="${meaning}")`);
-          continue;
-        }
-
-        // Insert record
-        const result = await pool.query(
-          'INSERT INTO grammar (title, pattern, explanation, meaning, category, level, example_sentence, example_translation) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id',
-          [title || pattern, pattern, explanation, meaning, category, level, example_sentence, example_translation]
-        );
-
-        if (result.rows.length > 0) {
-          imported++;
-          if (i % 100 === 0) {
-            console.log(`✅ Progress: ${imported} imported, ${skipped} skipped`);
-          }
-        }
-      } catch (err) {
+      // Validate required fields
+      if (!pattern || !meaning) {
         skipped++;
-        errors.push(`Row ${i + 1}: ${err.message}`);
-        console.error(`❌ Error importing record ${i + 1}:`, err.message);
+        errors.push(`Row ${i + 1}: Missing required fields (pattern="${pattern}", meaning="${meaning}")`);
+        continue;
+      }
+
+      validRecords.push({
+        title: title || pattern,
+        pattern,
+        explanation,
+        meaning,
+        category,
+        level,
+        example_sentence,
+        example_translation
+      });
+    }
+
+    if (validRecords.length > 0) {
+      try {
+        const values = [];
+        const valueStrings = [];
+        let paramIndex = 1;
+
+        for (const record of validRecords) {
+          valueStrings.push(`($${paramIndex}, $${paramIndex+1}, $${paramIndex+2}, $${paramIndex+3}, $${paramIndex+4}, $${paramIndex+5}, $${paramIndex+6}, $${paramIndex+7})`);
+          values.push(
+            record.title,
+            record.pattern,
+            record.explanation,
+            record.meaning,
+            record.category,
+            record.level,
+            record.example_sentence,
+            record.example_translation
+          );
+          paramIndex += 8;
+        }
+
+        const query = `
+          INSERT INTO grammar (title, pattern, explanation, meaning, category, level, example_sentence, example_translation)
+          VALUES ${valueStrings.join(', ')}
+          RETURNING id
+        `;
+        const result = await pool.query(query, values);
+        imported = result.rowCount;
+      } catch (insertErr) {
+        console.error('❌ Bulk insert grammar failed:', insertErr.message);
+        return res.status(500).json({ error: 'Bulk insert grammar failed', details: insertErr.message });
       }
     }
 
@@ -357,18 +429,20 @@ router.post('/grammar/import', adminMiddleware, async (req, res) => {
         );
         
         const numQuestions = Math.min(50, categoryCount);
+        const testName = `${firstCategory} Grammar Test`;
         
         if (testResult.rows.length > 0) {
           testId = testResult.rows[0].id;
+          // Update name and total_questions to resolve conflicts and match current count
+          await pool.query('UPDATE tests SET name = $1, total_questions = $2 WHERE id = $3', [testName, numQuestions, testId]);
         } else {
           const newTestResult = await pool.query(
             'INSERT INTO tests (name, category, topic_type, total_questions) VALUES ($1, $2, $3, $4) RETURNING id',
-            [`Test: ${firstCategory}`, firstCategory, 'grammar', numQuestions]
+            [testName, firstCategory, 'grammar', numQuestions]
           );
           testId = newTestResult.rows[0].id;
         }
         
-        await pool.query('UPDATE tests SET total_questions = $1 WHERE id = $2', [numQuestions, testId]);
         await pool.query('DELETE FROM test_questions WHERE test_id = $1', [testId]);
         
         const grammarItems = await pool.query(
@@ -379,7 +453,8 @@ router.post('/grammar/import', adminMiddleware, async (req, res) => {
         const maxWrongAnswers = Math.max(1, Math.min(3, items.length - 2));
         
         const questionTypes = ['fill-blank', 'choose-meaning', 'choose-reading', 'sentence'];
-        let inserted = 0;
+        const generatedQuestions = [];
+
         for (let i = 0; i < Math.min(numQuestions, items.length); i++) {
           const item = items[i];
           const questionType = questionTypes[i % 4];
@@ -405,13 +480,32 @@ router.post('/grammar/import', adminMiddleware, async (req, res) => {
           }
           
           opts = opts.sort(() => Math.random() - 0.5);
-          await pool.query(
-            'INSERT INTO test_questions (test_id, question_text, correct_answer, options, question_type, grammar_id) VALUES ($1, $2, $3, $4, $5, $6)',
-            [testId, q, ans, JSON.stringify(opts), questionType, item.id]
-          );
-          inserted++;
+          generatedQuestions.push({
+            q,
+            ans,
+            opts: JSON.stringify(opts),
+            questionType,
+            grammar_id: item.id
+          });
         }
-        console.log(`✅ Generated ${inserted} test questions for ${firstCategory}`);
+
+        if (generatedQuestions.length > 0) {
+          const values = [];
+          const valueStrings = [];
+          let paramIndex = 1;
+          for (const gq of generatedQuestions) {
+            valueStrings.push(`($${paramIndex}, $${paramIndex+1}, $${paramIndex+2}, $${paramIndex+3}, $${paramIndex+4}, $${paramIndex+5})`);
+            values.push(testId, gq.q, gq.ans, gq.opts, gq.questionType, gq.grammar_id);
+            paramIndex += 6;
+          }
+          const query = `
+            INSERT INTO test_questions (test_id, question_text, correct_answer, options, question_type, grammar_id)
+            VALUES ${valueStrings.join(', ')}
+          `;
+          await pool.query(query, values);
+        }
+
+        console.log(`✅ Generated ${generatedQuestions.length} test questions for ${firstCategory}`);
       } catch (err) {
         console.error('⚠️  Auto-generate failed:', err.message);
       }
@@ -738,12 +832,21 @@ router.post('/tests/:id/auto-generate', adminMiddleware, async (req, res) => {
 
     // Insert new questions
     let inserted = 0;
-    for (const q of generateQuestions) {
-      await pool.query(
-        'INSERT INTO test_questions (test_id, question_text, question_type, correct_answer, options, vocab_id, grammar_id) VALUES ($1, $2, $3, $4, $5, $6, $7)',
-        [q.test_id, q.question_text, q.question_type, q.correct_answer, q.options, q.vocab_id, q.grammar_id]
-      );
-      inserted++;
+    if (generateQuestions.length > 0) {
+      const values = [];
+      const valueStrings = [];
+      let paramIndex = 1;
+      for (const q of generateQuestions) {
+        valueStrings.push(`($${paramIndex}, $${paramIndex+1}, $${paramIndex+2}, $${paramIndex+3}, $${paramIndex+4}, $${paramIndex+5}, $${paramIndex+6})`);
+        values.push(q.test_id, q.question_text, q.question_type, q.correct_answer, q.options, q.vocab_id, q.grammar_id);
+        paramIndex += 7;
+      }
+      const query = `
+        INSERT INTO test_questions (test_id, question_text, question_type, correct_answer, options, vocab_id, grammar_id)
+        VALUES ${valueStrings.join(', ')}
+      `;
+      await pool.query(query, values);
+      inserted = generateQuestions.length;
     }
 
     res.json({
