@@ -8,6 +8,8 @@ import { api } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+
 export default function GrammarLab() {
   const { token } = useAuth();
   const { showToast } = useToast();
@@ -67,7 +69,7 @@ export default function GrammarLab() {
     setLoadingTest(true);
     try {
       // Try to get existing test for this category
-      const url = `${import.meta.env.VITE_API_URL}/tests?category=${category}&type=grammar`;
+      const url = `${API_BASE_URL}/tests?category=${category}&type=grammar`;
       console.log('📌 Fetching tests from:', url);
       
       const response = await fetch(url);
@@ -87,7 +89,7 @@ export default function GrammarLab() {
         setShowTestModal(true);
       } else {
         // Create new test and auto-generate questions
-        const createResponse = await fetch(`${import.meta.env.VITE_API_URL}/tests`, {
+        const createResponse = await fetch(`${API_BASE_URL}/tests`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -110,7 +112,7 @@ export default function GrammarLab() {
         
         // Auto-generate questions
         const genResponse = await fetch(
-          `${import.meta.env.VITE_API_URL}/tests/${newTest.id}/auto-generate`,
+          `${API_BASE_URL}/tests/${newTest.id}/auto-generate`,
           { 
             method: 'POST', 
             headers: { Authorization: `Bearer ${token}` } 

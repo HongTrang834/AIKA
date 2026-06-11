@@ -21,6 +21,8 @@ interface Question {
   options: string | string[];
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+
 export default function AdminTests() {
   const { token } = useAuth();
   const { showToast } = useToast();
@@ -54,12 +56,12 @@ export default function AdminTests() {
   const fetchCategories = async () => {
     try {
       // Fetch vocabulary categories
-      const vocabResponse = await fetch(`${import.meta.env.VITE_API_URL}/vocabulary`);
+      const vocabResponse = await fetch(`${API_BASE_URL}/vocabulary`);
       const vocabData = await vocabResponse.json();
       const vocabCats = [...new Set(vocabData.rows?.map((v: any) => v.category))].filter(Boolean);
 
       // Fetch grammar categories
-      const grammarResponse = await fetch(`${import.meta.env.VITE_API_URL}/grammar`);
+      const grammarResponse = await fetch(`${API_BASE_URL}/grammar`);
       const grammarData = await grammarResponse.json();
       const grammarCats = [...new Set(grammarData.rows?.map((g: any) => g.category))].filter(Boolean);
 
@@ -78,7 +80,7 @@ export default function AdminTests() {
     try {
       const cat = category || selectedCategory;
       const typ = type || selectedType;
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tests?category=${cat}&type=${typ}`, {
+      const response = await fetch(`${API_BASE_URL}/admin/tests?category=${cat}&type=${typ}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
@@ -92,7 +94,7 @@ export default function AdminTests() {
 
   const fetchQuestions = async (testId: number) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tests/${testId}/questions`, {
+      const response = await fetch(`${API_BASE_URL}/admin/tests/${testId}/questions`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
@@ -113,7 +115,7 @@ export default function AdminTests() {
 
     setCreating(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tests`, {
+      const response = await fetch(`${API_BASE_URL}/admin/tests`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -134,7 +136,7 @@ export default function AdminTests() {
         showToast('Test tạo thành công', 'success');
 
         // Auto-generate questions
-        const genResponse = await fetch(`${import.meta.env.VITE_API_URL}/admin/tests/${newTest.id}/auto-generate`, {
+        const genResponse = await fetch(`${API_BASE_URL}/admin/tests/${newTest.id}/auto-generate`, {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -158,7 +160,7 @@ export default function AdminTests() {
   const handleAutoGenerate = async (testId: number) => {
     setLoading(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tests/${testId}/auto-generate`, {
+      const response = await fetch(`${API_BASE_URL}/admin/tests/${testId}/auto-generate`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -179,7 +181,7 @@ export default function AdminTests() {
 
   const handleDeleteTest = async (testId: number) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tests/${testId}`, {
+      const response = await fetch(`${API_BASE_URL}/admin/tests/${testId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -202,7 +204,7 @@ export default function AdminTests() {
 
   const handleDeleteQuestion = async (testId: number, questionId: number) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tests/${testId}/questions/${questionId}`, {
+      const response = await fetch(`${API_BASE_URL}/admin/tests/${testId}/questions/${questionId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -229,7 +231,7 @@ export default function AdminTests() {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/admin/tests/${selectedTest.id}/questions/${editForm.id}`,
+        `${API_BASE_URL}/admin/tests/${selectedTest.id}/questions/${editForm.id}`,
         {
           method: 'PUT',
           headers: {
