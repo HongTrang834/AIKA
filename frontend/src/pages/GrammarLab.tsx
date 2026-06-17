@@ -171,7 +171,7 @@ export default function GrammarLab() {
   if (loading) {
     return (
       <div className="p-10 flex items-center justify-center min-h-screen">
-        <Loader className="w-8 h-8 animate-spin text-primary" />
+        <Loader className="w-14 h-14 animate-spin text-sky-blue" />
       </div>
     );
   }

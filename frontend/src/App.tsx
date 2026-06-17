@@ -25,8 +25,8 @@ function AppContent() {
   
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-indigo-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-sky-blue-light/20">
+        <div className="animate-spin rounded-full h-16 w-16 border-4 border-sky-blue border-t-transparent"></div>
       </div>
     );
   }

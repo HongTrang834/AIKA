@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, BookOpen, Check, Plus, X } from 'lucide-react';
+import { ArrowLeft, BookOpen, Check, Plus, X, Loader } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import DeckSelectionModal from '@/src/components/DeckSelectionModal';
 import { useToast } from '../context/ToastContext';
@@ -104,7 +104,11 @@ export default function VocabularyDetail() {
   };
 
   if (loading) {
-    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader className="w-14 h-14 animate-spin text-sky-blue" />
+      </div>
+    );
   }
 
   if (error) {

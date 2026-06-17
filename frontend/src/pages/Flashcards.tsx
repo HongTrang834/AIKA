@@ -126,8 +126,8 @@ export default function Flashcards() {
 
   if (loading && !studyMode) {
     return (
-      <div className="flex-grow flex items-center justify-center py-20">
-        <Loader className="w-8 h-8 animate-spin text-sky-blue" />
+      <div className="flex-grow flex items-center justify-center py-20 min-h-[400px]">
+        <Loader className="w-14 h-14 animate-spin text-sky-blue" />
       </div>
     );
   }

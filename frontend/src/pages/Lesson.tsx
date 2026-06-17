@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, BookOpen, Zap, MessageSquare, CheckCircle } from 'lucide-react';
+import { ArrowLeft, BookOpen, Zap, MessageSquare, CheckCircle, Loader } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useAuth } from '../context/AuthContext';
 
@@ -51,11 +51,8 @@ export default function Lesson() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
-        <div className="text-center">
-          <div className="animate-spin w-12 h-12 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4" />
-          <p className="text-slate-600 font-semibold">Loading lesson...</p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader className="w-14 h-14 animate-spin text-sky-blue" />
       </div>
     );
   }

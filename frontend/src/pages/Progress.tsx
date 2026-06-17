@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TrendingUp, BookOpen, Compass, MessageSquare, RotateCw, Calendar, Award, Target, Activity } from 'lucide-react';
+import { TrendingUp, BookOpen, Compass, MessageSquare, RotateCw, Calendar, Award, Target, Activity, Loader } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
@@ -179,13 +179,8 @@ export default function Progress() {
 
   if (loading) {
     return (
-      <div className="flex-grow flex items-center justify-center py-20">
-        <div className="text-center">
-          <div className="animate-spin mb-4 inline-block">
-            <TrendingUp className="w-12 h-12 text-sky-blue" />
-          </div>
-          <p className="text-gray-500 font-bold">Loading progress...</p>
-        </div>
+      <div className="flex-grow flex items-center justify-center py-20 min-h-[400px]">
+        <Loader className="w-14 h-14 animate-spin text-sky-blue" />
       </div>
     );
   }

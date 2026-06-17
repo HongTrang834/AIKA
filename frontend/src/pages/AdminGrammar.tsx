@@ -301,8 +301,8 @@ export default function AdminGrammar() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20 h-full">
-        <Loader className="w-8 h-8 animate-spin" />
+      <div className="flex items-center justify-center py-20 h-full min-h-[400px]">
+        <Loader className="w-14 h-14 animate-spin text-sky-blue" />
       </div>
     );
   }
