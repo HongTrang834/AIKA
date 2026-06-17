@@ -293,11 +293,8 @@ export default function Dashboard() {
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="lg:col-span-7 flex flex-col justify-center bg-sky-blue-light/30 border-2 border-dashed border-sky-blue rounded-[32px] p-32 h-full"
+          className="lg:col-span-7 flex flex-col justify-center bg-sky-blue-light/30 border-2 border-sky-blue rounded-[32px] p-32 h-full"
         >
-          <div className="inline-flex items-center rounded-full bg-sky-blue-light/60 px-16 py-6 text-xs font-bold text-sky-blue uppercase tracking-wider mb-20 w-max">
-            CURRENT UNIT: {currentLesson?.unit || 'BUSINESS ETHICS'}
-          </div>
           <h2 className="font-feather text-4xl md:text-5xl font-black tracking-heading text-sky-blue mb-16 leading-[1.15]">
             Ready to master {currentLesson?.title || 'Company Culture'}?
           </h2>
