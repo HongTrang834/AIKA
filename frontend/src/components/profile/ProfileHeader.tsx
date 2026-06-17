@@ -16,7 +16,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   onAvatarChange,
 }) => {
   return (
-    <div className="bg-gradient-to-br from-blue-300/40 via-purple-300/40 to-pink-300/40 rounded-2xl p-8 md:p-12 text-slate-900 mb-8 border border-blue-200/50 backdrop-blur-sm">
+    <div className="bg-gradient-to-br from-blue-300/40 via-purple-300/40 to-pink-300/40 rounded-2xl p-24 md:p-32 text-slate-900 mb-0 border border-blue-200/50 backdrop-blur-sm">
       <div className="flex flex-col items-center gap-6">
         <div className="flex flex-col items-center gap-4">
           <img
@@ -27,7 +27,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             referrerPolicy="no-referrer"
           />
           <label className="flex items-center gap-2 bg-white rounded-full px-6 py-2 cursor-pointer hover:bg-sky-blue/10 hover:border-sky-blue transition-colors shadow-sm border-2 border-cloud-gray font-bold text-sky-blue text-[15px]">
-            <Upload className="w-5 h-5" />Tải ảnh
+            <Upload className="w-5 h-5" />Upload Photo
             <input
               type="file"
               accept="image/*"

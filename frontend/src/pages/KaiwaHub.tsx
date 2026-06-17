@@ -111,7 +111,7 @@ export default function KaiwaHub() {
 
   const toggleListening = () => {
     if (!recognitionRef.current) {
-      showToast('Trình duyệt không hỗ trợ nhận diện giọng nói', 'error');
+      showToast('Your browser does not support speech recognition', 'error');
       return;
     }
 
@@ -182,7 +182,7 @@ export default function KaiwaHub() {
 
     try {
       // Gọi trực tiếp đến ngrok API từ Colab
-      const response = await fetch('https://quickness-spoiler-underfeed.ngrok-free.dev/chat', {
+      const response = await fetch('https://ai-datn-deploy.onrender.com/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -200,7 +200,7 @@ export default function KaiwaHub() {
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: data.reply || 'Không có phản hồi từ AI.',
+          content: data.reply || 'No response from AI.',
           errors: data.errors,
         };
 
@@ -213,23 +213,23 @@ export default function KaiwaHub() {
           speakText(data.reply);
         }
       } else {
-        showToast('Lỗi khi gửi tin nhắn lên API Colab', 'error');
+        showToast('Error sending message to Colab API', 'error');
       }
     } catch (error) {
       console.error('Error sending message:', error);
-      showToast('Lỗi kết nối với AI ngrok', 'error');
+      showToast('Connection error with AI ngrok', 'error');
     } finally {
       setModeLoading((prev) => ({ ...prev, [currentMode]: false }));
     }
   };
 
   const handleClearHistory = async () => {
-    if (!window.confirm('Xóa toàn bộ lịch sử trò chuyện?')) return;
+    if (!window.confirm('Delete entire chat history?')) return;
     setModeMessages((prev) => ({
       ...prev,
       [mode]: []
     }));
-    showToast('Đã xóa lịch sử', 'success');
+    showToast('History cleared', 'success');
   };
 
   return (
@@ -240,11 +240,10 @@ export default function KaiwaHub() {
         <div className="w-72 card-duo p-6 overflow-y-auto flex flex-col gap-6">
           {/* Mode Selection */}
           <div>
-            <h2 className="text-[19px] font-bold text-almost-black mb-4">Chế Độ Học</h2>
+            <h2 className="text-[19px] font-bold text-almost-black mb-4">Study Mode</h2>
             <div className="space-y-3">
-              <label className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                mode === 'study' ? 'border-sky-blue bg-sky-blue/10' : 'border-cloud-gray bg-white hover:bg-gray-50'
-              }`}>
+              <label className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${mode === 'study' ? 'border-sky-blue bg-sky-blue/10' : 'border-cloud-gray bg-white hover:bg-gray-50'
+                }`}>
                 <input
                   type="radio"
                   name="mode"
@@ -257,14 +256,13 @@ export default function KaiwaHub() {
                   {mode === 'study' && <div className="w-2.5 h-2.5 rounded-full bg-sky-blue" />}
                 </div>
                 <div>
-                  <p className="font-bold text-[15px] text-almost-black">Học Từ Vựng & Ngữ Pháp</p>
-                  <p className="text-[13px] text-graphite font-medium">Giải thích và ví dụ</p>
+                  <p className="font-bold text-[15px] text-almost-black">Vocab & Grammar Study</p>
+                  <p className="text-[13px] text-graphite font-medium">Explanations and examples</p>
                 </div>
               </label>
 
-              <label className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                mode === 'kaiwa' ? 'border-sky-blue bg-sky-blue-light' : 'border-cloud-gray bg-white hover:bg-gray-50'
-              }`}>
+              <label className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${mode === 'kaiwa' ? 'border-sky-blue bg-sky-blue-light' : 'border-cloud-gray bg-white hover:bg-gray-50'
+                }`}>
                 <input
                   type="radio"
                   name="mode"
@@ -277,14 +275,13 @@ export default function KaiwaHub() {
                   {mode === 'kaiwa' && <div className="w-2.5 h-2.5 rounded-full bg-sky-blue" />}
                 </div>
                 <div>
-                  <p className="font-bold text-[15px] text-almost-black">Luyện Tập Kaiwa</p>
-                  <p className="text-[13px] text-graphite font-medium">Giao tiếp tự nhiên</p>
+                  <p className="font-bold text-[15px] text-almost-black">Kaiwa Practice</p>
+                  <p className="text-[13px] text-graphite font-medium">Natural conversation</p>
                 </div>
               </label>
 
-              <label className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                mode === 'n2' ? 'border-grape-soda bg-grape-soda/10' : 'border-cloud-gray bg-white hover:bg-gray-50'
-              }`}>
+              <label className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${mode === 'n2' ? 'border-grape-soda bg-grape-soda/10' : 'border-cloud-gray bg-white hover:bg-gray-50'
+                }`}>
                 <input
                   type="radio"
                   name="mode"
@@ -298,7 +295,7 @@ export default function KaiwaHub() {
                 </div>
                 <div>
                   <p className="font-bold text-[15px] text-almost-black">Kaiwa N2</p>
-                  <p className="text-[13px] text-graphite font-medium">Hội thoại nâng cao</p>
+                  <p className="text-[13px] text-graphite font-medium">Advanced conversation</p>
                 </div>
               </label>
             </div>
@@ -312,7 +309,7 @@ export default function KaiwaHub() {
             className="w-full mt-auto flex items-center justify-center gap-2 text-bubblegum-pink py-3 rounded-xl hover:bg-pink-50 transition-colors font-bold text-[15px] border-2 border-transparent hover:border-pink-100"
           >
             <Trash2 className="w-5 h-5" />
-            Xóa Lịch Sử
+            Clear History
           </button>
         </div>
 
@@ -325,7 +322,7 @@ export default function KaiwaHub() {
                 <div>
                   <p className="text-6xl mb-4">🎌</p>
                   <p className="text-[19px] font-bold text-graphite">日本語でチャットを始めましょう！</p>
-                  <p className="text-[15px] text-silver font-bold mt-2">Bắt đầu trò chuyện bằng tiếng Nhật</p>
+                  <p className="text-[15px] text-silver font-bold mt-2">Start conversation in Japanese</p>
                 </div>
               </div>
             ) : (
@@ -362,10 +359,10 @@ export default function KaiwaHub() {
                       <button
                         onClick={() => speakText(message.content)}
                         className="mt-3 text-silver hover:text-sky-blue transition-colors flex items-center gap-1 font-bold"
-                        title="Nghe phát âm"
+                        title="Listen pronunciation"
                       >
                         <Volume2 className="w-5 h-5" />
-                        <span className="text-[13px]">Phát âm</span>
+                        <span className="text-[13px]">Pronounce</span>
                       </button>
                     )}
 
@@ -400,7 +397,7 @@ export default function KaiwaHub() {
               <div className="flex justify-start">
                 <div className="bg-cloud-gray text-almost-black px-5 py-4 rounded-3xl rounded-tl-sm flex items-center gap-2 font-bold text-[15px]">
                   <Loader className="w-5 h-5 animate-spin" />
-                  <span>AI đang suy nghĩ...</span>
+                  <span>AI is thinking...</span>
                 </div>
               </div>
             )}
@@ -419,7 +416,7 @@ export default function KaiwaHub() {
                     handleSendMessage();
                   }
                 }}
-                placeholder="日本語で話してください... / Nhập bằng tiếng Nhật"
+                placeholder="Speak in Japanese..."
                 className="flex-1 px-5 py-3 border-2 border-cloud-gray rounded-2xl focus:outline-none focus:border-sky-blue focus:bg-sky-blue/5 text-[15px] font-bold text-almost-black placeholder-silver transition-all"
                 disabled={loading || isListening}
               />
@@ -427,7 +424,7 @@ export default function KaiwaHub() {
                 onClick={() => setMicLang(prev => prev === 'ja-JP' ? 'vi-VN' : 'ja-JP')}
                 disabled={loading || isListening}
                 className="px-4 py-3 rounded-2xl border-2 border-cloud-gray bg-white text-graphite hover:bg-gray-50 hover:border-silver font-extrabold text-[15px] transition-all"
-                title={micLang === 'ja-JP' ? "Đang thu âm tiếng Nhật (nhấn để đổi tiếng Việt)" : "Đang thu âm tiếng Việt (nhấn để đổi tiếng Nhật)"}
+                title={micLang === 'ja-JP' ? "Recording Japanese (click to switch to Vietnamese)" : "Recording Vietnamese (click to switch to Japanese)"}
               >
                 {micLang === 'ja-JP' ? 'JA' : 'VI'}
               </button>
@@ -438,12 +435,12 @@ export default function KaiwaHub() {
                   ? 'bg-bubblegum-pink border-bubblegum-pink text-white animate-pulse'
                   : 'border-cloud-gray bg-white text-graphite hover:bg-gray-50 hover:border-silver'
                   }`}
-                title="Nhấn để nói (Voice input)"
+                title="Press to speak (Voice input)"
               >
                 <Mic className="w-6 h-6" />
               </button>
               <button
-                onClick={handleSendMessage}
+                onClick={() => handleSendMessage()}
                 disabled={loading || !inputValue.trim()}
                 className="px-8 btn-3d-blue text-[17px] flex items-center gap-2 disabled:opacity-50 disabled:active:translate-y-0 disabled:active:border-b-4 disabled:active:mt-0"
               >
@@ -454,7 +451,7 @@ export default function KaiwaHub() {
                 )}
               </button>
             </div>
-            <p className="text-[13px] text-silver font-bold mt-3 text-center">AI sẽ chỉ ra lỗi ngữ pháp nếu có</p>
+            <p className="text-[13px] text-silver font-bold mt-3 text-center">AI will analyze grammatical errors if any</p>
           </div>
         </div>
       </div>

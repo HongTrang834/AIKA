@@ -54,7 +54,7 @@ export default function Profile() {
       setAvatarPreview(data.avatar_url || `https://picsum.photos/seed/${data.username}/200/200`);
     } catch (error) {
       console.error('Error loading profile:', error);
-      showToast('Không thể tải hồ sơ', 'error');
+      showToast('Unable to load profile', 'error');
     } finally {
       setLoading(false);
     }
@@ -77,12 +77,12 @@ export default function Profile() {
       setSavingProfile(true);
 
       if (!token) {
-        showToast('Token không tồn tại', 'error');
+        showToast('Token does not exist', 'error');
         return;
       }
 
       if (!fullName.trim()) {
-        showToast('Tên đầy đủ không thể trống', 'error');
+        showToast('Full name cannot be empty', 'error');
         return;
       }
 
@@ -118,10 +118,10 @@ export default function Profile() {
         avatar_url: data.avatar_url,
       });
 
-      showToast('Hồ sơ đã được lưu thành công', 'success');
+      showToast('Profile saved successfully', 'success');
     } catch (error: any) {
       console.error('Error updating profile:', error);
-      showToast(error?.message || 'Không thể cập nhật hồ sơ', 'error');
+      showToast(error?.message || 'Unable to update profile', 'error');
     } finally {
       setSavingProfile(false);
     }
@@ -132,23 +132,23 @@ export default function Profile() {
       setSavingPassword(true);
 
       if (!passwords.old || !passwords.new || !passwords.confirm) {
-        showToast('Vui lòng điền đầy đủ thông tin', 'error');
-        return;
+        showToast('Please fill in all fields', 'error');
+        return false;
       }
 
       if (passwords.new !== passwords.confirm) {
-        showToast('Mật khẩu mới và xác minh mật khẩu không trùng khớp', 'error');
-        return;
+        showToast('New password and confirm password do not match', 'error');
+        return false;
       }
 
       if (passwords.new.length < 6) {
-        showToast('Mật khẩu mới phải có ít nhất 6 ký tự', 'error');
-        return;
+        showToast('New password must be at least 6 characters', 'error');
+        return false;
       }
 
       if (!token) {
-        showToast('Token không tồn tại', 'error');
-        return;
+        showToast('Token does not exist', 'error');
+        return false;
       }
 
       await api.changePassword(token, {
@@ -157,17 +157,19 @@ export default function Profile() {
         confirm_password: passwords.confirm,
       });
 
-      showToast('Mật khẩu đã được thay đổi thành công', 'success');
+      showToast('Password changed successfully', 'success');
+      return true;
     } catch (error: any) {
       console.error('Error changing password:', error);
-      showToast(error?.message || 'Không thể thay đổi mật khẩu', 'error');
+      showToast(error?.message || 'Unable to change password', 'error');
+      return false;
     } finally {
       setSavingPassword(false);
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('vi-VN', {
+    return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -176,22 +178,22 @@ export default function Profile() {
 
   if (loading) {
     return (
-      <div className="p-10 flex items-center justify-center min-h-screen">
-        <p className="text-slate-600">Đang tải hồ sơ...</p>
+      <div className="p-24 flex items-center justify-center min-h-screen">
+        <p className="text-slate-600">Loading profile...</p>
       </div>
     );
   }
 
   if (!profile) {
     return (
-      <div className="p-10 flex items-center justify-center min-h-screen">
-        <p className="text-slate-600">Không tìm thấy hồ sơ</p>
+      <div className="p-24 flex items-center justify-center min-h-screen">
+        <p className="text-slate-600">Profile not found</p>
       </div>
     );
   }
 
   return (
-    <div className="w-full p-8 max-w-7xl mx-auto space-y-12">
+    <div className="w-full p-24 max-w-7xl mx-auto space-y-24">
       {/* Header */}
       <div className="flex items-center gap-3">
         <button
@@ -220,29 +222,29 @@ export default function Profile() {
       />
 
       {/* Statistics Section */}
-      <div className="bg-white rounded-2xl shadow-md p-8 mb-8 border border-slate-100">
-        <h3 className="text-xl font-bold text-slate-900 mb-6">Thống Kê Học Tập</h3>
+      <div className="bg-white rounded-2xl shadow-md p-24 mb-24 border border-slate-100">
+        <h3 className="text-xl font-bold text-slate-900 mb-6">Learning Statistics</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <StatsCard label="Từ Vựng" value={profile.progress?.total_vocab_learned || 0} unit="từ" color="blue" />
-          <StatsCard label="Ngữ Pháp" value={profile.progress?.total_grammar_learned || 0} unit="mẫu" color="purple" />
-          <StatsCard label="Hội Thoại" value={profile.progress?.total_kaiwas || 0} unit="lần" color="green" />
-          <StatsCard label="Flash Card" value={profile.progress?.total_flashcard_reviews || 0} unit="thẻ" color="orange" />
+          <StatsCard label="Vocabulary" value={profile.progress?.total_vocab_learned || 0} unit="words" color="blue" />
+          <StatsCard label="Grammar" value={profile.progress?.total_grammar_learned || 0} unit="patterns" color="purple" />
+          <StatsCard label="Kaiwa" value={profile.progress?.total_kaiwas || 0} unit="times" color="green" />
+          <StatsCard label="Flashcards" value={profile.progress?.total_flashcard_reviews || 0} unit="cards" color="orange" />
         </div>
       </div>
 
       <PasswordForm onSave={handleChangePassword} saving={savingPassword} />
 
       {/* Logout Section */}
-      <div className="mt-8">
+      <div className="mt-24">
         <button
           onClick={() => {
-            showToast('Đã đăng xuất', 'success');
+            showToast('Logged out', 'success');
             logout();
             navigate('/login');
           }}
           className="w-full bg-slate-100 text-slate-700 py-4 rounded-lg font-semibold hover:bg-slate-200 transition-colors border border-slate-200"
         >
-          Đăng Xuất
+          Log Out
         </button>
       </div>
     </div>

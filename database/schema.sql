@@ -64,24 +64,11 @@ CREATE TABLE conversation_history
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     mode VARCHAR(50),
-    scenario_id INT,
     user_message VARCHAR(1000),
     ai_response VARCHAR(2000),
     grammar_errors JSON,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-
--- Scenarios Table
-CREATE TABLE scenarios
-(
-    id SERIAL PRIMARY KEY,
-    title VARCHAR(100) NOT NULL,
-    description VARCHAR(500),
-    context VARCHAR(1000),
-    example_conversation TEXT,
-    difficulty_level INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- User Progress Table

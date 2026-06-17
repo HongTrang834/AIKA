@@ -109,7 +109,7 @@ export default function AdminTests() {
 
   const handleCreateTest = async () => {
     if (!formData.name || !formData.category) {
-      showToast('Hãy điền tất cả các trường', 'error');
+      showToast('Please fill in all fields', 'error');
       return;
     }
 
@@ -133,7 +133,7 @@ export default function AdminTests() {
         const newTest = await response.json();
         setTests([...tests, newTest]);
         setFormData({ name: '', category: '', total_questions: 5 });
-        showToast('Test tạo thành công', 'success');
+        showToast('Test created successfully', 'success');
 
         // Auto-generate questions
         const genResponse = await fetch(`${API_BASE_URL}/admin/tests/${newTest.id}/auto-generate`, {
@@ -144,14 +144,14 @@ export default function AdminTests() {
         if (genResponse.ok) {
           setSelectedTest(newTest);
           fetchQuestions(newTest.id);
-          showToast('Câu hỏi đã sinh xong', 'success');
+          showToast('Questions generated successfully', 'success');
         }
       } else {
-        showToast('Lỗi khi tạo test', 'error');
+        showToast('Error creating test', 'error');
       }
     } catch (error) {
       console.error('Error creating test:', error);
-      showToast('Lỗi khi tạo test', 'error');
+      showToast('Error creating test', 'error');
     } finally {
       setCreating(false);
     }
@@ -167,13 +167,13 @@ export default function AdminTests() {
 
       if (response.ok) {
         fetchQuestions(testId);
-        showToast('Câu hỏi đã tái tạo', 'success');
+        showToast('Questions regenerated successfully', 'success');
       } else {
-        showToast('Lỗi khi tái tạo câu hỏi', 'error');
+        showToast('Error regenerating questions', 'error');
       }
     } catch (error) {
       console.error('Error regenerating questions:', error);
-      showToast('Lỗi khi tái tạo câu hỏi', 'error');
+      showToast('Error regenerating questions', 'error');
     } finally {
       setLoading(false);
     }
@@ -192,13 +192,13 @@ export default function AdminTests() {
           setSelectedTest(null);
           setQuestions([]);
         }
-        showToast('Test đã xóa', 'success');
+        showToast('Test deleted successfully', 'success');
       } else {
-        showToast('Lỗi khi xóa test', 'error');
+        showToast('Error deleting test', 'error');
       }
     } catch (error) {
       console.error('Error deleting test:', error);
-      showToast('Lỗi khi xóa test', 'error');
+      showToast('Error deleting test', 'error');
     }
   };
 
@@ -211,13 +211,13 @@ export default function AdminTests() {
 
       if (response.ok) {
         setQuestions(questions.filter(q => q.id !== questionId));
-        showToast('Câu hỏi đã xóa', 'success');
+        showToast('Question deleted successfully', 'success');
       } else {
-        showToast('Lỗi khi xóa câu hỏi', 'error');
+        showToast('Error deleting question', 'error');
       }
     } catch (error) {
       console.error('Error deleting question:', error);
-      showToast('Lỗi khi xóa câu hỏi', 'error');
+      showToast('Error deleting question', 'error');
     }
   };
 
@@ -225,7 +225,7 @@ export default function AdminTests() {
     if (!editForm || !selectedTest) return;
 
     if (!editForm.question_text || !editForm.correct_answer || !editForm.options || editForm.options.length !== 4) {
-      showToast('Điền tất cả trường và đảm bảo có 4 tùy chọn', 'error');
+      showToast('Please fill in all fields and ensure there are exactly 4 options', 'error');
       return;
     }
 
@@ -252,13 +252,13 @@ export default function AdminTests() {
         setQuestions(questions.map(q => q.id === updated.id ? { ...updated, options: JSON.parse(updated.options) } : q));
         setEditingQuestion(null);
         setEditForm(null);
-        showToast('Câu hỏi đã cập nhật', 'success');
+        showToast('Question updated successfully', 'success');
       } else {
-        showToast('Lỗi khi cập nhật câu hỏi', 'error');
+        showToast('Error updating question', 'error');
       }
     } catch (error) {
       console.error('Error updating question:', error);
-      showToast('Lỗi khi cập nhật câu hỏi', 'error');
+      showToast('Error updating question', 'error');
     }
   };
 
@@ -284,7 +284,7 @@ export default function AdminTests() {
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="h1-feather text-almost-black mb-8">Quản Lý Bài Test</h1>
+        <h1 className="h1-feather text-almost-black mb-8">Tests Management</h1>
       </div>
 
       {/* Main Content */}
@@ -295,7 +295,7 @@ export default function AdminTests() {
 
           <div className="space-y-3 pr-2 custom-scrollbar" style={{ maxHeight: '600px', overflowY: 'auto' }}>
             {tests.length === 0 ? (
-              <p className="text-silver font-bold text-[15px] text-center mt-4">Chưa có test</p>
+              <p className="text-silver font-bold text-[15px] text-center mt-4">No tests available</p>
             ) : (
               tests.map(test => (
                 <div
@@ -311,7 +311,7 @@ export default function AdminTests() {
                 >
                   <p className="font-extrabold text-[17px] text-almost-black mb-1">{test.name}</p>
                   <p className="text-[13px] font-bold text-sky-blue uppercase tracking-wide mb-1">{test.category}</p>
-                  <p className="text-[13px] font-bold text-silver bg-cloud-gray inline-block px-2 py-1 rounded-lg">{test.total_questions} câu</p>
+                  <p className="text-[13px] font-bold text-silver bg-cloud-gray inline-block px-2 py-1 rounded-lg">{test.total_questions} questions</p>
                 </div>
               ))
             )}
@@ -330,7 +330,7 @@ export default function AdminTests() {
                 <button
                   onClick={() => handleDeleteTest(selectedTest.id)}
                   className="p-3 rounded-xl border-2 border-cloud-gray hover:border-bubblegum-pink text-bubblegum-pink transition-all"
-                  title="Xóa Test"
+                  title="Delete Test"
                 >
                   <Trash2 className="w-5 h-5" />
                 </button>
@@ -341,10 +341,10 @@ export default function AdminTests() {
                 className="w-full btn-3d-blue py-3 text-[15px] mb-6 flex items-center justify-center gap-2"
               >
                 <RefreshCw className="w-5 h-5" />
-                Tái tạo Câu Hỏi
+                Regenerate Questions
               </button>
 
-              <h3 className="h3-feather text-graphite mb-4">Câu Hỏi ({questions.length})</h3>
+              <h3 className="h3-feather text-graphite mb-4">Questions ({questions.length})</h3>
 
               <div style={{ maxHeight: '500px', overflowY: 'auto' }} className="space-y-4 pr-2 custom-scrollbar">
                 {questions.map((q, idx) => (
@@ -361,7 +361,7 @@ export default function AdminTests() {
                           type="text"
                           value={editForm.correct_answer}
                           onChange={(e) => setEditForm({ ...editForm, correct_answer: e.target.value })}
-                          placeholder="Đáp án đúng"
+                          placeholder="Correct answer"
                           className="w-full px-4 py-3 border-2 border-cloud-gray rounded-xl font-bold text-[15px] focus:border-sky-blue focus:outline-none text-sky-blue bg-sky-blue-light/30"
                         />
                         <div className="space-y-2 pl-4 border-l-4 border-cloud-gray">
@@ -385,7 +385,7 @@ export default function AdminTests() {
                             onClick={handleUpdateQuestion}
                             className="flex-1 btn-3d-blue py-3 text-[15px] flex items-center justify-center gap-2"
                           >
-                            <Check className="w-5 h-5" /> Lưu
+                            <Check className="w-5 h-5" /> Save
                           </button>
                           <button
                             onClick={() => {
@@ -394,7 +394,7 @@ export default function AdminTests() {
                             }}
                             className="flex-1 btn-outline-gray py-3 text-[15px] text-graphite flex items-center justify-center gap-2"
                           >
-                            <X className="w-5 h-5" /> Hủy
+                            <X className="w-5 h-5" /> Cancel
                           </button>
                         </div>
                       </div>
@@ -405,7 +405,7 @@ export default function AdminTests() {
                         </p>
                         <div className="bg-sky-blue-light/50 border-2 border-sky-blue p-3 rounded-xl mb-4">
                           <p className="text-[13px] font-bold text-sky-blue">
-                            <span className="font-extrabold">✓ Đáp án:</span> {q.correct_answer}
+                            <span className="font-extrabold">✓ Answer:</span> {q.correct_answer}
                           </p>
                         </div>
                         <div className="flex gap-2 justify-end">
@@ -433,8 +433,8 @@ export default function AdminTests() {
               <div className="w-16 h-16 bg-cloud-gray rounded-full flex items-center justify-center mb-4 text-silver">
                 <Check className="w-8 h-8" />
               </div>
-              <p className="text-graphite font-bold text-[17px]">Chọn một test để xem câu hỏi</p>
-              <p className="text-silver font-bold text-[13px] mt-2">Nội dung bài test sẽ hiển thị ở đây</p>
+              <p className="text-graphite font-bold text-[17px]">Select a test to view questions</p>
+              <p className="text-silver font-bold text-[13px] mt-2">Test questions and options will be displayed here</p>
             </div>
           )}
         </div>

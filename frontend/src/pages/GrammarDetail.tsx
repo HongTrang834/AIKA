@@ -57,13 +57,13 @@ export default function GrammarDetail() {
         // Mock missing data for now
         setGrammar({
           ...data,
-          title: data.title || "Diễn đạt mục đích",
-          category: data.category || "Mục đích",
-          quick_tip: data.quick_tip || "Dùng với động từ thể từ điển. Không dùng với tính từ hoặc trạng thái tạm thời.",
-          examples: data.examples && data.examples.length > 0 ? data.examples : [{ jp: data.example_sentence, vn: data.example_translation || "Bản dịch đang được cập nhật." }],
+          title: data.title || "Expressing purpose",
+          category: data.category || "Purpose",
+          quick_tip: data.quick_tip || "Used with dictionary form verbs. Do not use with adjectives or temporary states.",
+          examples: data.examples && data.examples.length > 0 ? data.examples : [{ jp: data.example_sentence, vn: data.example_translation || "Translation is being updated." }],
           compare: data.compare || [
-            { pattern: "〜のに", meaning: "Mặc dù... nhưng... (đối lập)", color: "#f59e0b" },
-            { pattern: "〜から", meaning: "Vì... nên... (lý do chủ quan)", color: "#ef4444" },
+            { pattern: "〜のに", meaning: "Although... but... (contrast)", color: "#f59e0b" },
+            { pattern: "〜から", meaning: "Because... so... (subjective reason)", color: "#ef4444" },
           ],
         });
       } catch (err) {
@@ -94,10 +94,10 @@ export default function GrammarDetail() {
       // showToast('Đã thêm vào flashcards', 'success');
       setSaved(true);
       setShowConfetti(true);
-      setTimeout(() => setShowConfetti(false), 2500);
+      setTimeout(() => setShowConfetti(false), 1200);
       setShowDeckSelection(false);
     } catch (error: any) {
-      showToast('Lỗi: ' + (error.message || 'Không thể thêm vào flashcards'), 'error');
+      showToast('Error: ' + (error.message || 'Unable to add to flashcards'), 'error');
     } finally {
       setIsAdding(false);
     }
@@ -125,7 +125,7 @@ export default function GrammarDetail() {
           className="inline-flex items-center gap-2 rounded-xl bg-slate-200 px-4 py-2 font-semibold text-slate-600 transition hover:bg-slate-300 mb-7"
         >
           <ArrowLeft size={16} />
-          Quay lại
+          Back
         </button>
 
         {/* Hero */}
@@ -133,7 +133,7 @@ export default function GrammarDetail() {
           <div className="absolute -right-12 -top-12 h-52 w-52 rounded-full bg-sky-blue/10" />
 
           <div className="flex flex-wrap gap-2 mb-5">
-            <Badge className="bg-sky-blue text-white">📖 Ngữ Pháp</Badge>
+            <Badge className="bg-sky-blue text-white">📖 Grammar</Badge>
             <Badge className="bg-white text-sky-blue border border-sky-200">{level}</Badge>
             <Badge className="bg-sky-blue/20 text-sky-blue">{category}</Badge>
           </div>
@@ -159,7 +159,7 @@ export default function GrammarDetail() {
 
           {showTip && quick_tip && (
             <div className="mt-5 rounded-2xl border-2 border-amber-200 bg-white/70 p-5 backdrop-blur-sm">
-              <p className="mb-1.5 text-xs font-extrabold uppercase tracking-widest text-amber-600">💡 Mẹo nhanh</p>
+              <p className="mb-1.5 text-xs font-extrabold uppercase tracking-widest text-amber-600">💡 Quick Tip</p>
               <p className="text-sm text-slate-700 leading-relaxed">{quick_tip}</p>
             </div>
           )}
@@ -169,7 +169,7 @@ export default function GrammarDetail() {
         <div className="rounded-2xl border-2 border-slate-200 bg-white p-7 shadow-sm mb-4">
           <div className="flex items-center gap-3 mb-4">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-100 text-lg">🧠</div>
-            <p className="font-bold text-slate-800">Giải thích</p>
+            <p className="font-bold text-slate-800">Explanation</p>
           </div>
           <p className="text-sm text-slate-600 leading-loose">{explanation}</p>
         </div>
@@ -179,7 +179,7 @@ export default function GrammarDetail() {
           <div className="flex flex-wrap items-center justify-between gap-4 mb-5">
             <div className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-100 text-lg">📝</div>
-              <p className="font-bold text-slate-800">Câu ví dụ ({activeEx + 1}/{examples.length})</p>
+              <p className="font-bold text-slate-800">Example sentence ({activeEx + 1}/{examples.length})</p>
             </div>
             <div className="flex gap-1.5">
               {examples.map((_, i) => (
@@ -207,14 +207,14 @@ export default function GrammarDetail() {
                 disabled={activeEx === 0}
                 className="flex items-center justify-center gap-2 rounded-xl border-2 border-slate-200 bg-white p-2.5 font-semibold text-slate-600 disabled:opacity-40"
               >
-                <ChevronLeft size={16} /> Trước
+                <ChevronLeft size={16} /> Prev
               </button>
               <button
                 onClick={() => setActiveEx(i => Math.min(examples.length - 1, i + 1))}
                 disabled={activeEx === examples.length - 1}
                 className="flex items-center justify-center gap-2 rounded-xl border-2 border-slate-200 bg-white p-2.5 font-semibold text-slate-600 disabled:opacity-40"
               >
-                Tiếp <ChevronRight size={16} />
+                Next <ChevronRight size={16} />
               </button>
             </div>
           )}
@@ -225,7 +225,7 @@ export default function GrammarDetail() {
           <div className="rounded-2xl border-2 border-slate-200 bg-white p-7 shadow-sm mb-5">
             <div className="flex items-center gap-3 mb-4">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-100 text-lg">⚖️</div>
-              <p className="font-bold text-slate-800">So sánh mẫu tương tự</p>
+              <p className="font-bold text-slate-800">Compare similar patterns</p>
             </div>
             <div className="flex flex-col gap-2.5">
               {compare.map((c, i) => (
@@ -250,17 +250,17 @@ export default function GrammarDetail() {
           )}
         >
           {saved ? (
-            <> <Check size={20} /> Đã lưu vào Deck! </>
+            <> <Check size={20} /> Saved to Deck! </>
           ) : isAdding ? (
-            'Đang lưu...'
+            'Saving...'
           ) : (
-            <> <Plus size={20} /> Lưu vào Flashcard Deck </>
+            <> <Plus size={20} /> Add to Flashcard Deck </>
           )}
         </button>
       </div>
 
       {showConfetti && (
-        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm animate-in fade-in duration-150">
           <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
             {/* @ts-ignore */}
             <dotlottie-wc 
@@ -269,9 +269,9 @@ export default function GrammarDetail() {
               autoplay 
             ></dotlottie-wc>
           </div>
-          <div className="flex flex-col items-center justify-center animate-in zoom-in-75 duration-500 gap-6">
+          <div className="flex flex-col items-center justify-center animate-in zoom-in-75 duration-200 gap-6">
             <Check size={100} strokeWidth={4} className="text-emerald-400 drop-shadow-2xl" />
-            <p className="font-extrabold text-3xl text-white drop-shadow-lg tracking-wide">Đã lưu thành công!</p>
+            <p className="font-extrabold text-3xl text-white drop-shadow-lg tracking-wide">Successfully Saved!</p>
           </div>
         </div>
       )}

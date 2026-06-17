@@ -144,112 +144,112 @@ export default function VocabLab() {
       });
 
       // Accept both real DB responses and temporary mock responses
-      if (response || response === null) {
-        setPendingVocabId(null);
-        showToast('Đã thêm vào flashcards', 'success');
-      } else {
-        throw new Error('Invalid response');
+          if (response || response === null) {
+          setPendingVocabId(null);
+          showToast('Added to flashcards', 'success');
+        } else {
+          throw new Error('Invalid response');
+        }
+      } catch (error: any) {
+        console.error('Error adding to flashcard:', error);
+        // If it's a 503 (table doesn't exist), still allow the action
+        if (error.response?.status === 503 || error.status === 503) {
+          setPendingVocabId(null);
+          showToast('Added to flashcards', 'success');
+        } else {
+          showToast('Error: ' + (error.message || 'Unable to add to flashcards'), 'error');
+        }
+      } finally {
+        setAddingId(null);
       }
-    } catch (error: any) {
-      console.error('Error adding to flashcard:', error);
-      // If it's a 503 (table doesn't exist), still allow the action
-      if (error.response?.status === 503 || error.status === 503) {
-        setPendingVocabId(null);
-        showToast('Đã thêm vào flashcards', 'success');
-      } else {
-        showToast('Lỗi: ' + (error.message || 'Không thể thêm vào flashcards'), 'error');
-      }
-    } finally {
-      setAddingId(null);
+    };
+
+    const getVocabByTopic = (topic: string) => {
+      return vocabulary.filter(v => (v.category || 'General') === topic);
+    };
+
+    if (loading) {
+      return (
+        <div className="p-10 flex items-center justify-center min-h-screen">
+          <Loader className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      );
     }
-  };
 
-  const getVocabByTopic = (topic: string) => {
-    return vocabulary.filter(v => (v.category || 'General') === topic);
-  };
+    // TOPICS VIEW
+    if (!selectedTopic) {
+      return (
+        <div className="w-full p-8 max-w-7xl mx-auto space-y-12">
+          <div className="mb-10">
+            <h1 className="h1-feather text-almost-black mb-2">Vocabulary</h1>
+            <p className="text-graphite font-bold text-lg">Browse and study Japanese vocabulary</p>
+          </div>
 
-  if (loading) {
-    return (
-      <div className="p-10 flex items-center justify-center min-h-screen">
-        <Loader className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
-  }
+          {/* Topics Grid */}
+          {topics.length === 0 ? (
+            <div className="text-center py-12 card-duo bg-gray-50">
+              <p className="text-silver font-bold text-lg">No vocabulary topics available</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {topics.map((topic) => {
+                const vocabCount = getVocabByTopic(topic).length;
+                return (
+                  <button
+                    key={topic}
+                    onClick={() => setSelectedTopic(topic)}
+                    className="text-left p-6 card-duo hover:-translate-y-1 hover:border-silver transition-all duration-300"
+                  >
+                    <h3 className="font-feather text-[24px] font-bold text-almost-black mb-3">{topic}</h3>
+                    <p className="text-silver font-bold mb-6">{vocabCount} words</p>
+                    <div className="flex items-center gap-2 text-sky-blue font-extrabold uppercase text-[15px]">
+                      <BookOpen className="w-5 h-5" />
+                      Browse
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
-  // TOPICS VIEW
-  if (!selectedTopic) {
+
+        </div>
+      );
+    }
+
+    // VOCABULARY IN TOPIC VIEW
+    const topicVocabs = getVocabByTopic(selectedTopic);
+
+    if (showTestModal && testId) {
+      return (
+        <TestTakerModal testId={testId} onBack={() => setShowTestModal(false)} />
+      );
+    }
+
     return (
       <div className="w-full p-8 max-w-7xl mx-auto space-y-12">
-        <div className="mb-10">
-          <h1 className="h1-feather text-almost-black mb-2">Vocabulary</h1>
-          <p className="text-graphite font-bold text-lg">Browse and study Japanese vocabulary</p>
-        </div>
-
-        {/* Topics Grid */}
-        {topics.length === 0 ? (
-          <div className="text-center py-12 card-duo bg-gray-50">
-            <p className="text-silver font-bold text-lg">No vocabulary topics available</p>
+        {/* Header with Back Button */}
+        <div className="flex items-center justify-between gap-3 mb-12">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setSelectedTopic(null)}
+              className="p-3 hover:bg-gray-100 rounded-2xl border-2 border-cloud-gray transition-colors text-graphite hover:border-silver"
+            >
+              <ArrowLeft className="w-6 h-6" />
+            </button>
+            <div>
+              <h2 className="h1-feather text-almost-black">{selectedTopic}</h2>
+              <p className="text-silver font-bold text-[17px]">{topicVocabs.length} words</p>
+            </div>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {topics.map((topic) => {
-              const vocabCount = getVocabByTopic(topic).length;
-              return (
-                <button
-                  key={topic}
-                  onClick={() => setSelectedTopic(topic)}
-                  className="text-left p-6 card-duo hover:-translate-y-1 hover:border-silver transition-all duration-300"
-                >
-                  <h3 className="font-feather text-[24px] font-bold text-almost-black mb-3">{topic}</h3>
-                  <p className="text-silver font-bold mb-6">{vocabCount} words</p>
-                  <div className="flex items-center gap-2 text-sky-blue font-extrabold uppercase text-[15px]">
-                    <BookOpen className="w-5 h-5" />
-                    Browse
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        )}
-
-
-      </div>
-    );
-  }
-
-  // VOCABULARY IN TOPIC VIEW
-  const topicVocabs = getVocabByTopic(selectedTopic);
-
-  if (showTestModal && testId) {
-    return (
-      <TestTakerModal testId={testId} onBack={() => setShowTestModal(false)} />
-    );
-  }
-
-  return (
-    <div className="w-full p-8 max-w-7xl mx-auto space-y-12">
-      {/* Header with Back Button */}
-      <div className="flex items-center justify-between gap-3 mb-12">
-        <div className="flex items-center gap-4">
           <button
-            onClick={() => setSelectedTopic(null)}
-            className="p-3 hover:bg-gray-100 rounded-2xl border-2 border-cloud-gray transition-colors text-graphite hover:border-silver"
+            onClick={() => handleTakeTest(selectedTopic!)}
+            disabled={loadingTest}
+            className="flex items-center gap-2 btn-3d-blue px-8 py-4 text-[17px] disabled:opacity-50 disabled:active:translate-y-0 disabled:active:border-b-4 disabled:active:mt-0"
           >
-            <ArrowLeft className="w-6 h-6" />
+            {loadingTest ? <Loader className="w-5 h-5 animate-spin" /> : <Lightbulb className="w-5 h-5" />}
+            Take Mini Test
           </button>
-          <div>
-            <h2 className="h1-feather text-almost-black">{selectedTopic}</h2>
-            <p className="text-silver font-bold text-[17px]">{topicVocabs.length} words</p>
-          </div>
-        </div>
-        <button
-          onClick={() => handleTakeTest(selectedTopic!)}
-          disabled={loadingTest}
-          className="flex items-center gap-2 btn-3d-blue px-8 py-4 text-[17px] disabled:opacity-50 disabled:active:translate-y-0 disabled:active:border-b-4 disabled:active:mt-0"
-        >
-          {loadingTest ? <Loader className="w-5 h-5 animate-spin" /> : <Lightbulb className="w-5 h-5" />}
-          Làm Bài Test
-        </button>
       </div>
 
       {/* Vocabulary Grid */}

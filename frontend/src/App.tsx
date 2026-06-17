@@ -8,7 +8,6 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import VocabLab from './pages/VocabLab';
 import GrammarLab from './pages/GrammarLab';
-import Scenarios from './pages/Scenarios';
 import KaiwaHub from './pages/KaiwaHub';
 import Flashcards from './pages/Flashcards';
 import Progress from './pages/Progress';
@@ -67,7 +66,6 @@ function AppContent() {
                 <Route path="/vocab" element={<VocabLab />} />
                 <Route path="/learn/vocabulary/:id" element={<VocabularyDetail />} />
                 <Route path="/kaiwa" element={<KaiwaHub />} />
-                <Route path="/scenarios" element={<Scenarios />} />
                 <Route path="/flashcards" element={<Flashcards />} />
                 <Route path="/progress" element={<Progress />} />
                 <Route path="/grammar" element={<GrammarLab />} />

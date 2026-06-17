@@ -147,7 +147,7 @@ export default function GrammarLab() {
       
       if (response || response === null) {
         setPendingGrammarId(null);
-        showToast('Đã thêm vào flashcards', 'success');
+        showToast('Added to flashcards', 'success');
       } else {
         throw new Error('Invalid response');
       }
@@ -155,9 +155,9 @@ export default function GrammarLab() {
       console.error('Error adding to flashcard:', error);
       if (error.response?.status === 503 || error.status === 503) {
         setPendingGrammarId(null);
-        showToast('Đã thêm vào flashcards', 'success');
+        showToast('Added to flashcards', 'success');
       } else {
-        showToast('Lỗi: ' + (error.message || 'Không thể thêm vào flashcards'), 'error');
+        showToast('Error: ' + (error.message || 'Unable to add to flashcards'), 'error');
       }
     } finally {
       setAddingId(null);
@@ -247,7 +247,7 @@ export default function GrammarLab() {
           className="flex items-center gap-2 btn-3d-blue px-8 py-4 text-[17px] disabled:opacity-50 disabled:active:translate-y-0 disabled:active:border-b-4 disabled:active:mt-0"
         >
           {loadingTest ? <Loader className="w-5 h-5 animate-spin" /> : <Lightbulb className="w-5 h-5" />}
-          Làm Bài Test
+          Take Mini Test
         </button>
       </div>
 

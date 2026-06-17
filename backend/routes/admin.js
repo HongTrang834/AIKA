@@ -53,6 +53,17 @@ router.post('/vocabulary/import', adminMiddleware, async (req, res) => {
     await pool.query('DELETE FROM vocabulary WHERE category = $1', [firstCategory]);
     console.log(`🗑️  Cleared vocabulary records for category: ${firstCategory}`);
 
+    // Check if table is empty to reset sequence
+    const countCheck = await pool.query('SELECT COUNT(*) FROM vocabulary');
+    if (parseInt(countCheck.rows[0].count) === 0) {
+      try {
+        await pool.query("SELECT setval(pg_get_serial_sequence('vocabulary', 'id'), 1, false)");
+        console.log('🔄 Reset vocabulary sequence to 1 because table is empty');
+      } catch (seqErr) {
+        console.error('Failed to reset vocabulary sequence:', seqErr.message);
+      }
+    }
+
     const validRecords = [];
     for (let i = 0; i < records.length; i++) {
       const record = records[i];
@@ -273,6 +284,12 @@ router.put('/vocabulary/:id', adminMiddleware, async (req, res) => {
 router.delete('/vocabulary/all', adminMiddleware, async (req, res) => {
   try {
     const result = await pool.query('DELETE FROM vocabulary');
+    try {
+      await pool.query("SELECT setval(pg_get_serial_sequence('vocabulary', 'id'), 1, false)");
+      console.log('🔄 Reset vocabulary sequence to 1 after deleting all');
+    } catch (seqErr) {
+      console.error('Failed to reset vocabulary sequence:', seqErr.message);
+    }
     res.json({ message: `Deleted ${result.rowCount} vocabulary items` });
   } catch (error) {
     console.error('Error deleting all vocabulary:', error);
@@ -289,6 +306,17 @@ router.delete('/vocabulary/:id', adminMiddleware, async (req, res) => {
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Vocabulary not found' });
+    }
+
+    // Check if table is empty to reset sequence
+    const countCheck = await pool.query('SELECT COUNT(*) FROM vocabulary');
+    if (parseInt(countCheck.rows[0].count) === 0) {
+      try {
+        await pool.query("SELECT setval(pg_get_serial_sequence('vocabulary', 'id'), 1, false)");
+        console.log('🔄 Reset vocabulary sequence to 1 because table is empty');
+      } catch (seqErr) {
+        console.error('Failed to reset vocabulary sequence:', seqErr.message);
+      }
     }
 
     res.json({ message: 'Vocabulary deleted successfully' });
@@ -346,6 +374,17 @@ router.post('/grammar/import', adminMiddleware, async (req, res) => {
     // Only delete records with same category (preserve other categories)
     await pool.query('DELETE FROM grammar WHERE category = $1', [firstCategory]);
     console.log(`🗑️  Cleared grammar records for category: ${firstCategory}`);
+
+    // Check if table is empty to reset sequence
+    const countCheck = await pool.query('SELECT COUNT(*) FROM grammar');
+    if (parseInt(countCheck.rows[0].count) === 0) {
+      try {
+        await pool.query("SELECT setval(pg_get_serial_sequence('grammar', 'id'), 1, false)");
+        console.log('🔄 Reset grammar sequence to 1 because table is empty');
+      } catch (seqErr) {
+        console.error('Failed to reset grammar sequence:', seqErr.message);
+      }
+    }
 
     const validRecords = [];
     for (let i = 0; i < records.length; i++) {
@@ -570,6 +609,12 @@ router.put('/grammar/:id', adminMiddleware, async (req, res) => {
 router.delete('/grammar/all', adminMiddleware, async (req, res) => {
   try {
     const result = await pool.query('DELETE FROM grammar');
+    try {
+      await pool.query("SELECT setval(pg_get_serial_sequence('grammar', 'id'), 1, false)");
+      console.log('🔄 Reset grammar sequence to 1 after deleting all');
+    } catch (seqErr) {
+      console.error('Failed to reset grammar sequence:', seqErr.message);
+    }
     res.json({ message: `Deleted ${result.rowCount} grammar items` });
   } catch (error) {
     console.error('Error deleting all grammar:', error);
@@ -588,83 +633,20 @@ router.delete('/grammar/:id', adminMiddleware, async (req, res) => {
       return res.status(404).json({ error: 'Grammar not found' });
     }
 
+    // Check if table is empty to reset sequence
+    const countCheck = await pool.query('SELECT COUNT(*) FROM grammar');
+    if (parseInt(countCheck.rows[0].count) === 0) {
+      try {
+        await pool.query("SELECT setval(pg_get_serial_sequence('grammar', 'id'), 1, false)");
+        console.log('🔄 Reset grammar sequence to 1 because table is empty');
+      } catch (seqErr) {
+        console.error('Failed to reset grammar sequence:', seqErr.message);
+      }
+    }
+
     res.json({ message: 'Grammar deleted successfully' });
   } catch (error) {
     console.error('Error deleting grammar:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-// ======================== SCENARIOS ADMIN ========================
-
-// GET all scenarios
-router.get('/scenarios', adminMiddleware, async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM scenarios ORDER BY id DESC');
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Error fetching scenarios:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-// CREATE scenario
-router.post('/scenarios', adminMiddleware, async (req, res) => {
-  try {
-    const { title, description, context, example_conversation, difficulty_level } = req.body;
-
-    if (!title || !context) {
-      return res.status(400).json({ error: 'Missing required fields' });
-    }
-
-    const result = await pool.query(
-      'INSERT INTO scenarios (title, description, context, example_conversation, difficulty_level) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [title, description || null, context, example_conversation || null, difficulty_level || 2]
-    );
-
-    res.status(201).json(result.rows[0]);
-  } catch (error) {
-    console.error('Error creating scenario:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-// UPDATE scenario
-router.put('/scenarios/:id', adminMiddleware, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { title, description, context, example_conversation, difficulty_level } = req.body;
-
-    const result = await pool.query(
-      'UPDATE scenarios SET title = $1, description = $2, context = $3, example_conversation = $4, difficulty_level = $5 WHERE id = $6 RETURNING *',
-      [title, description, context, example_conversation, difficulty_level, id]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Scenario not found' });
-    }
-
-    res.json(result.rows[0]);
-  } catch (error) {
-    console.error('Error updating scenario:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-// DELETE scenario
-router.delete('/scenarios/:id', adminMiddleware, async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const result = await pool.query('DELETE FROM scenarios WHERE id = $1 RETURNING id', [id]);
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Scenario not found' });
-    }
-
-    res.json({ message: 'Scenario deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting scenario:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });

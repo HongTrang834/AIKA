@@ -1,111 +1,240 @@
-Tên đề tài: Hệ thống hỗ trợ học tiếng Nhật N2 tích hợp chatbot AI trên nền tảng kiến trúc Microservices 
-1. Mục tiêu đề tài
-Xây dựng một web application hỗ trợ học tiếng Nhật trình độ N2 tích hợp nhiều hình thức học khác nhau trong cùng một hệ thống, bao gồm:
-Học từ vựng N2
-Học ngữ pháp N2
-Luyện hội thoại tiếng Nhật với AI thông qua chat hoặc voice
-Flashcard ôn tập 
-Hệ thống tạo môi trường học tập và khắc phục vấn đề luyện giao tiếp - điều vẫn luôn là điểm yếu của người học ngoại ngữ 
-2. Các chức năng chính của hệ thống
-1 Quản lý người dùng
-Đăng ký / đăng nhập
-Quản lý thông tin cá nhân
-Thống kê lượng từ vựng, ngữ pháp đã học, thời gian đã luyện kaiwa  
-2 Học từ vựng N2
-Danh sách từ vựng N2 theo cụm
-Ví dụ minh họa (các câu sử dụng từ vựng đó)
-Đánh dấu 1 từ để thêm vào flashcard
-Trắc nghiệm ôn tập từ vựng sau mỗi cụm
-3 Học ngữ pháp N2
-Danh sách ngữ pháp N2 theo cụm
-Giải thích và ví dụ sử dụng ngữ pháp đó 
-Trắc nghiệm ôn tập ngữ pháp sau mỗi cụm
-4 Luyện hội thoại với AI
-Chat với chatbot AI bằng tiếng Nhật 
-Hội thoại theo tình huống (Scenario-based Chat): Cung cấp các kịch bản thực tế (Phỏng vấn, thảo luận dự án IT, đặt lịch hẹn...). AI sẽ dẫn dắt cuộc hội thoại dựa trên kịch bản đã chọn.
-Thực hiện kiểm tra lỗi xuất hiện trong câu 
-Lưu ý:AI sẽ có 2 chế độ, 1 là hội thoại tự do, 2 là hội thoại theo chủ đề. Trong phần tự do, AI sẽ nói chuyện không giới hạn chủ đề với user, nhưng sẽ chỉ ra lỗi sai nếu có mà user đã dùng. Còn hội thoại theo chủ đề thì Ai sẽ luôn dẫn cuộc hội thoại về chủ đề đã chọn. Và chỉ khi user yêu cầu hội thoại theo kiến thức N2 thì AI mới nói theo N2, còn không thì sẽ hội thoại như giao tiếp thường không phân cấp độ.
-5 Phản hồi và sửa lỗi
-Trong quá trình hội thoại hệ thống có thể:
-phát hiện lỗi ngữ pháp
-gợi ý cách nói đúng
-đưa ra cách diễn đạt tự nhiên hơn, hoặc chuẩn N2 nếu user chọn chế độ hội thoại N2. 
-7 Flashcards tự động: 
-Có các bộ flashcard có sẵn hoặc người dùng tự tạo ( bằng các từ vựng người dùng chọn để thêm vào).
-Dùng thuật toán Spaced Repetition tương tự Anki. 
-3. Phân tích chi tiết Mô hình AI
-    3.1. Công nghệ sử dụng: 
-Python FastAPI (Xử lý NLP, RAG, Kết nối LLM, LangChain)... và các công nghệ khác nếu có phát sinh trong quá trình thực hiện 
-3.2. Kiến trúc hệ thống AI (AI Pipeline)
-Hệ thống không gọi API trực tiếp từ Frontend mà thông qua một AI Service chuyên biệt. Quy trình xử lý bao gồm 4 tầng:
-Tầng Giao tiếp: Tiếp nhận yêu cầu (Text/Voice) và ngữ cảnh (Context) từ Web Server.
-Tầng Tri thức (RAG): Truy xuất dữ liệu từ vựng/ngữ pháp N2 phù hợp từ Vector Database để bổ trợ cho AI.
-Tầng Tư duy: Sử dụng LLM (Gemini 1.5 Flash hoặc 1 model khác nếu Gemini không đáp ứng đúng yêu cầu) để xử lý ngôn ngữ dựa trên các Prompt chuyên biệt.
-Tầng Chuẩn hóa: Chuyển đổi phản hồi của AI thành cấu trúc JSON để hệ thống Web có thể bóc tách lỗi sai.
-3.2. Phân định khối lượng công việc (Tự làm vs Sử dụng sẵn)
-Mô hình ngôn ngữ (LLM): * Công cụ: Google Gemini 1.5 Flash API.
-Sinh viên thực hiện: Prompt Engineering - Thiết kế các bộ khung câu lệnh (System Prompts) phức tạp cho từng chế độ: Hội thoại tự do, Hội thoại tình huống, Sửa lỗi ngữ pháp.
-Cơ sở dữ liệu N2: * Công cụ: Dataset N2 (CSV/JSON).
-Sinh viên thực hiện: Tìm kiếm dataset N2 có sẵn, bổ sung thêm dữ liệu tự thu thập. Xây dựng RAG Logic (Pipeline tìm kiếm ngữ pháp/từ vựng phù hợp ngữ cảnh) để nhồi kiến thức vào AI, đảm bảo không nói sai kiến thức N2.
-Xử lý dữ liệu đầu ra: * Công cụ: LLM JSON Mode.
-Sinh viên thực hiện: Output Parser - Lập trình bộ phân tích để bóc tách lỗi sai (trợ từ, kính ngữ) từ phản hồi của AI và chuyển hóa thành dữ liệu cho tính năng Thống kê.
-Quản lý hội thoại: * Công cụ: LangChain Framework.
-Sinh viên thực hiện: Xử lý bộ nhớ (Memory) để AI ghi nhớ lịch sử hội thoại, duy trì mạch kịch bản (Scenario) mà không bị lạc đề.
-Hạ tầng AI Service: * Công cụ: Python, FastAPI.
-Sinh viên thực hiện: Xây dựng toàn bộ Server AI riêng biệt, xử lý bất đồng bộ (Async) để tối ưu tốc độ. Thiết kế cấu trúc API đồng bộ dữ liệu giữa AI Server và hệ thống Database chính (Node.js).
-4. Hướng mở rộng 
-Định hướng mở rộng đề tài nếu có đủ thời gian và tài nguyên:
-Cung cấp các bài thi thử N2
-Thêm chức năng Luyện nghe 
-Thêm chức năng Tra cứu từ vựng với cộng đồng người dùng thật
-Phát triển chatbot AI thời gian phản hồi nhanh hơn 
-5. Lộ trình chi tiết thực hiện dự án:
-Giai đoạn 1: Chuẩn bị Nền tảng (Setup)
- Thiết lập Database PostgreSQL
- Cấu hình Environment Variables (.env)
- Tạo Database Schema cho User, Vocabulary, Grammar
- Cấu hình Google Gemini API Key
-Giai đoạn 2: Phát triển Backend Core
- API User Management (Đăng ký/Đăng nhập)
- JWT Authentication
- CRUD endpoints cho Vocabulary & Grammar
- Flashcard Management API
- Kết nối với PostgreSQL
- Thực hiện i18n, responsive xuyên suốt quá trình code 
+BẢN TỔNG QUAN CHI TIẾT ĐỀ TÀI NGHIÊN CỨU VÀ PHÁT TRIỂN
+HỆ THỐNG HỖ TRỢ HỌC TIẾNG NHẬT N2 TÍCH HỢP CHATBOT AI VÀ THUẬT TOÁN LẶP LẠI NGẮT QUÃNG
 
-Giai đoạn 3: Xây dựng AI Service
- Cài đặt FastAPI Python backend
- Prompt Engineering cho 3 chế độ AI:
-Hội thoại tự do
-Hội thoại theo chủ đề
-Sửa lỗi ngữ pháp
- Tích hợp Google Gemini API
- RAG Pipeline (Tri thức N2)
-Giai đoạn 4: Phát triển Frontend - Trang chính
- Dashboard (Trang chủ)
- Sidebar Navigation
- Layout responsive
- Styling với Tailwind CSS
-Giai đoạn 5: Các tính năng học tập
- VocabLab: Danh sách từ vựng + flashcard picker
- KaiwaHub: Luyện kaiwa (3 chế độ chat AI)
- Scenarios: Hội thoại theo tình huống
- Flashcards: Ôn tập với Spaced Repetition Algorithm
-Giai đoạn 6: Tích hợp hoàn chỉnh
- Kết nối Frontend ↔ Backend API
- Kết nối Backend → AI Service
- WebSocket (nếu cần real-time chat)
- Error Handling & Validation
-Giai đoạn 7: Testing & QA
- Unit Tests cho Backend
- Integration Tests
- E2E Tests cho Frontend
- Load Testing cho API
-Giai đoạn 8: Triển khai & Tối ưu
- Build Production
- Docker & Deployment (AWS/Azure/Heroku)
- Performance Optimization
- Update Documentation
+---
 
+1. KIẾN TRÚC HỆ THỐNG HYBRID CLOUD AI (SYSTEM ARCHITECTURE)
+Hệ thống được thiết kế theo mô hình tách biệt giữa giao diện người dùng, máy chủ quản lý dữ liệu (Node.js/PostgreSQL) và máy chủ dịch vụ trí tuệ nhân tạo (AI Service):
+- Frontend (Client Side):
+  * Xây dựng dựa trên ReactJS (Single Page Application) sử dụng Vite làm công cụ build nhanh.
+  * Ngôn ngữ lập trình: TypeScript giúp quản lý dữ liệu chặt chẽ bằng cách khai báo kiểu (Types/Interfaces).
+  * Giao diện: Tailwind CSS phục vụ thiết kế giao diện động (Responsive Design) tương thích hoàn toàn trên Desktop, Tablet và Mobile.
+  * Quản lý trạng thái: Context API (AuthContext, ToastContext) quản lý phiên đăng nhập và các thông báo nổi.
+  * Giao diện hội thoại (KaiwaHub) gửi tin nhắn trực tiếp tới Máy chủ AI trung gian qua giao thức HTTP POST.
+- Backend API Server:
+  * Node.js kết hợp Express framework quản lý dữ liệu người dùng, từ vựng, ngữ pháp, flashcards và các bài test trắc nghiệm.
+  * Cơ chế kết nối Database: Sử dụng Thư viện `pg` (node-postgres) thiết lập Connection Pool (Giới hạn kết nối, quản lý các tác vụ truy vấn bất đồng bộ để tránh tràn bộ nhớ).
+- Database:
+  * PostgreSQL (Neon Serverless PostgreSQL ở production và PostgreSQL Local ở development).
+- Máy chủ AI Service (Hybrid Cloud AI Server):
+  * Xây dựng bằng ngôn ngữ Python, chạy framework Flask phục vụ các API hội thoại thời gian thực.
+  * Triển khai độc lập (chạy trên Google Colab GPU/CPU) và phân phối công khai qua đường truyền ngrok tunnel bảo mật (`...ngrok-free.dev/chat`).
+  * Sử dụng Groq LPU (Language Processing Unit) làm nền tảng tính toán đám mây siêu tốc để gọi mô hình lớn Llama-3.1-8b-instant của Meta với thời gian phản hồi cực nhanh (dưới 0.5 giây).
 
+---
 
+2. THIẾT KẾ CHI TIẾT CƠ SỞ DỮ LIỆU (DATABASE SCHEMA)
+Hệ thống sử dụng cơ sở dữ liệu quan hệ PostgreSQL gồm các bảng dữ liệu liên kết chặt chẽ:
+
+2.1. Bảng `users` (Quản lý người dùng)
+- `id` (SERIAL PRIMARY KEY): Khóa chính tự tăng.
+- `username` (VARCHAR(50) UNIQUE NOT NULL): Tên tài khoản.
+- `email` (VARCHAR(100) UNIQUE NOT NULL): Email.
+- `password_hash` (VARCHAR(255) NOT NULL): Mật khẩu đã được băm bằng thuật toán bcryptjs (10 rounds).
+- `full_name` (VARCHAR(100)): Họ tên đầy đủ.
+- `avatar_url` (TEXT): Đường dẫn ảnh đại diện.
+- `role` (VARCHAR(20) DEFAULT 'student'): Vai trò người dùng ('admin', 'student').
+- `created_at` / `updated_at` (TIMESTAMP): Thời gian khởi tạo/cập nhật.
+
+2.2. Bảng `vocabulary` (Ngân hàng từ vựng N2)
+- `id` (SERIAL PRIMARY KEY): Khóa chính.
+- `word` (TEXT NOT NULL): Chữ Kanji/Từ vựng.
+- `reading` (TEXT NOT NULL): Cách đọc Hiragana.
+- `meaning` (TEXT NOT NULL): Nghĩa tiếng Việt.
+- `category` (TEXT): Chủ đề từ vựng (ví dụ: Business, General, IT,...).
+- `level` (INT DEFAULT 2): Cấp độ năng lực Nhật ngữ (mặc định 2 tương đương N2).
+- `example_sentence` (TEXT): Câu ví dụ tiếng Nhật.
+- `example_translation` (TEXT): Dịch nghĩa câu ví dụ.
+- `examples` (TEXT): Lưu mảng JSON bổ sung các ví dụ khác (nếu có).
+
+2.3. Bảng `grammar` (Ngân hàng cấu trúc ngữ pháp N2)
+- `id` (SERIAL PRIMARY KEY): Khóa chính.
+- `title` (TEXT NOT NULL): Tên bài ngữ pháp.
+- `pattern` (TEXT NOT NULL): Cấu trúc ngữ pháp (ví dụ: ～たばかりに).
+- `explanation` (TEXT NOT NULL): Cách dùng và cấu trúc liên kết.
+- `meaning` (TEXT NOT NULL): Ý nghĩa tiếng Việt.
+- `example_sentence` (TEXT): Câu ví dụ mẫu.
+- `example_translation` (TEXT): Dịch nghĩa ví dụ.
+- `category` (TEXT): Phân nhóm ngữ pháp.
+- `examples` (TEXT): Cấu trúc ví dụ phụ.
+
+2.4. Bảng `flashcard_decks` (Bộ thẻ flashcard ôn tập)
+- `id` (SERIAL PRIMARY KEY): Khóa chính.
+- `user_id` (INTEGER REFERENCES users(id)): ID người sở hữu (cho phép NULL đối với các bộ thẻ mặc định toàn cục của hệ thống - Global Decks).
+- `name` (VARCHAR(255) NOT NULL): Tên bộ thẻ.
+- `description` (TEXT): Mô tả.
+- `color` (VARCHAR(50)): Mã màu hiển thị giao diện.
+- `is_global` (BOOLEAN DEFAULT FALSE): Xác định xem bộ thẻ này có hiển thị cho toàn bộ học viên không.
+
+2.5. Bảng `flashcards` (Thẻ ghi nhớ chi tiết)
+- `id` (SERIAL PRIMARY KEY): Khóa chính.
+- `user_id` (INTEGER REFERENCES users(id)): Liên kết người học.
+- `vocab_id` (INTEGER REFERENCES vocabulary(id)): Từ vựng cần học (nullable).
+- `grammar_id` (INTEGER REFERENCES grammar(id)): Ngữ pháp cần học (nullable).
+- `deck_id` (INTEGER REFERENCES flashcard_decks(id)): Thuộc bộ thẻ nào.
+- `interval` (INT DEFAULT 1): Chu kỳ lặp lại tiếp theo (tính bằng số ngày).
+- `repetitions` (INT DEFAULT 0): Số lần trả lời đúng liên tục.
+- `ease_factor` (DECIMAL(3, 2) DEFAULT 2.5): Hệ số độ dễ của thẻ ghi nhớ.
+- `next_review_date` (TIMESTAMP DEFAULT CURRENT_TIMESTAMP): Lịch ôn tập kế tiếp.
+
+2.6. Bảng `tests` (Đề kiểm tra trắc nghiệm)
+- `id` (SERIAL PRIMARY KEY): Khóa chính.
+- `name` (VARCHAR(255) NOT NULL): Tên đề thi.
+- `category` (VARCHAR(100) NOT NULL): Chủ đề thi.
+- `topic_type` (VARCHAR(50) DEFAULT 'vocabulary'): Thể loại thi ('vocabulary' hoặc 'grammar').
+- `total_questions` (INT DEFAULT 5): Tổng số câu hỏi trong bài kiểm tra.
+
+2.7. Bảng `test_questions` (Chi tiết câu hỏi trắc nghiệm)
+- `id` (SERIAL PRIMARY KEY): Khóa chính.
+- `test_id` (INT REFERENCES tests(id) ON DELETE CASCADE): Thuộc đề thi nào.
+- `question_text` (TEXT NOT NULL): Nội dung câu hỏi.
+- `question_type` (VARCHAR(50)): Loại câu hỏi (trắc nghiệm 4 đáp án).
+- `correct_answer` (VARCHAR(255) NOT NULL): Đáp án đúng.
+- `options` (JSONB NOT NULL): Mảng chứa 4 phương án lựa chọn dưới dạng JSON.
+- `explanation` (TEXT): Giải thích tại sao đáp án đó đúng.
+- `vocab_id` / `grammar_id`: Liên kết tới thực thể tương ứng để truy xuất học thuật.
+
+2.8. Bảng `test_results` (Kết quả thi trắc nghiệm của học viên)
+- `id` (SERIAL PRIMARY KEY): Khóa chính.
+- `user_id` (INT REFERENCES users(id)): Học viên tham gia thi.
+- `test_id` (INT REFERENCES tests(id)): Đề thi tham gia.
+- `score` (DECIMAL(5, 2)): Điểm số đạt được (trên thang điểm 10).
+- `total_questions` (INT): Tổng số câu hỏi.
+- `answered_questions` (INT): Số câu học viên đã trả lời.
+- `answers` (JSONB): Mảng các đáp án đã chọn của học viên để đối chiếu lỗi sai.
+
+2.9. Bảng `conversation_history` (Lịch sử hội thoại Kaiwa)
+- `id` (SERIAL PRIMARY KEY): Khóa chính.
+- `user_id` (INT REFERENCES users(id)): Học viên.
+- `mode` (VARCHAR(50)): Chế độ hội thoại ('free' - tự do, 'scenario' - kịch bản).
+- `scenario_id` (INT REFERENCES scenarios(id)): ID kịch bản (nếu học theo kịch bản).
+- `user_message` (VARCHAR(1000)): Tin nhắn người dùng gửi đi.
+- `ai_response` (VARCHAR(2000)): Phản hồi của Trợ lý AI.
+- `grammar_errors` (JSON): Danh sách các lỗi sai ngữ pháp được AI bóc tách (chứa mảng lỗi gồm: từ sai, từ sửa lại, giải thích tiếng Việt).
+
+2.10. Bảng `scenarios` (Danh sách kịch bản hội thoại)
+- `id` (SERIAL PRIMARY KEY): Khóa chính.
+- `title` (VARCHAR(100) NOT NULL): Tên kịch bản (ví dụ: Xin việc, Đặt nhà hàng,...).
+- `description` (VARCHAR(500)): Mô tả tình huống.
+- `context` (VARCHAR(1000)): Ngữ cảnh thiết lập để nhồi vào prompt điều hướng AI.
+- `example_conversation` (TEXT): Đoạn hội thoại mẫu cho học viên tham khảo.
+- `difficulty_level` (INT): Độ khó của kịch bản.
+
+2.11. Bảng `user_vocabulary_learned` & `user_grammar_learned` (Tiến trình tích lũy học tập)
+- Bảng này theo dõi xem học viên đã học các mục từ vựng/ngữ pháp nào, đánh dấu trạng thái ôn tập (`status`: 'NEW', 'LEARNED') và ghi lại tổng số lần ôn tập (`review_count`).
+
+2.12. Database View `recently_learned_items`
+- View này được định nghĩa bằng câu lệnh `UNION ALL` kết hợp dữ liệu học từ bảng từ vựng và ngữ pháp của từng người dùng cụ thể. Giúp backend truy xuất tức thời tiến trình học tập gần nhất của học viên mà không cần thực hiện nhiều câu truy vấn phức tạp trên Client.
+
+---
+
+3. THUẬT TOÁN ÔN TẬP THẺ GHI NHỚ (SPACED REPETITION ALGORITHM - SM-2)
+Hệ thống sử dụng phiên bản cải tiến của thuật toán SM-2 (SuperMemo-2) được tối ưu hóa bằng JavaScript nhằm tự động hóa lịch ôn tập cá nhân:
+- Đầu vào: Đánh giá chất lượng nhớ (`quality` từ 0 đến 5):
+  * 0-2 (Tương đương nút "Again"): Không nhớ hoặc nhớ sai.
+  * 3 (Tương đương nút "Hard"): Nhớ mang máng, mất nhiều thời gian nghĩ.
+  * 4 (Tương đương nút "Good"): Nhớ chính xác nhưng cần một chút tập trung.
+  * 5 (Tương đương nút "Easy"): Nhớ ngay lập tức và rất trôi chảy.
+
+- Quy tắc tính toán:
+  1. Nếu chất lượng nhớ kém (`quality < 3`):
+     * Đặt số lần lặp liên tục (`repetitions`) về `0`.
+     * Khoảng thời gian ôn tập tiếp theo (`interval`) được đặt mặc định là `1` ngày.
+  2. Nếu chất lượng nhớ tốt (`quality >= 3`):
+     * Tăng số lần lặp liên tục lên 1: `repetitions = repetitions + 1`.
+     * Tính toán chu kỳ ôn tập tiếp theo (`interval` tính bằng ngày):
+       - Lần đầu tiên đúng (`repetitions == 1`): `interval = 1` ngày.
+       - Lần thứ hai đúng liên tục (`repetitions == 2`): `interval = 3` ngày.
+       - Lần thứ ba trở đi (`repetitions > 2`): `interval = Math.round(interval * ease_factor)`.
+  3. Cập nhật hệ số độ dễ (`ease_factor` - mặc định là 2.5):
+     * `ease_factor = ease_factor + 0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)`.
+     * Giới hạn dưới của `ease_factor` tối thiểu là `1.3` (để tránh việc thẻ ghi nhớ bị lặp lại quá dày đặc vô hạn).
+  4. Lịch hẹn tiếp theo: `next_review_date = CurrentDate + interval` ngày.
+
+---
+
+4. CƠ CHẾ HOẠT ĐỘNG CỦA PIPELINE AI VÀ CÔNG NGHỆ RAG (RETRIEVAL-AUGMENTED GENERATION)
+Hệ thống AI chạy trên máy chủ Python kết nối thông qua Flask API sử dụng công nghệ LPU Groq để tối ưu hóa thời gian xử lý:
+
+4.1. Cấu trúc AI Pipeline và xử lý RAG
+- Lưu trữ tri thức (Knowledge Base): File dữ liệu giáo khoa N2 chuẩn `JLPT_N2_Grammar_v2.csv` lưu trữ trên máy chủ AI, được nạp trực tiếp vào RAM (biến `grammar_data`) thông qua thư viện `pandas` để tối ưu hóa tốc độ tìm kiếm.
+- Công nghệ RAG (Chế độ 1 - Study):
+  * Khi học viên gửi câu hỏi trong chế độ Học tập (Study Mode), hệ thống RAG thực hiện quét và đối sánh chuỗi (String Matching) để tìm kiếm các cấu trúc ngữ pháp có trong tin nhắn của người học.
+  * Lấy ra tối đa 2 cấu trúc ngữ pháp khớp nhất gồm: Cấu trúc (Pattern), Ý nghĩa, Cách dùng (Explanation), Ví dụ mẫu (Example sentence) và Dịch ví dụ (Example translation).
+  * Chèn kết quả giáo khoa này làm ngữ cảnh nền bổ trợ (`[DỮ LIỆU SÁCH GIÁO KHOA CHUẨN ĐƯỢC TÌM THẤY]`) vào System Prompt gửi đến mô hình LLM.
+
+4.2. Các chế độ hoạt động của Chatbot AI (System Prompts)
+AI hoạt động dưới 3 chế độ chuyên biệt được điều khiển bởi 3 bộ cấu trúc Prompt chi tiết:
+
+1. Chế độ 1: Học tập (Study Mode)
+- System Prompt: Thiết lập AI đóng vai trò Chuyên gia đào tạo tiếng Nhật, tập trung giải thích cấu trúc ngữ pháp/từ vựng dựa trên RAG Giáo khoa.
+- Quy tắc phản hồi: Phản hồi bằng tiếng Việt chi tiết về Ý nghĩa, Cách dùng, đồng thời đưa ra các câu ví dụ thực tế bằng tiếng Nhật kèm Furigana/Kanji và bản dịch tiếng Việt tương ứng.
+
+2. Chế độ 2: Kaiwa Đời thường (Daily Chat Mode)
+- System Prompt: AI đóng vai người bạn trò chuyện người Nhật thân thiện, sử dụng tiếng Nhật tự nhiên ở trình độ trung cấp (N3 - N4).
+- Quy tắc phản hồi: Chỉ trả lời trực tiếp nội dung bằng tiếng Nhật, kèm một câu hỏi ngắn gợi mở để duy trì tương tác. Không dịch hay giải thích tiếng Việt. Mảng lỗi sai `errors` luôn để trống (`[]`) để khuyến khích học viên giao tiếp tự nhiên và không bắt lỗi văn nói.
+- Định dạng trả về: JSON sạch gồm `{ "reply": "...", "errors": [] }`.
+
+3. Chế độ 3: Kaiwa N2 Nâng cao (Advanced Workplace Mode)
+- System Prompt: AI đóng vai đối tác chuyên nghiệp, sử dụng cấu trúc ngữ pháp nâng cao hoặc kính ngữ (Keigo).
+- Quy tắc phản hồi: AI có trách nhiệm khắt khe rà soát tỉ mỉ từng câu thoại của học viên. Nếu phát hiện lỗi sai về ngữ pháp N2, từ vựng hoặc sắc thái biểu cảm không phù hợp doanh nghiệp, AI sẽ bóc tách và chèn vào danh sách lỗi.
+- Định dạng trả về (JSON Mode):
+  ```json
+  {
+    "reply": "Câu thoại tiếp theo của AI bằng tiếng Nhật",
+    "errors": [
+      {
+        "original": "Cụm từ người dùng viết chưa chuẩn",
+        "correction": "Cụm từ sửa lại cho đúng",
+        "explanation": "Giải thích chi tiết lỗi sai và cách diễn đạt đúng bằng tiếng Việt"
+      }
+    ]
+  }
+  ```
+
+4.3. Đảm bảo cấu trúc đầu ra (JSON Mode & Regex Parser)
+- Khi chạy chế độ Kaiwa và N2, API của Groq được thiết lập tham số `response_format={"type": "json_object"}` và hạ nhiệt độ `temperature=0.3` để ép buộc AI trả về đúng chuẩn JSON.
+- Trường hợp có lỗi ngoại lệ về ký tự, máy chủ Python sử dụng thuật toán bóc tách biểu thức chính quy (Regex: `\{.*\}`) để lọc lấy phần JSON thô nhằm đảm bảo không bao giờ bị lỗi giao tiếp hiển thị lên Frontend.
+
+---
+
+5. QUY TRÌNH TỐI ƯU HÓA IMPORT DỮ LIỆU BẰNG BULK INSERT
+Ban đầu, hệ thống chạy vòng lặp tuần tự để kiểm tra và chèn từng dòng từ vựng/ngữ pháp từ file import của Admin. Cách làm này dẫn tới thời gian chờ lâu (độ trễ mạng giữa Backend và Database PostgreSQL Neon tăng dần theo số dòng), gây crash timeout 10 giây trên các dịch vụ serverless như Vercel.
+
+Giải pháp tối ưu hóa Bulk Insert đã được áp dụng:
+1. Đọc và phân tích file Excel/CSV bằng thư viện `xlsx` và `csv-parse`.
+2. Kiểm tra tính hợp lệ của dữ liệu (validation) ngay trong bộ nhớ RAM của Server (loại bỏ các dòng thiếu thông tin cốt lõi như word, reading, meaning).
+3. Sử dụng 1 câu lệnh SQL duy nhất để xóa tất cả từ vựng/ngữ pháp cũ thuộc cùng chủ đề đó nhằm tránh trùng lặp dữ liệu:
+   `DELETE FROM vocabulary WHERE category = $1;`
+4. Dựng động tham số SQL có cấu trúc chèn hàng loạt:
+   `INSERT INTO vocabulary (word, reading, meaning, category, level, example_sentence, example_translation) VALUES ($1, $2, ...), ($8, $9, ...), ...`
+5. Toàn bộ hàng trăm bản ghi được truyền dưới dạng một mảng phẳng các tham số truyền vào, thực thi trong một chu kỳ truy vấn duy nhất.
+6. Sau khi chèn từ vựng thành công, hệ thống tự động gom nhóm và chèn hàng loạt các câu hỏi trắc nghiệm tương ứng cho đề thi mới tạo.
+7. Thời gian thực thi import giảm từ **12.5 giây** (gây timeout) xuống chỉ còn **khoảng 80ms - 150ms** ở môi trường sản xuất.
+
+---
+
+6. CẤU TRÚC DANH SÁCH REST APIS CHÍNH
+Hệ thống giao tiếp dữ liệu giữa các máy chủ thông qua các API RESTful sau:
+
+- APIs của hệ thống AI Service (Python Flask - chạy qua ngrok):
+  * `POST /chat`: Tiếp nhận tin nhắn, phân loại `mode` (study, kaiwa, n2), thực hiện tìm kiếm RAG và gọi mô hình Llama-3.1-8b-instant để xử lý phản hồi và phân tích lỗi ngữ pháp.
+
+- APIs của máy chủ quản lý dữ liệu (Node.js/Express):
+  * `POST /api/users/register`: Đăng ký tài khoản mới.
+  * `POST /api/users/login`: Đăng nhập hệ thống (trả về token JWT).
+  * `GET /api/users/profile`: Lấy thông tin cá nhân.
+  * `PUT /api/users/profile`: Cập nhật thông tin cá nhân.
+  * `POST /api/users/progress`: Cập nhật chỉ số tiến độ học tập.
+  * `GET /api/vocabulary`: Lấy danh sách từ vựng có phân trang.
+  * `GET /api/grammar`: Lấy danh sách ngữ pháp có phân trang.
+  * `POST /api/admin/vocabulary/import`: Admin import từ vựng hàng loạt.
+  * `POST /api/admin/grammar/import`: Admin import ngữ pháp hàng loạt.
+  * `GET /api/decks/my`: Lấy danh sách bộ thẻ ôn tập cá nhân.
+  * `POST /api/decks`: Tạo một bộ thẻ mới.
+  * `GET /api/flashcards/deck/:deckId`: Lấy danh sách thẻ ôn tập kèm trạng thái và lịch hẹn.
+  * `PATCH /api/flashcards/:id`: Cập nhật trạng thái thẻ ghi nhớ (thuật toán SM-2).
+  * `GET /api/tests`: Lấy danh sách bài kiểm tra.
+  * `POST /api/tests/:id/submit`: Nộp bài thi trắc nghiệm, chấm điểm tự động.
+  * `GET /api/conversation/history`: Truy xuất lịch sử trò chuyện Kaiwa của học viên.
+  * `POST /api/conversation/save`: Lưu tin nhắn hội thoại vào database.

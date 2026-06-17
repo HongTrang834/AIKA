@@ -16,12 +16,12 @@ interface Deck {
 }
 
 const COLORS = [
-  { name: 'blue', label: 'Xanh', bg: 'bg-sky-blue/10', border: 'border-sky-blue', ring: 'ring-sky-blue' },
-  { name: 'red', label: 'Đỏ', bg: 'bg-pink-50', border: 'border-bubblegum-pink', ring: 'ring-bubblegum-pink' },
-  { name: 'green', label: 'Xanh lá', bg: 'bg-sky-blue-light', border: 'border-sky-blue', ring: 'ring-sky-blue' },
-  { name: 'purple', label: 'Tím', bg: 'bg-grape-soda/10', border: 'border-grape-soda', ring: 'ring-grape-soda' },
-  { name: 'yellow', label: 'Vàng', bg: 'bg-sunshine-yellow/20', border: 'border-sunshine-yellow', ring: 'ring-[#cc9f00]' },
-  { name: 'gray', label: 'Xám', bg: 'bg-cloud-gray/30', border: 'border-silver', ring: 'ring-silver' },
+  { name: 'blue', label: 'Blue', bg: 'bg-sky-blue/10', border: 'border-sky-blue', ring: 'ring-sky-blue' },
+  { name: 'red', label: 'Red', bg: 'bg-pink-50', border: 'border-bubblegum-pink', ring: 'ring-bubblegum-pink' },
+  { name: 'green', label: 'Green', bg: 'bg-sky-blue-light', border: 'border-sky-blue', ring: 'ring-sky-blue' },
+  { name: 'purple', label: 'Purple', bg: 'bg-grape-soda/10', border: 'border-grape-soda', ring: 'ring-grape-soda' },
+  { name: 'yellow', label: 'Yellow', bg: 'bg-sunshine-yellow/20', border: 'border-sunshine-yellow', ring: 'ring-[#cc9f00]' },
+  { name: 'gray', label: 'Gray', bg: 'bg-cloud-gray/30', border: 'border-silver', ring: 'ring-silver' },
 ];
 
 export default function AdminDecks() {
@@ -65,7 +65,7 @@ export default function AdminDecks() {
       setDecks(data.rows || []);
     } catch (error) {
       console.error('Error fetching decks:', error);
-      showToast('Lỗi khi tải decks', 'error');
+      showToast('Error loading decks', 'error');
     } finally {
       setLoading(false);
     }
@@ -85,7 +85,7 @@ export default function AdminDecks() {
       setVocabCategories(cats);
     } catch (err) {
       console.error('Error fetching vocabulary for picker:', err);
-      showToast('Không thể tải danh sách Từ vựng', 'error');
+      showToast('Unable to load vocabulary list', 'error');
     } finally {
       setVocabLoading(false);
     }
@@ -111,7 +111,7 @@ export default function AdminDecks() {
 
   const importCurrentCategory = () => {
     if (vocabCategory === 'all') {
-      showToast('Vui lòng chọn 1 danh mục để import', 'error');
+      showToast('Please select a category to import', 'error');
       return;
     }
     toggleCategory(vocabCategory);
@@ -121,7 +121,7 @@ export default function AdminDecks() {
     e.preventDefault();
 
     if (!formData.name.trim()) {
-      showToast('Tên deck không thể trống', 'error');
+      showToast('Deck name cannot be empty', 'error');
       return;
     }
 
@@ -163,22 +163,22 @@ export default function AdminDecks() {
 
               if (bulkRes.ok) {
                 const bulkResult = await bulkRes.json();
-                showToast(`Deck tạo thành công: +${bulkResult.created} thẻ`, 'success');
+                showToast(`Deck created successfully: +${bulkResult.created} cards`, 'success');
                 newDeck.card_count = bulkResult.created;
                 setDecks([{ ...newDeck, is_global: true }, ...decks]);
               } else {
                 const error = await bulkRes.json();
-                showToast(`Deck tạo nhưng import lỗi: ${error.error}`, 'error');
+                showToast(`Deck created but import error: ${error.error}`, 'error');
                 setDecks([{ ...newDeck, card_count: 0, is_global: true }, ...decks]);
               }
             } catch (fcErr) {
               console.error('Error importing vocabulary into deck:', fcErr);
-              showToast('Deck tạo nhưng lỗi khi import từ vựng', 'error');
+              showToast('Deck created but error importing vocabulary', 'error');
               setDecks([{ ...newDeck, card_count: 0, is_global: true }, ...decks]);
             }
           } else {
             setDecks([{ ...newDeck, card_count: 0, is_global: true }, ...decks]);
-            showToast('Deck tạo thành công', 'success');
+            showToast('Deck created successfully', 'success');
           }
         } else if (editingId) {
           // Update deck with vocabulary
@@ -197,9 +197,9 @@ export default function AdminDecks() {
           if (updateRes.ok) {
             const updatedDeck = await updateRes.json();
             setDecks(decks.map(d => d.id === editingId ? { ...d, ...updatedDeck } : d));
-            showToast('Deck đã cập nhật', 'success');
+            showToast('Deck updated', 'success');
           } else {
-            showToast('Lỗi khi cập nhật deck', 'error');
+            showToast('Error updating deck', 'error');
           }
         }
         
@@ -211,11 +211,11 @@ export default function AdminDecks() {
         setVocabSearch('');
         setVocabCategory('all');
       } else {
-        showToast('Lỗi khi lưu deck', 'error');
+        showToast('Error saving deck', 'error');
       }
     } catch (error) {
       console.error('Error saving deck:', error);
-      showToast('Lỗi khi lưu deck', 'error');
+      showToast('Error saving deck', 'error');
     } finally {
       setSaving(false);
     }
@@ -232,13 +232,13 @@ export default function AdminDecks() {
 
       if (res.ok) {
         setDecks(decks.filter(d => d.id !== id));
-        showToast('Deck đã xóa', 'success');
+        showToast('Deck deleted', 'success');
       } else {
-        showToast('Lỗi khi xóa deck', 'error');
+        showToast('Error deleting deck', 'error');
       }
     } catch (error) {
       console.error('Error deleting deck:', error);
-      showToast('Lỗi khi xóa deck', 'error');
+      showToast('Error deleting deck', 'error');
     }
   };
 
@@ -325,8 +325,8 @@ export default function AdminDecks() {
     <div className="p-8 max-w-6xl mx-auto space-y-8">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="h1-feather text-almost-black">Quản Lý Decks Global</h1>
-          <p className="text-graphite font-bold mt-1 text-[15px]">Các deck này sẽ hiển thị cho tất cả người dùng</p>
+          <h1 className="h1-feather text-almost-black">Global Decks Management</h1>
+          <p className="text-graphite font-bold mt-1 text-[15px]">These decks will be displayed to all users</p>
         </div>
         <button
           onClick={() => {
@@ -339,19 +339,19 @@ export default function AdminDecks() {
           className="btn-3d-blue flex items-center gap-2 px-6"
         >
           <Plus className="w-5 h-5" />
-          Thêm Deck
+          Add Deck
         </button>
       </div>
 
       {/* Search Bar */}
       <div className="relative">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-silver" />
+        <Search className="absolute left-16 top-1/2 -translate-y-1/2 w-5 h-5 text-silver" />
         <input
           type="text"
-          placeholder="Tìm kiếm tên hoặc mô tả deck..."
+          placeholder="Search deck name or description..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-12 pr-4 py-3 border-2 border-cloud-gray rounded-2xl focus:outline-none focus:border-sky-blue focus:bg-sky-blue/5 font-bold text-almost-black text-[15px] transition-colors"
+          className="w-full pl-48 pr-4 py-3 border-2 border-cloud-gray rounded-2xl focus:outline-none focus:border-sky-blue focus:bg-sky-blue/5 font-bold text-almost-black text-[15px] transition-colors"
         />
       </div>
 
@@ -359,33 +359,33 @@ export default function AdminDecks() {
       {showForm && (
         <div className="fixed inset-0 bg-almost-black/50 flex items-center justify-center z-50 p-4">
           <div className="card-duo p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <h2 className="h2-feather mb-6 text-almost-black">{editingId ? 'Cập Nhật' : 'Thêm'} Deck</h2>
+            <h2 className="h2-feather mb-6 text-almost-black">{editingId ? 'Update' : 'Add'} Deck</h2>
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label className="block text-[15px] font-extrabold text-graphite mb-2">Tên Deck *</label>
+                <label className="block text-[15px] font-extrabold text-graphite mb-2">Deck Name *</label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full px-5 py-4 border-2 border-cloud-gray rounded-2xl focus:outline-none focus:border-sky-blue focus:bg-sky-blue/5 font-bold text-[15px]"
-                  placeholder="Ví dụ: N2 Business"
+                  placeholder="Example: N2 Business"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-[15px] font-extrabold text-graphite mb-2">Mô Tả</label>
+                <label className="block text-[15px] font-extrabold text-graphite mb-2">Description</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   className="w-full px-5 py-4 border-2 border-cloud-gray rounded-2xl focus:outline-none focus:border-sky-blue focus:bg-sky-blue/5 font-bold text-[15px]"
-                  placeholder="Mô tả ngắn về deck này"
+                  placeholder="Short description of this deck"
                   rows={3}
                 />
               </div>
 
               <div>
-                <label className="block text-[15px] font-extrabold text-graphite mb-3">Màu Sắc</label>
+                <label className="block text-[15px] font-extrabold text-graphite mb-3">Color</label>
                 <div className="grid grid-cols-3 gap-3">
                   {COLORS.map((colorOption) => (
                     <button
@@ -410,24 +410,24 @@ export default function AdminDecks() {
                 <div className="border-4 border-cloud-gray rounded-3xl p-6 bg-white">
                   <div className="flex items-start justify-between gap-3 mb-4">
                     <div>
-                      <label className="block text-[15px] font-extrabold text-graphite">Chọn từ vựng (từ mục Từ vựng)</label>
+                      <label className="block text-[15px] font-extrabold text-graphite">Select vocabulary (from Vocabulary bank)</label>
                       <p className="text-[13px] font-bold text-silver mt-1">
-                        Bạn có thể chọn từng từ hoặc import hàng loạt theo danh mục.
+                        You can select individual words or bulk import by category.
                       </p>
                     </div>
                     <div className="text-[13px] font-bold text-silver bg-sky-blue/10 px-3 py-1.5 rounded-xl border border-sky-blue/20">
-                      Đã chọn: <b className="text-sky-blue text-[15px]">{selectedVocabIds.size}</b> từ / <b className="text-sky-blue text-[15px]">{selectedCategories.size}</b> danh mục
+                      Selected: <b className="text-sky-blue text-[15px]">{selectedVocabIds.size}</b> words / <b className="text-sky-blue text-[15px]">{selectedCategories.size}</b> categories
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
                     <div className="md:col-span-2 relative">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-silver" />
+                      <Search className="absolute left-16 top-1/2 -translate-y-1/2 w-5 h-5 text-silver" />
                       <input
                         value={vocabSearch}
                         onChange={(e) => setVocabSearch(e.target.value)}
-                        placeholder="Tìm theo word / reading / meaning..."
-                        className="w-full pl-10 pr-4 py-3 border-2 border-cloud-gray rounded-2xl focus:outline-none focus:border-sky-blue font-bold text-[13px]"
+                        placeholder="Search by word / reading / meaning..."
+                        className="w-full pl-48 pr-4 py-3 border-2 border-cloud-gray rounded-2xl focus:outline-none focus:border-sky-blue font-bold text-[13px]"
                       />
                     </div>
                     <select
@@ -435,7 +435,7 @@ export default function AdminDecks() {
                       onChange={(e) => setVocabCategory(e.target.value)}
                       className="w-full px-4 py-3 border-2 border-cloud-gray rounded-2xl focus:outline-none focus:border-sky-blue font-bold text-[13px] text-graphite bg-white"
                     >
-                      <option value="all">Tất cả danh mục</option>
+                      <option value="all">All categories</option>
                       {vocabCategories.map((c) => (
                         <option key={c} value={c}>
                           {c}
@@ -450,10 +450,10 @@ export default function AdminDecks() {
                       onClick={importCurrentCategory}
                       className="inline-flex items-center gap-2 px-4 py-2 text-[13px] font-bold rounded-xl border-2 border-sky-blue text-sky-blue bg-white hover:bg-sky-blue/10 transition-colors"
                       disabled={vocabLoading}
-                      title="Import cả danh mục đang chọn"
+                      title="Import the entire selected category"
                     >
                       <FolderPlus className="w-5 h-5" />
-                      Import danh mục
+                      Import category
                     </button>
                     {Array.from(selectedCategories).map((c) => (
                       <button
@@ -461,7 +461,7 @@ export default function AdminDecks() {
                         type="button"
                         onClick={() => toggleCategory(c)}
                         className="px-3 py-2 text-[13px] font-bold rounded-xl bg-sky-blue/10 border-2 border-sky-blue text-sky-blue hover:bg-sky-blue/20"
-                        title="Bỏ chọn danh mục"
+                        title="Deselect category"
                       >
                         {c} ✕
                       </button>
@@ -472,10 +472,10 @@ export default function AdminDecks() {
                     {vocabLoading ? (
                       <div className="p-6 flex items-center justify-center gap-3 text-[15px] font-bold text-silver">
                         <Loader className="w-5 h-5 animate-spin" />
-                        Đang tải danh sách từ vựng...
+                        Loading vocabulary list...
                       </div>
                     ) : filteredVocab.length === 0 ? (
-                      <div className="p-6 text-center text-[15px] font-bold text-silver">Không có từ vựng phù hợp.</div>
+                      <div className="p-6 text-center text-[15px] font-bold text-silver">No matching vocabulary.</div>
                     ) : (
                       <div className="divide-y-2 divide-cloud-gray">
                         {filteredVocab.map((v: any) => {
@@ -508,7 +508,7 @@ export default function AdminDecks() {
                   </div>
 
                   <p className="text-[13px] font-bold text-silver mt-3">
-                    Gợi ý: để import nhanh cả danh mục, chọn danh mục ở dropdown rồi bấm “Import danh mục”.
+                    Tip: to quickly import the entire category, select the category from the dropdown and click "Import category".
                   </p>
                 </div>
               )}
@@ -520,7 +520,7 @@ export default function AdminDecks() {
                   className="flex-1 btn-3d-blue py-4 font-bold text-[17px] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {saving && <Loader className="w-5 h-5 animate-spin" />}
-                  {editingId ? 'Cập Nhật' : 'Thêm Deck'}
+                  {editingId ? 'Update' : 'Add Deck'}
                 </button>
                 <button
                   type="button"
@@ -528,7 +528,7 @@ export default function AdminDecks() {
                   disabled={saving}
                   className="flex-1 btn-outline-gray py-4 font-bold text-[17px] text-graphite disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Hủy
+                  Cancel
                 </button>
               </div>
             </form>
@@ -543,19 +543,19 @@ export default function AdminDecks() {
           return (
             <div key={deck.id} className={`${colorOption.bg} border-4 ${colorOption.border} rounded-2xl p-6 relative group overflow-hidden transition-all hover:-translate-y-1`}>
               <div className="flex justify-between items-start mb-4 relative z-10">
-                <h3 className="h2-feather text-almost-black flex-1 pr-4 leading-tight">{deck.name}</h3>
-                <div className="flex gap-2">
+                <h3 className="h2-feather text-almost-black flex-1 pr-4 leading-tight break-all">{deck.name}</h3>
+                <div className="flex gap-2 flex-shrink-0">
                   <button
                     onClick={() => handleEdit(deck)}
                     className="p-2 rounded-xl bg-white/50 hover:bg-white border-2 border-transparent hover:border-cloud-gray transition-colors"
-                    title="Sửa deck"
+                    title="Edit deck"
                   >
                     <Edit2 className="w-5 h-5 text-sky-blue" />
                   </button>
                   <button
                     onClick={() => handleDelete(deck.id)}
                     className="p-2 rounded-xl bg-white/50 hover:bg-white border-2 border-transparent hover:border-cloud-gray transition-colors"
-                    title="Xóa deck"
+                    title="Delete deck"
                   >
                     <Trash2 className="w-5 h-5 text-bubblegum-pink" />
                   </button>
@@ -569,7 +569,7 @@ export default function AdminDecks() {
               <div className="flex justify-between items-center text-[15px] font-extrabold text-graphite pt-4 border-t-2 border-cloud-gray relative z-10">
                 <span className="bg-white/50 px-3 py-1.5 rounded-xl border-2 border-cloud-gray/50">📚 {deck.card_count} flashcards</span>
                 <span className="text-[13px] text-silver font-bold">
-                  {new Date(deck.created_at).toLocaleDateString('vi-VN')}
+                  {new Date(deck.created_at).toLocaleDateString('en-US')}
                 </span>
               </div>
             </div>
@@ -579,7 +579,7 @@ export default function AdminDecks() {
 
       {filteredDecks.length === 0 && (
         <div className="text-center py-12 text-gray-500">
-          <p>Không tìm thấy deck nào.</p>
+          <p>No decks found.</p>
         </div>
       )}
     </div>

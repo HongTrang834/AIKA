@@ -10,11 +10,18 @@ interface AdminLayoutProps {
 export function AdminLayout({ children }: AdminLayoutProps) {
   const { logout } = useAuth();
   const location = useLocation();
+  const contentRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (contentRef.current) {
+      contentRef.current.scrollTop = 0;
+    }
+  }, [location.pathname]);
 
   const menuItems = [
-    { path: '/admin/vocabulary', label: 'Từ Vựng', icon: BookOpen },
-    { path: '/admin/grammar', label: 'Ngữ Pháp', icon: BookMarked },
-    { path: '/admin/tests', label: 'Tests Mini', icon: ClipboardList },
+    { path: '/admin/vocabulary', label: 'Vocabulary', icon: BookOpen },
+    { path: '/admin/grammar', label: 'Grammar', icon: BookMarked },
+    { path: '/admin/tests', label: 'Mini Tests', icon: ClipboardList },
     { path: '/admin/decks', label: 'Decks', icon: Folder },
   ];
 
@@ -58,14 +65,14 @@ export function AdminLayout({ children }: AdminLayoutProps) {
             className="w-full btn-3d-red px-5 py-4 flex items-center justify-center gap-3 text-[17px] border-b-4 active:border-b-0 active:translate-y-1"
           >
             <LogOut className="w-6 h-6" />
-            <span>Đăng Xuất</span>
+            <span>Log Out</span>
           </button>
         </div>
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden bg-snow-white">
-        <div className="flex-1 overflow-x-hidden overflow-y-auto">
+        <div ref={contentRef} className="flex-1 overflow-x-hidden overflow-y-auto">
           {children}
         </div>
       </main>

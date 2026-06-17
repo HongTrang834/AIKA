@@ -12,8 +12,8 @@ import {
 import { cn } from '@/src/lib/utils';
 
 const navItems = [
-  { icon: LayoutDashboard, label: 'Home', path: '/' },
-  { icon: BookOpen, label: 'Vocab', path: '/vocab' },
+  { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
+  { icon: BookOpen, label: 'Vocabulary', path: '/vocab' },
   { icon: Compass, label: 'Grammar', path: '/grammar' },
   { icon: Layers, label: 'Flashcards', path: '/flashcards' },
   { icon: TrendingUp, label: 'Progress', path: '/progress' },

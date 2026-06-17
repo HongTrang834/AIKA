@@ -1,0 +1,877 @@
+DANH MỤC CÁC TỪ VIẾT TẮT
+
+Chữ viết tắt | Từ ngữ
+AI           | Trí tuệ nhân tạo
+LLM          | Mô hình ngôn ngữ lớn
+RAG          | Retrieval-Augmented Generation
+LPU          | Language Processing Unit
+SM-2         | SuperMemo-2
+JLPT         | Japanese-Language Proficiency Test
+BrSE         | Bridge Software Engineer
+IT Comtor    | IT Communicator
+CNTT         | Công nghệ thông tin
+SPA          | Single Page Application
+DOM          | Document Object Model
+JSX          | JavaScript XML
+API          | Application Programming Interface
+CRUD         | Create, Read, Update, Delete
+CSV          | Comma-Separated Values
+RAM          | Random Access Memory
+GPU          | Graphics Processing Unit
+SQL          | Structured Query Language
+HTML         | HyperText Markup Language
+CSS          | Cascading Style Sheets
+UI           | User Interface
+URL          | Uniform Resource Locator
+JSON         | JavaScript Object Notation
+JWT          | JSON Web Token
+HTTP         | Hypertext Transfer Protocol
+REST         | Representational State Transfer
+DBMS         | Database Management System
+
+================================================================================
+
+MỞ ĐẦU
+
+1. Mục đích thực hiện đề tài
+
+Trong bối cảnh toàn cầu hóa và hội nhập kinh tế quốc tế sâu rộng, mối quan hệ hợp tác chiến lược giữa Việt Nam và Nhật Bản ngày càng phát triển mạnh mẽ trên nhiều lĩnh vực, từ kinh tế, thương mại đến trao đổi nguồn nhân lực chất lượng cao. Đặc biệt, nhu cầu về nhân sự ngành Công nghệ thông tin (CNTT) có năng lực tiếng Nhật (như Kỹ sư cầu nối - BrSE, điều phối viên dự án - IT Comtor) liên tục tăng trưởng đột biến. Trình độ tiếng Nhật N2 (JLPT N2) được coi là tiêu chuẩn vàng, là điều kiện tiên quyết để các kỹ sư và cử nhân Việt Nam có thể làm việc trực tiếp, đàm phán và quản lý dự án với các đối tác Nhật Bản.
+
+Tuy nhiên, việc đạt được và duy trì trình độ tiếng Nhật N2 là một thách thức lớn đối với người học tại Việt Nam. Phương pháp học tập truyền thống tại các trung tâm ngoại ngữ hay qua giáo trình giấy thường tập trung nhiều vào lý thuyết, chuẩn bị cho các kỳ thi trắc nghiệm đọc hiểu và nghe hiểu, dẫn đến tình trạng "lệch kỹ năng". Học viên có thể thi đỗ chứng chỉ N2 nhưng lại thiếu tự tin, gặp khó khăn lớn trong việc giao tiếp thực tế (Kaiwa), phản xạ chậm và thường xuyên mắc các lỗi ngữ pháp cơ bản hoặc sử dụng từ vựng không phù hợp với văn phong công sở chuyên nghiệp của Nhật Bản. Hơn nữa, việc tìm kiếm môi trường luyện nói bản xứ hàng ngày đòi hỏi chi phí rất lớn và không linh hoạt về mặt thời gian.
+
+Sự bùng nổ của Trí tuệ nhân tạo (AI) và các Mô hình ngôn ngữ lớn (LLM) trong những năm gần đây đã mở ra những hướng đi mang tính đột phá cho giáo dục số. Đề tài "Hệ thống hỗ trợ học tiếng Nhật N2 tích hợp chatbot AI và thuật toán lặp lại ngắt quãng" được thực hiện nhằm mục đích giải quyết triệt để các hạn chế trên. Hệ thống hướng tới việc xây dựng một môi trường tự học thông minh, toàn diện, hoạt động 24/7. Bằng cách kết hợp giữa quản lý bài học truyền thống, thuật toán ghi nhớ dài hạn tối ưu và trợ lý AI hội thoại siêu tốc có khả năng sửa lỗi thời gian thực, đề tài tạo ra một công cụ hỗ trợ đắc lực giúp người học thu hẹp khoảng cách giữa lý thuyết học thuật và phản xạ giao tiếp thực tế trong công việc.
+
+
+2. Mục tiêu đề tài
+
+Để đạt được mục đích đề ra, đề tài xác định rõ các mục tiêu cụ thể về mặt nghiên cứu lý thuyết lẫn ứng dụng thực tiễn như sau:
+
+2.1. Mục tiêu lý thuyết
+- Nghiên cứu cơ sở khoa học của thuật toán lặp lại ngắt quãng (Spaced Repetition Algorithm - điển hình là thuật toán SuperMemo-2) nhằm tối ưu hóa khả năng ghi nhớ từ vựng và cấu trúc ngữ pháp vào trí nhớ dài hạn của não bộ.
+- Nghiên cứu kỹ thuật thiết kế câu lệnh (Prompt Engineering) và cơ chế RAG (Retrieval-Augmented Generation) dựa trên đối sánh chuỗi dữ liệu chuẩn để kiểm soát phản hồi của mô hình ngôn ngữ lớn (LLM), hạn chế hiện tượng ảo giác (hallucination) của AI khi giải thích kiến thức tiếng Nhật.
+- Nghiên cứu mô hình ngôn ngữ lớn mã nguồn mở Llama-3.1-8b-instant thông qua hạ tầng Groq LPU (Language Processing Unit), đánh giá khả năng hiểu ngữ cảnh Nhật ngữ và tốc độ xử lý đàm thoại thời gian thực dưới 0.5 giây.
+
+2.2. Mục tiêu thực tiễn
+- Thiết kế và xây dựng một hệ thống Web Application hoàn chỉnh sử dụng mô hình Hybrid Cloud AI với kiến trúc phân tách rõ ràng giữa máy chủ dữ liệu (Node.js/Express/PostgreSQL) và máy chủ dịch vụ trí tuệ nhân tạo (Python Flask/Groq LPU/ngrok).
+- Hiện thực hóa các phân hệ chức năng cốt lõi:
+  * VocabLab & GrammarLab: Quản lý ngân hàng dữ liệu bài học N2 phong phú kèm theo cơ chế chèn dữ liệu hàng loạt (Bulk Insert) hiệu năng cao dành cho người quản trị (Admin).
+  * Flashcards System: Ứng dụng thuật toán SM-2 để tự động tính toán tần suất lặp lại ôn tập thẻ ghi nhớ cá năng hóa theo năng lực tiếp thu của từng học viên.
+  * Test Engine: Tự động tạo lập đề trắc nghiệm và chấm điểm, lưu lịch sử học tập.
+  * KaiwaHub: Chatbot giao tiếp đa chế độ (Học tập giải thích ngữ pháp, Kaiwa đời thường N3-N4, Kaiwa N2 công sở nâng cao Keigo) có khả năng phát hiện lỗi ngữ pháp, đưa ra câu sửa lỗi và giải thích tiếng Việt trực quan.
+
+
+3. Phạm vi và đối tượng nghiên cứu
+
+3.1. Đối tượng nghiên cứu
+- Về mặt Công nghệ: Lập trình Web Fullstack (ReactJS, TypeScript, Tailwind CSS, Node.js, Express), hệ quản trị cơ sở dữ liệu quan hệ PostgreSQL, lập trình dịch vụ Python Flask, API đàm thoại Groq LPU, mô hình Llama-3.1-8b-instant, thuật toán lặp ngắt quãng SM-2 và cơ chế truy xuất ngữ cảnh bổ trợ RAG.
+- Về mặt Kiến thức: Hệ thống từ vựng, chữ Kanji, ngữ nghĩa, và cấu trúc ngữ pháp tiếng Nhật trình độ N2 của kỳ thi đánh giá năng lực Nhật ngữ JLPT.
+
+3.2. Phạm vi nghiên cứu
+- Giới hạn nội dung: Tập trung vào việc cung cấp hệ thống học tập tích lũy từ vựng, ngữ pháp trình độ N2 và luyện phản xạ đàm thoại tiếng Nhật đời thường kết hợp với văn phong công sở Nhật Bản (Business Japanese) nâng cao.
+- Giới hạn kỹ thuật:
+  * Máy chủ AI chạy trên hạ tầng Google Colab liên kết qua đường truyền ngrok.
+  * Dữ liệu RAG được đối sánh chuỗi trực tiếp từ file CSV tri thức chuẩn (JLPT_N2_Grammar_v2.csv) lưu trữ trong RAM của máy chủ AI Python Flask.
+  * Hệ thống kiểm tra trắc nghiệm tự động tạo ngẫu nhiên dựa trên các danh mục từ vựng/ngữ pháp được import vào.
+
+
+4. Phương pháp nghiên cứu
+
+Để hoàn thành đồ án tốt nghiệp một cách khoa học và đạt chất lượng tốt nhất, các phương pháp nghiên cứu sau đây đã được áp dụng song song:
+
+- Phương pháp nghiên cứu lý thuyết (Literature Review): Thu thập, đọc hiểu và phân tích các bài báo khoa học, tài liệu kỹ thuật chính thức liên quan đến phát triển ứng dụng Web hiệu năng cao, cơ chế kết nối tối ưu của PostgreSQL, hoạt động của các API LLM thế hệ mới, cấu trúc toán học của thuật toán SuperMemo-2 (SM-2) phục vụ Spaced Repetition, và các phương án xây dựng RAG trong xử lý ngôn ngữ tự nhiên.
+- Phương pháp thực nghiệm (Empirical Method):
+  * Lập trình triển khai thực tế mã nguồn Frontend và Backend.
+  * Thiết kế, đo đạc tốc độ xử lý phản hồi của hệ thống AI khi chuyển đổi qua lại giữa các chế độ Prompt khác nhau.
+  * Thực hiện kiểm thử hiệu năng truy vấn database (chuyển đổi từ vòng lặp chèn tuần tự gây nghẽn timeout sang cơ chế Bulk Insert) để đo lường tốc độ xử lý dữ liệu ở môi trường production thực tế.
+- Phương pháp phân tích hệ thống & đánh giá phản hồi (System Analysis & Black-box Testing): Đóng vai người học thực tế thực hiện hội thoại bằng tiếng Nhật có chủ ý sai trợ từ, sai ngữ pháp, hoặc sai kính ngữ công sở để kiểm chứng độ nhạy, khả năng phát hiện lỗi và tính chính xác của phản hồi JSON trả về từ chatbot AI.
+
+
+5. Cấu trúc của đồ án tốt nghiệp
+
+Nội dung đồ án tốt nghiệp được tổ chức mạch lạc và logic, chia làm các phần chính như sau:
+
+* MỞ ĐẦU: Giới thiệu khái quát tính cấp thiết của đề tài, mục đích thực hiện, mục tiêu cụ thể, đối tượng, phạm vi nghiên cứu và phương pháp tiếp cận nghiên cứu.
+* CHƯƠNG 1: CƠ SỞ LÝ THUYẾT: Trình bày chi tiết lý thuyết nền tảng về phát triển ứng dụng Web SPA (React/Node.js), cơ chế quản lý cơ sở dữ liệu quan hệ PostgreSQL, lý thuyết hoạt động của mô hình ngôn ngữ lớn (LLM) và LPU của Groq, toán học thuật toán lặp lại ngắt quãng SM-2 và nguyên lý kiến trúc RAG phục vụ huấn luyện ngữ cảnh AI.
+* CHƯƠNG 2: PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG: Đặc tả yêu cầu người dùng thông qua sơ đồ Use Case, phân tích quy trình nghiệp vụ bằng sơ đồ hoạt động (Activity Diagrams), thiết kế kiến trúc hệ thống Hybrid Cloud AI, sơ đồ luồng dữ liệu (Data Flow) và thiết kế chi tiết lược đồ quan hệ cơ sở dữ liệu (Database Schema).
+* CHƯƠNG 3: TRIỂN KHAI VÀ KẾT QUẢ: Mô tả chi tiết quá trình lập trình xây dựng các phân hệ chức năng: Phân hệ quản trị bài học của Admin (Import và tối ưu Bulk Insert), Phân hệ thẻ ghi nhớ Flashcard (chạy thuật toán SM-2 cập nhật lịch ôn tập tự động), Phân hệ làm bài thi trắc nghiệm chấm điểm tự động và Phân hệ đàm thoại AI KaiwaHub kết nối tới server ngrok Python Flask. Đồng thời trình bày kết quả thử nghiệm thực tế cùng đánh giá hiệu năng hệ thống.
+* CHƯƠNG 4: KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN: Tổng hợp các kết quả đạt được của đồ án tốt nghiệp, những ưu điểm và hạn chế còn tồn tại, từ đó đề xuất hướng mở rộng và phát triển hệ thống trong tương lai.
+
+
+================================================================================
+
+
+CHƯƠNG 1: CƠ SỞ LÝ THUYẾT VÀ CÔNG NGHỆ ÁP DỤNG
+
+1. Thư viện giao diện ReactJS
+
+ReactJS là một thư viện mã nguồn mở viết bằng ngôn ngữ JavaScript, được phát triển bởi Facebook vào năm 2013, dùng để xây dựng các giao diện người dùng (User Interface - UI) động và tương tác cao. ReactJS hoạt động trên cơ chế Single Page Application (SPA), giúp tối ưu hóa trải nghiệm người dùng bằng cách thay đổi nội dung trang web mà không cần tải lại toàn bộ trang từ máy chủ.
+
+Nguyên lý hoạt động cốt lõi của ReactJS bao gồm:
+- Virtual DOM (DOM ảo): Thay vì cập nhật trực tiếp cây DOM của trình duyệt vốn rất tốn kém tài nguyên, ReactJS duy trì một bản sao DOM nhẹ trong bộ nhớ. Khi có sự thay đổi dữ liệu (state), ReactJS sẽ so sánh DOM ảo mới với DOM ảo cũ bằng thuật toán Diffing và chỉ cập nhật những phần thực sự thay đổi lên DOM thật, giúp cải thiện đáng kể tốc độ render giao diện.
+- Component-based Architecture: ReactJS khuyến khích chia nhỏ giao diện thành các khối thành phần độc lập (Components), có khả năng tái sử dụng cao. Mỗi Component tự quản lý logic và trạng thái (state) riêng, nhận dữ liệu đầu vào qua các thuộc tính (props).
+- JSX (JavaScript XML): Cú pháp mở rộng cho phép viết mã HTML trực tiếp trong tệp JavaScript, giúp nhà phát triển dễ dàng hình dung cấu trúc giao diện và tăng tốc lập trình.
+
+Trong đồ án này, ReactJS được chọn để xây dựng toàn bộ giao diện phía máy khách (Frontend). Nhờ cơ chế Component, hệ thống dễ dàng thiết kế các thẻ ghi nhớ Flashcards có khả năng lật hai mặt động, danh mục từ vựng VocabLab hiển thị tiến trình tức thời và giao diện KaiwaHub đàm thoại thời gian thực dưới dạng dòng hội thoại chat mượt mà, thân thiện.
+
+
+2. Ngôn ngữ lập trình TypeScript
+
+TypeScript là ngôn ngữ lập trình mã nguồn mở được phát triển bởi Microsoft vào năm 2012, hoạt động như một bản nâng cấp (superset) của JavaScript. TypeScript biên dịch trực tiếp sang JavaScript thuần để có thể chạy trên mọi trình duyệt hoặc môi trường Node.js.
+
+Các đặc tính kỹ thuật vượt trội của TypeScript bao gồm:
+- Static Typing (Khai báo kiểu tĩnh): Cho phép lập trình viên định nghĩa rõ ràng kiểu dữ liệu cho biến, tham số hàm và đối tượng. Điều này giúp phát hiện lỗi cú pháp và logic ngay trong quá trình viết mã (Compile-time error checking) thay vì đợi ứng dụng chạy mới gặp lỗi (Runtime).
+- Hỗ trợ lập trình hướng đối tượng nâng cao: Cung cấp đầy đủ các khái niệm như Interfaces, Classes, Enums, Generics giúp tổ chức mã nguồn một cách khoa học.
+- Tự động hoàn thành mã (Autocompletion): Hỗ trợ các công cụ viết code (IDE) gợi ý chính xác thuộc tính và phương thức của đối tượng, giảm thiểu thời gian gõ phím và sai lệch tên biến.
+
+TypeScript đóng vai trò cốt lõi trong dự án để định nghĩa cấu trúc dữ liệu truyền nhận giữa máy chủ và trình duyệt. Các Interface như User, Vocabulary, GrammarEntry, và ChatResponse được ràng buộc nghiêm ngặt, đảm bảo dữ liệu hiển thị không bị lỗi định dạng hoặc undefined, nâng cao chất lượng lập trình và tính dễ bảo trì của ứng dụng.
+
+
+3. Môi trường thực thi Node.js và Express Framework
+
+Node.js là một môi trường thực thi JavaScript phía máy chủ (Runtime Environment) mã nguồn mở, đa nền tảng, được phát triển dựa trên bộ biên dịch V8 Engine của Google Chrome. Node.js cho phép chạy mã JavaScript trực tiếp trên hệ điều hành thay vì chỉ chạy trong trình duyệt.
+
+Các nguyên lý kỹ thuật nổi bật của Node.js:
+- Single-threaded Event Loop: Node.js sử dụng kiến trúc đơn luồng kết hợp với vòng lặp sự kiện bất đồng bộ. Khi nhận yêu cầu đọc/ghi dữ liệu, Node.js sẽ giao nhiệm vụ đó cho hệ điều hành xử lý dưới nền và tiếp tục nhận yêu cầu mới mà không bị chặn (Non-blocking I/O). Nhờ đó, Node.js có hiệu năng xử lý cực cao đối với các ứng dụng thời gian thực có lượng truy cập đồng thời lớn.
+- Quản lý thư viện qua NPM (Node Package Manager): Cung cấp kho tàng mã nguồn mở khổng lồ, giúp tích hợp nhanh chóng các thư viện bảo mật và cơ sở dữ liệu.
+
+ExpressJS là một framework tối giản, linh hoạt chạy trên Node.js, cung cấp một tập hợp các tính năng mạnh mẽ để xây dựng các ứng dụng web và di động:
+- Hỗ trợ xây dựng các tuyến đường dẫn RESTful API (Routing) rõ ràng, khoa học.
+- Quản lý Middleware: Cho phép can thiệp vào chu kỳ yêu cầu - phản hồi (Request - Response) để thực hiện các nhiệm vụ như ghi log, kiểm tra quyền hạn đăng nhập hoặc nén dữ liệu.
+
+Môi trường Node.js kết hợp ExpressJS được ứng dụng để làm máy chủ xử lý dữ liệu chính (Core API Server) của đồ án. Máy chủ này tiếp nhận các yêu cầu xác thực người dùng qua JWT, cung cấp dữ liệu từ vựng/ngữ pháp và lưu trữ lịch sử kiểm tra trắc nghiệm vào cơ sở dữ liệu trung tâm.
+
+
+4. Hệ quản trị cơ sở dữ liệu PostgreSQL
+
+PostgreSQL là một hệ quản trị cơ sở dữ liệu quan hệ đối tượng (ORDBMS) mã nguồn mở mạnh mẽ, có lịch sử phát triển lâu đời và nổi tiếng với độ tin cậy cao, tính toàn vẹn dữ liệu mạnh và khả năng mở rộng tốt.
+
+Các đặc trưng công nghệ chính của PostgreSQL áp dụng trong đề tài:
+- Đảm bảo các đặc tính ACID (Atomicity, Consistency, Isolation, Durability) một cách tuyệt đối, giúp các giao dịch dữ liệu tài khoản và học tập của người dùng luôn chính xác và an toàn.
+- Hỗ trợ kiểu dữ liệu JSONB: Cho phép lưu trữ và lập chỉ mục dữ liệu bán cấu trúc dưới dạng nhị phân, rất thích hợp để lưu các mảng lỗi ngữ pháp linh hoạt được bóc tách từ chatbot AI hoặc danh sách phương án trắc nghiệm.
+- Cơ chế lập chỉ mục nâng cao (Indexes): Hỗ trợ các chỉ mục B-Tree, GIN để tăng tốc độ truy vấn tìm kiếm từ vựng, ngữ pháp theo chủ đề.
+
+Trong đề tài, PostgreSQL đóng vai trò lưu trữ toàn bộ cơ sở dữ liệu quan hệ. Đặc biệt, để giải quyết vấn đề nghẽn mạng gây quá tải thời gian chờ (timeout) trên máy chủ đám mây khi Admin cập nhật dữ liệu, hệ thống đã ứng dụng cơ chế Bulk Insert chèn hàng trăm dòng từ vựng/ngữ pháp và câu hỏi đề thi cùng lúc trong một truy vấn duy nhất, rút ngắn thời gian xử lý từ hàng chục giây xuống dưới 150 miligiây.
+
+
+5. Hạ tầng đám mây Groq LPU và Mô hình Llama-3.1-8b-instant
+
+Groq LPU (Language Processing Unit) là một kiến trúc bộ vi xử lý phần cứng chuyên dụng thế mới, được thiết kế đặc biệt cho các tác vụ suy luận trí tuệ nhân tạo (AI Inference) với tốc độ cực cao và độ trễ cực thấp. Khác với GPU truyền thống thường bị nghẽn ở băng thông bộ nhớ khi xử lý tuần tự, LPU của Groq tổ chức luồng thực thi dữ liệu theo thời gian thực một cách tối ưu, mang lại tốc độ sinh từ ngữ đàm thoại đạt hàng trăm token mỗi giây.
+
+Llama-3.1-8b-instant là mô hình ngôn ngữ lớn (LLM) mã nguồn mở được phát triển bởi Meta, sở hữu 8 tỷ tham số và được tinh chỉnh đặc biệt để tối ưu hóa hiệu năng phản hồi tức thời.
+Các đặc điểm chính của mô hình:
+- Khả năng xử lý ngữ cảnh dài lên tới 128k tokens.
+- Hiểu biết ngôn ngữ sâu sắc và có khả năng tương tác đa ngôn ngữ (tiếng Nhật, tiếng Việt) rất tự nhiên.
+- Được cấu hình hoạt động ở chế độ JSON Mode trên API Groq để đảm bảo đầu ra dữ liệu của chatbot luôn tuân thủ cấu trúc mong muốn.
+
+Đồ án ứng dụng cặp công nghệ Groq LPU và Llama-3.1-8b-instant làm nhân tố vận hành cốt lõi cho tính năng hội thoại Kaiwa. Người học sẽ gửi tin nhắn hội thoại tiếng Nhật từ trình duyệt, máy chủ AI Flask sẽ chuyển tiếp yêu cầu đến Groq LPU. AI thực hiện đóng vai giao tiếp, rà soát cấu trúc ngữ pháp và trả về phản hồi kèm lỗi sai ngữ pháp bằng tiếng Việt trong thời gian chưa đầy 0.5 giây.
+
+
+6. Thuật toán lặp lại ngắt quãng SuperMemo-2 (SM-2)
+
+Thuật toán lặp lại ngắt quãng (Spaced Repetition System - SRS) là phương pháp học tập dựa trên nghiên cứu về "Đường cong lãng quên" của nhà tâm lý học Hermann Ebbinghaus. Nghiên cứu chỉ ra rằng thông tin sẽ nhanh chóng bị quên đi nếu không được ôn tập, nhưng nếu ta ôn tập lại đúng vào thời điểm chuẩn bị quên, não bộ sẽ ghi nhớ thông tin đó lâu hơn cho các lần tiếp theo.
+
+Thuật toán SM-2 (được phát triển bởi Piotr Wozniak cho phần mềm SuperMemo) tính toán chu kỳ lặp lại tối ưu dựa trên các tham số:
+- Số lần lặp lại đúng liên tục (Repetitions - n).
+- Hệ số độ dễ (Ease Factor - EF): Thể hiện mức độ dễ nhớ của thẻ ghi nhớ, mặc định ban đầu là 2.5.
+- Khoảng giãn cách ôn tập tiếp theo (Interval - I): Tính bằng số ngày.
+
+Công thức cập nhật của thuật toán SM-2 dựa vào đánh giá chất lượng nhớ (Quality - q từ 0 đến 5):
+- Nếu q < 3 (Học viên chọn nút "Again" - không nhớ):
+  * Số lần lặp n = 0.
+  * Khoảng giãn cách I = 1 ngày.
+- Nếu q >= 3 (Học viên nhớ từ Hard, Good đến Easy):
+  * Tăng số lần lặp: n = n + 1.
+  * Nếu n == 1: I = 1 ngày.
+  * Nếu n == 2: I = 3 ngày.
+  * Nếu n > 2: I = làm_tròn( I_trước * EF ).
+- Cập nhật hệ số độ dễ: EF = EF + 0.1 - (5 - q) * (0.08 + (5 - q) * 0.02). Giá trị EF tối thiểu luôn được giới hạn ở mức 1.3 để tránh lặp lại quá dày đặc.
+
+Hệ thống ứng dụng thuật toán SM-2 vào tính năng thẻ ghi nhớ Flashcard. Mỗi từ vựng hoặc ngữ pháp mà người học thêm vào sẽ được lập lịch ôn tập riêng biệt, giúp học viên ôn tập đúng lúc, tiết kiệm thời gian học và nâng cao tỷ lệ thuộc từ vựng N2 bền vững.
+
+
+7. Kiến trúc RAG (Retrieval-Augmented Generation)
+
+Retrieval-Augmented Generation (RAG) là một kỹ thuật trong trí tuệ nhân tạo nhằm nâng cao độ chính xác và độ tin cậy của các mô hình ngôn ngữ lớn (LLM) bằng cách trích xuất dữ liệu từ các nguồn tài liệu bên ngoài tin cậy và đưa thông tin đó vào làm ngữ cảnh gợi ý cho mô hình trước khi tạo câu trả lời.
+
+Quy trình RAG đơn giản hóa được triển khai trong đồ án như sau:
+- Chuẩn bị dữ liệu: Toàn bộ danh mục ngữ pháp và câu ví dụ N2 chuẩn được biên soạn kỹ lưỡng và lưu trữ trong tệp dữ liệu phẳng JLPT_N2_Grammar_v2.csv trực tiếp trên máy chủ AI Flask.
+- Tìm kiếm ngữ cảnh: Khi học viên gửi tin nhắn Kaiwa trong chế độ học tập (Study Mode), máy chủ Python Flask sẽ đọc tệp CSV bằng thư viện Pandas và thực hiện thuật toán tìm kiếm đối sánh chuỗi (String Matching) để quét tên các mẫu ngữ pháp xuất hiện trong tin nhắn.
+- Tích hợp ngữ cảnh (Augmentation): Trích xuất tối đa 2 cấu trúc ngữ pháp khớp nhất kèm giải nghĩa tiếng Việt và ví dụ minh họa chuẩn. Thông tin này được cấu trúc lại và nhồi trực tiếp vào System Prompt của Llama 3.1.
+- Sinh phản hồi (Generation): Llama 3.1 nhận được cả tin nhắn người dùng và ngữ cảnh chuẩn trong sách giáo khoa, từ đó đưa ra câu trả lời giải thích vô cùng chính xác, đúng học thuật và hoàn toàn không bị sai lệch kiến thức N2.
+
+
+8. Mô hình kiến trúc mạng Client-Server
+
+Mô hình Client-Server (Khách - Chủ) là một mô hình mạng máy tính phân tán, trong đó các nhiệm vụ hoặc tài nguyên được phân chia giữa nhà cung cấp dịch vụ (Server) và người yêu cầu dịch vụ (Client). Client và Server giao tiếp với nhau qua môi trường mạng bằng cách sử dụng các giao thức chuẩn hóa (phổ biến nhất là HTTP hoặc HTTPS).
+
+Quy trình hoạt động cơ bản của mô hình bao gồm:
+- Gửi yêu cầu (Request): Client (thường là trình duyệt web hoặc ứng dụng di động) đóng vai trò giao diện tương tác với người dùng. Khi người dùng thực hiện một hành động (như đăng nhập, nhấn học từ mới), Client sẽ đóng gói thông tin và gửi yêu cầu dưới dạng gói tin HTTP Request tới địa chỉ IP hoặc tên miền của Server.
+- Xử lý và phản hồi (Response): Server là hệ thống máy chủ mạnh mẽ, luôn ở trạng thái lắng nghe yêu cầu. Khi nhận được yêu cầu từ Client, Server sẽ phân tích đường dẫn, thực hiện logic nghiệp vụ (business logic), truy vấn cơ sở dữ liệu để lấy thông tin cần thiết, sau đó đóng gói dữ liệu kết quả dưới dạng cấu trúc chuẩn (thường là JSON) và gửi ngược lại cho Client qua gói tin HTTP Response.
+- Hiển thị: Client nhận phản hồi, phân tách dữ liệu và cập nhật giao diện hiển thị cho người dùng.
+
+Trong đồ án này, kiến trúc Client-Server được áp dụng để chia tách độc lập hoàn toàn mã nguồn giao diện (Frontend chạy trên trình duyệt của người dùng) và mã nguồn xử lý nghiệp vụ (Backend chạy trên máy chủ đám mây). Sự phân tách này giúp cải thiện tính bảo mật, tránh việc lộ khóa bí mật hoặc thông tin database trực tiếp lên Client, đồng thời cho phép bảo trì và nâng cấp từng phân hệ độc lập mà không ảnh hưởng đến phần còn lại.
+
+
+9. Cơ sở dữ liệu đám mây Neon Serverless PostgreSQL
+
+Neon là một dịch vụ cơ sở dữ liệu quan hệ mã nguồn mở hoàn toàn, được xây dựng dựa trên công nghệ PostgreSQL truyền thống nhưng được thiết kế lại tối ưu hóa cho môi trường điện toán đám mây theo kiến trúc Serverless (không máy chủ).
+Các tính năng kỹ thuật nổi bật của Neon PostgreSQL bao gồm:
+- Phân tách lớp lưu trữ và tính toán (Separation of Storage and Compute): Khác với cơ sở dữ liệu truyền thống gộp chung ổ cứng và bộ vi xử lý trên một máy chủ, Neon tách lớp Compute (xử lý truy vấn SQL) và lớp Storage (lưu trữ dữ liệu thực tế) thành các nút độc lập. Nhờ vậy, nút Compute có thể tự động co giãn hiệu năng theo tải thực tế, thậm chí tự động tắt về trạng thái nghỉ khi không có truy cập (autoscaling to zero) và khởi động lại tức thì khi có yêu cầu mới (cold start cực nhanh), giúp tối ưu hóa chi phí hạ tầng tối đa.
+- Cơ chế lưu trữ phân tán dựa trên trang (Pageserver): Neon lưu dữ liệu dưới dạng các trang lịch sử viết đè liên tục, hỗ trợ tính năng sao lưu dữ liệu tự động theo thời gian thực và khôi phục dữ liệu ở bất kỳ thời điểm nào trong lịch sử (Point-in-Time Recovery).
+- Tính năng phân nhánh cơ sở dữ liệu (Branching): Tương tự như cơ chế phân nhánh của Git, Neon cho phép người phát triển tạo ra một bản sao hoàn chỉnh của toàn bộ database production (bao gồm cả schema và dữ liệu) chỉ trong vòng vài giây mà không tiêu tốn thêm dung lượng lưu trữ thực tế, phục vụ đắc lực cho việc thử nghiệm code và kiểm thử an toàn.
+
+Neon PostgreSQL được lựa chọn làm cơ sở dữ liệu trung tâm cho môi trường production của đồ án. Neon giúp hệ thống tự động mở rộng tài nguyên khi có nhiều học viên truy cập cùng lúc để làm đề thi hoặc luyện Kaiwa, đồng thời tích hợp sẵn các công cụ quản lý trực tuyến trực quan, hỗ trợ kết nối bảo mật SSL và tương thích hoàn toàn với thư viện kết nối PostgreSQL của Node.js.
+
+Vai trò Quản trị viên (Admin):
+- Có toàn quyền quản lý nội dung hệ thống.
+- Import hàng loạt dữ liệu từ vựng N2 từ file Excel/CSV thông qua cơ chế Bulk Insert tối ưu hóa hiệu năng.
+- Import hàng loạt dữ liệu ngữ pháp N2 từ file Excel/CSV thông qua cơ chế Bulk Insert tối ưu hóa hiệu năng.
+- Quản lý kho dữ liệu từ vựng (thực hiện các thao tác thêm, sửa, xóa thủ công).
+- Quản lý kho dữ liệu ngữ pháp (thực hiện các thao tác thêm, sửa, xóa thủ công).
+- Tạo lập đề và quản lý danh sách các bài kiểm tra trắc nghiệm.
+- Quản lý tài khoản người dùng và thông tin phân quyền hệ thống.
+- Tạo và quản lý các bộ thẻ ghi nhớ toàn cục (Global Decks) hiển thị công khai cho tất cả học viên ôn tập.
+
+Vai trò Học sinh (Student):
+- Là nhóm đối tượng người dùng tương tác chính của hệ thống.
+- Đăng ký tài khoản, đăng nhập và tự quản lý thông tin hồ sơ cá nhân.
+- Tra cứu và học tập kho dữ liệu từ vựng N2 theo từng danh mục chủ đề.
+- Tra cứu và học tập kho dữ liệu ngữ pháp N2 theo từng danh mục cấu trúc.
+- Ôn tập kiến thức thông qua các bộ thẻ ghi nhớ (Flashcards) cá nhân hoặc bộ thẻ toàn cục (Global Decks) tích hợp thuật toán lặp lại ngắt quãng SM-2.
+- Tham gia các bài thi trắc nghiệm (N2 Test) tự động chấm điểm để đánh giá năng lực tích lũy.
+- Luyện kỹ năng hội thoại giao tiếp tiếng Nhật thời gian thực với trợ lý ảo AI Kaiwa.
+- Theo dõi tiến trình tích lũy học tập cá nhân trực quan qua trang Dashboard cá nhân.
+
+
+Mô tả ngắn gọn các bảng cơ sở dữ liệu trong hệ thống:
+1. Bảng users: Lưu trữ thông tin tài khoản đăng nhập, mật khẩu mã hóa và vai trò phân quyền quản trị của người dùng.
+2. Bảng vocabulary: Lưu trữ ngân hàng dữ liệu từ vựng tiếng Nhật N2 gồm cách đọc, ngữ nghĩa và ví dụ minh họa đi kèm.
+3. Bảng grammar: Lưu trữ ngân hàng dữ liệu cấu trúc ngữ pháp N2 gồm ý nghĩa, cách dùng và câu ví dụ chuẩn.
+4. Bảng flashcard_decks: Lưu trữ thông tin danh sách các nhóm bộ thẻ ghi nhớ toàn cục của hệ thống hoặc bộ thẻ cá nhân của học viên.
+5. Bảng flashcards: Lưu trữ chi tiết trạng thái học tập của từng thẻ ghi nhớ cá nhân phục vụ thuật toán ôn tập SM-2.
+6. Bảng tests: Lưu trữ danh sách thông tin cơ bản của các đề kiểm tra trắc nghiệm từ vựng và ngữ pháp.
+7. Bảng test_questions: Lưu trữ chi tiết ngân hàng câu hỏi trắc nghiệm bốn đáp án lựa chọn tương ứng với từng đề thi.
+8. Bảng test_results: Ghi lại lịch sử kết quả làm bài trắc nghiệm của học viên gồm điểm số và chi tiết câu trả lời.
+9. Bảng user_vocabulary_learned: Theo dõi và cập nhật trạng thái học tập tích lũy từ vựng N2 của từng người dùng.
+10. Bảng user_grammar_learned: Theo dõi và cập nhật trạng thái học tập tích lũy cấu trúc ngữ pháp N2 của từng người dùng.
+11. Bảng conversation_history: Lưu trữ lịch sử tin nhắn đàm thoại Kaiwa thời gian thực giữa người dùng và trợ lý ảo AI.
+12. Bảng scenarios: Lưu trữ kịch bản đàm thoại tiếng Nhật mẫu để tham khảo và phục vụ phát triển mở rộng trong tương lai.
+
+
+10. Sơ đồ ca sử dụng tổng quan (Overview Use Case Diagram)
+
+Sơ đồ ca sử dụng tổng quan (Overview Use Case Diagram) trong ngôn ngữ mô hình hóa thống nhất UML là một biểu đồ thể hiện góc nhìn vĩ mô và toàn diện về các mối quan hệ tương tác giữa các tác nhân bên ngoài (Actors) và các chức năng lớn của hệ thống (Use Cases) trong một ranh giới xác định. Sơ đồ này cung cấp một bản đồ chức năng ở mức cao nhất, giúp các bên liên quan dễ dàng nắm bắt phạm vi nghiệp vụ cốt lõi mà không cần đi sâu vào chi tiết lập trình.
+
+Các thành phần cơ bản của sơ đồ bao gồm:
+- Tác nhân (Actor): Đại diện cho các vai trò của con người hoặc hệ thống bên ngoài tương tác trực tiếp với phần mềm. Trong đồ án này, các tác nhân chính bao gồm Học sinh (Student - người dùng chính sử dụng ứng dụng để học tập) và Quản trị viên (Admin - người vận hành hệ thống).
+- Ca sử dụng (Use Case): Đại diện cho các nhóm chức năng lớn hoặc các gói nghiệp vụ chính mà hệ thống cung cấp (ví dụ: ca sử dụng Đăng nhập, Học từ vựng, Ôn tập Flashcards, Làm bài thi trắc nghiệm, Luyện hội thoại AI).
+- Ranh giới hệ thống (System Boundary): Hộp giới hạn phân tách rõ ràng những gì thuộc phạm vi bên trong phần mềm xử lý và những thực thể nằm bên ngoài phần mềm.
+- Đường liên kết (Association): Các đường nối vẽ giữa các tác nhân và các ca sử dụng để chỉ ra tác nhân đó có quyền thực hiện hay tương tác với chức năng đó hay không.
+
+Ý nghĩa của sơ đồ tổng quan là thiết lập một tiếng nói chung giữa người phát triển phần mềm và người sử dụng, đảm bảo việc xác định đúng và đủ các nhóm chức năng lớn ngay từ giai đoạn đầu thiết kế hệ thống.
+
+
+11. Sơ đồ ca sử dụng phân rã (Decomposed Use Case Diagram)
+
+Sơ đồ ca sử dụng phân rã (Decomposed/Detailed Use Case Diagram) là kỹ thuật chi tiết hóa một ca sử dụng hoặc một nhóm chức năng phức tạp từ sơ đồ ca sử dụng tổng quan. Việc phân rã giúp bóc tách một chức năng lớn thành các ca sử dụng nhỏ hơn, biểu diễn các luồng đi kèm, điều kiện ngoại lệ và các bước phụ trợ cần thiết để hoàn thành nghiệp vụ đó.
+
+Các mối quan hệ đặc thù được biểu diễn trong sơ đồ phân rã bao gồm:
+- Quan hệ bao hàm (Include - ký hiệu <<include>>): Chỉ ra rằng ca sử dụng nguồn bắt buộc phải chứa hoặc gọi ca sử dụng đích để hoàn thành công việc. Ví dụ: Để thực hiện ca sử dụng "Làm bài thi trắc nghiệm" hoặc "Import từ vựng", hệ thống bắt buộc phải thực hiện ca sử dụng "Xác thực đăng nhập" của người dùng.
+- Quan hệ mở rộng (Extend - ký hiệu <<extend>>): Chỉ ra rằng hành vi của ca sử dụng mở rộng có thể được chèn vào ca sử dụng cơ sở dưới một số điều kiện cụ thể. Ví dụ: Ca sử dụng "Gợi ý sửa lỗi ngữ pháp" sẽ mở rộng từ ca sử dụng "Hội thoại Kaiwa", và nó chỉ thực sự được kích hoạt khi tin nhắn của học viên có chứa lỗi sai cấu trúc.
+- Quan hệ khái quát hóa (Generalization): Thể hiện mối quan hệ thừa kế giữa các ca sử dụng hoặc giữa các tác nhân (ví dụ: Ca sử dụng "Chọn chế độ đàm thoại" có thể khái quát hóa thành các ca sử dụng con như "Học tập ngữ pháp", "Kaiwa đời thường N3-N4" hoặc "Giao tiếp N2 công sở").
+
+Việc xây dựng sơ đồ ca sử dụng phân rã giúp đội ngũ thiết kế và lập trình nắm bắt được các logic ràng buộc phức tạp, hỗ trợ việc lập tài liệu đặc tả ca sử dụng (Use Case Specification), thiết kế lược đồ cơ sở dữ liệu chi tiết và lập trình kiểm thử (Unit Test) cho các nhánh chức năng nhỏ một cách chính xác nhất.
+
+
+12. Hướng dẫn chi tiết vẽ sơ đồ áp dụng vào dự án (bao gồm mô tả và mã Mermaid)
+
+A. Sơ đồ ca sử dụng tổng quan (Overview Use Case Diagram)
+
+Sơ đồ ca sử dụng tổng quan của dự án "Hệ thống học tiếng Nhật N2 & AI Chatbot" bao gồm 2 tác nhân ngoài và 13 ca sử dụng cốt lõi được đặt trong ranh giới hệ thống:
+
+1. Các tác nhân ngoài (vẽ ở hai bên rìa sơ đồ):
+- Học sinh (Student): Nằm ở bên trái, là đối tượng người dùng chính tham gia học tập, ôn tập và luyện giao tiếp.
+- Quản trị viên (Admin): Nằm ở bên phải, chịu trách nhiệm quản lý nội dung dữ liệu và vận hành hệ thống.
+
+2. Các ca sử dụng chính (vẽ hình oval nằm trong hộp ranh giới hệ thống):
+- Đăng ký / Đăng nhập.
+- Xem Dashboard tiến trình.
+- Quản lý Hồ sơ cá nhân.
+- Học từ vựng N2.
+- Học ngữ pháp N2.
+- Ôn tập Flashcards (SM-2).
+- Làm bài thi trắc nghiệm.
+- Luyện đàm thoại AI Kaiwa.
+- Import dữ liệu hàng loạt (Admin).
+- CRUD từ vựng và ngữ pháp (Admin).
+- Quản lý đề thi & câu hỏi (Admin).
+- Quản lý Flashcards hệ thống (Admin).
+- Quản lý tài khoản học sinh (Admin).
+
+3. Các đường liên kết (Association):
+- Tác nhân Học sinh kết nối tới các ca sử dụng: Đăng ký / Đăng nhập, Xem Dashboard tiến trình, Quản lý Hồ sơ cá nhân, Học từ vựng N2, Học ngữ pháp N2, Ôn tập Flashcards, Làm bài thi trắc nghiệm, Luyện đàm thoại AI Kaiwa.
+- Tác nhân Quản trị viên kết nối tới các ca sử dụng: Đăng ký / Đăng nhập, Import dữ liệu hàng loạt, CRUD từ vựng và ngữ pháp, Quản lý đề thi & câu hỏi, Quản lý Flashcards hệ thống, Quản lý tài khoản học sinh.
+
+Mã Mermaid vẽ sơ đồ tổng quan (sao chép toàn bộ đoạn text dưới đây dán vào công cụ vẽ trực tuyến Mermaid Live Editor hoặc Draw.io để sinh hình vẽ tự động):
+
+graph TB
+    subgraph HeThong["Hệ thống học tiếng Nhật N2 & AI Chatbot"]
+        UC_Auth(Đăng ký / Đăng nhập)
+        UC_Dash(Xem Dashboard tiến trình)
+        UC_Profile(Quản lý Hồ sơ cá nhân)
+        UC_Vocab(Học từ vựng N2)
+        UC_Grammar(Học ngữ pháp N2)
+        UC_Flash(Ôn tập Flashcards SM-2)
+        UC_Test(Làm bài thi trắc nghiệm)
+        UC_Kaiwa(Luyện đàm thoại AI Kaiwa)
+        UC_Import(Import dữ liệu hàng loạt)
+        UC_Crud(CRUD từ vựng và ngữ pháp)
+        UC_MngTest(Quản lý đề thi & câu hỏi)
+        UC_MngFlash(Quản lý Flashcards hệ thống)
+        UC_MngUser(Quản lý tài khoản học sinh)
+    end
+
+    Student([Học sinh])
+    Admin([Quản trị viên])
+
+    Student --> UC_Auth
+    Student --> UC_Dash
+    Student --> UC_Profile
+    Student --> UC_Vocab
+    Student --> UC_Grammar
+    Student --> UC_Flash
+    Student --> UC_Test
+    Student --> UC_Kaiwa
+
+    Admin --> UC_Auth
+    Admin --> UC_Import
+    Admin --> UC_Crud
+    Admin --> UC_MngTest
+    Admin --> UC_MngFlash
+    Admin --> UC_MngUser
+
+
+B. Sơ đồ ca sử dụng phân rã phía Học sinh (Student Decomposed Use Case Diagram)
+
+Sơ đồ phân rã bóc tách chi tiết các mối quan hệ phụ thuộc (include và extend) đối với luồng chức năng của Học sinh:
+
+1. Xác thực đăng nhập: Là ca sử dụng được bao hàm (include) bắt buộc bởi hầu hết các chức năng nghiệp vụ của Học sinh để lưu tiến trình.
+2. Thêm vào Flashcard cá nhân: Là ca sử dụng mở rộng (extend) tự chọn từ "Học từ vựng N2" và "Học ngữ pháp N2". Khi đang xem từ vựng/ngữ pháp mới, học sinh có thể nhấn nút để thêm chúng vào bộ thẻ cá nhân để ôn tập sau này.
+3. Đánh giá chất lượng nhớ (SM-2): Được bao hàm (include) bởi ca sử dụng "Ôn tập Flashcards". Mỗi lần lật thẻ ôn tập, học sinh đánh giá độ thuộc (0-5) để hệ thống chạy thuật toán cập nhật ngày hẹn ôn tiếp theo.
+4. Lựa chọn đáp án và Nộp bài & Chấm điểm: Được bao hàm (include) bởi ca sử dụng "Làm bài thi trắc nghiệm".
+5. Chọn chế độ đàm thoại: Được bao hàm (include) bởi ca sử dụng "Luyện đàm thoại AI Kaiwa" (gồm chế độ Học tập, chế độ Đời thường, và chế độ N2 Công sở).
+6. Truy xuất tri thức bổ trợ RAG: Là ca sử dụng mở rộng (extend) tự chọn từ "Luyện đàm thoại AI Kaiwa", tự động chạy khi ở chế độ Học tập để AI giải thích từ vựng/ngữ pháp chuẩn sách giáo khoa.
+7. Đề xuất sửa lỗi ngữ pháp & giải thích: Là ca sử dụng mở rộng (extend) tự chọn từ "Luyện đàm thoại AI Kaiwa", tự động hiển thị khi học sinh nhắn tin tiếng Nhật bị sai cấu trúc ở chế độ N2 Công sở.
+
+Mã Mermaid vẽ sơ đồ phân rã Học sinh:
+
+graph TB
+    Student([Học sinh])
+    
+    subgraph HeThong_HocSinh["Phân hệ Học sinh"]
+        UC_Login(Đăng nhập tài khoản)
+        UC_Vocab(Học từ vựng N2)
+        UC_Gram(Học ngữ pháp N2)
+        UC_AddFlash(Thêm vào Flashcard cá nhân)
+        UC_Review(Ôn tập Flashcards)
+        UC_SM2(Đánh giá chất lượng nhớ SM-2)
+        UC_DoTest(Làm bài thi trắc nghiệm)
+        UC_Select(Lựa chọn đáp án)
+        UC_Submit(Nộp bài & Chấm điểm)
+        UC_Kaiwa(Luyện đàm thoại AI Kaiwa)
+        UC_Mode(Chọn chế độ đàm thoại)
+        UC_RAG(Truy xuất tri thức bổ trợ RAG)
+        UC_Fix(Đề xuất sửa lỗi ngữ pháp & giải thích)
+    end
+
+    Student --> UC_Vocab
+    Student --> UC_Gram
+    Student --> UC_Review
+    Student --> UC_DoTest
+    Student --> UC_Kaiwa
+
+    UC_Vocab -.->|include| UC_Login
+    UC_Gram -.->|include| UC_Login
+    UC_Review -.->|include| UC_Login
+    UC_DoTest -.->|include| UC_Login
+    UC_Kaiwa -.->|include| UC_Login
+
+    UC_AddFlash -.->|extend| UC_Vocab
+    UC_AddFlash -.->|extend| UC_Gram
+    
+    UC_Review -.->|include| UC_SM2
+    
+    UC_DoTest -.->|include| UC_Select
+    UC_DoTest -.->|include| UC_Submit
+    
+    UC_Kaiwa -.->|include| UC_Mode
+    UC_RAG -.->|extend| UC_Kaiwa
+    UC_Fix -.->|extend| UC_Kaiwa
+
+
+C. Sơ đồ ca sử dụng phân rã phía Quản trị viên (Admin Decomposed Use Case Diagram)
+
+Sơ đồ phân rã bóc tách chi tiết các mối quan hệ phụ thuộc đối với luồng chức năng của Quản trị viên:
+
+1. Đăng nhập tài khoản Admin: Là ca sử dụng bao hàm (include) bắt buộc trước khi thực hiện bất kỳ hành động quản trị nào.
+2. Xóa dữ liệu cũ cùng danh mục: Được bao hàm (include) bởi ca sử dụng "Import dữ liệu hàng loạt". Hệ thống sẽ tự động dọn dẹp các từ vựng/ngữ pháp cũ thuộc cùng chủ đề chuẩn bị nạp để tránh trùng lặp.
+3. Tự động tạo đề thi mới: Được bao hàm (include) bởi ca sử dụng "Import dữ liệu hàng loạt". Sau khi nạp từ vựng/ngữ pháp từ Excel/CSV thành công, hệ thống tự động tạo bộ đề thi trắc nghiệm tương ứng.
+4. Thêm đề thi mới, Sửa câu hỏi, Xóa đề thi: Được bao hàm (include) bởi ca sử dụng "Quản lý đề thi & câu hỏi".
+5. Tạo bộ thẻ toàn cục (Global Decks), Thêm từ vựng mẫu: Được bao hàm (include) bởi ca sử dụng "Quản lý Flashcards hệ thống".
+
+Mã Mermaid vẽ sơ đồ phân rã Quản trị viên:
+
+graph TB
+    Admin([Quản trị viên])
+
+    subgraph HeThong_Admin["Phân hệ Quản trị viên"]
+        UC_LoginAdmin(Đăng nhập Admin)
+        UC_Import(Import dữ liệu hàng loạt)
+        UC_DeleteOld(Xóa dữ liệu cũ cùng danh mục)
+        UC_GenTest(Tự động tạo đề thi mới)
+        
+        UC_MngTest(Quản lý đề thi & câu hỏi)
+        UC_AddTest(Thêm đề thi mới)
+        UC_EditQuest(Sửa câu hỏi)
+        UC_DelTest(Xóa đề thi)
+        
+        UC_MngGlobal(Quản lý Flashcards hệ thống)
+        UC_CreateGlobal(Tạo bộ thẻ toàn cục Global Decks)
+        UC_AddWord(Thêm từ vựng mẫu)
+    end
+
+    Admin --> UC_Import
+    Admin --> UC_MngTest
+    Admin --> UC_MngGlobal
+
+    UC_Import -.->|include| UC_LoginAdmin
+    UC_MngTest -.->|include| UC_LoginAdmin
+    UC_MngGlobal -.->|include| UC_LoginAdmin
+
+    UC_Import -.->|include| UC_DeleteOld
+    UC_Import -.->|include| UC_GenTest
+
+    UC_MngTest -.->|include| UC_AddTest
+    UC_MngTest -.->|include| UC_EditQuest
+    UC_MngTest -.->|include| UC_DelTest
+
+    UC_MngGlobal -.->|include| UC_CreateGlobal
+    UC_MngGlobal -.->|include| UC_AddWord
+
+
+D. Sơ đồ hoạt động (Activity Diagrams) cho các quy trình nghiệp vụ cốt lõi
+
+1. Quy trình Ôn tập Flashcard và cập nhật lịch ôn tập theo thuật toán SM-2:
+Học sinh truy cập bộ thẻ, hệ thống tìm các thẻ đến hạn ôn tập (next_review_date <= thời gian hiện tại) và hiển thị Kanji/Từ vựng mặt trước. Học sinh tự nhớ nghĩa và bấm "Lật thẻ" để xem mặt sau. Học sinh bấm tự đánh giá chất lượng (0-5). Hệ thống nhận giá trị quality, kiểm tra nếu quality < 3 thì đặt lại repetitions = 0, interval = 1. Nếu quality >= 3 thì tăng repetitions thêm 1, tính interval dựa vào số lần lặp liên tục (lần 1 = 1 ngày, lần 2 = 3 ngày, lần 3 trở đi = interval cũ * ease_factor). Cập nhật ease_factor mới (giới hạn tối thiểu 1.3), tính ngày hẹn mới next_review_date và lưu vào PostgreSQL.
+
+Mã Mermaid vẽ sơ đồ hoạt động Flashcard SM-2:
+
+stateDiagram-v2
+    [*] --> BatDau
+    BatDau --> LayDanhSachThe: Học sinh chọn bộ thẻ ôn tập
+    LayDanhSachThe --> KiemTraThe: Lấy thẻ đến hạn ôn tập
+    
+    state KiemTraThe <<choice>>
+    KiemTraThe --> HetThe: Không còn thẻ cần ôn tập
+    KiemTraThe --> ConThe: Còn thẻ cần ôn tập
+
+    HetThe --> [*]: Hiển thị thông báo hoàn thành
+    
+    ConThe --> HienThiMatTruoc: Hiển thị từ vựng/ngữ pháp mặt trước
+    HienThiMatTruoc --> LatThe: Học sinh bấm lật thẻ
+    LatThe --> HienThiMatSau: Hiển thị đáp án, ví dụ mặt sau
+    HienThiMatSau --> ChonChatLuong: Học sinh tự đánh giá chất lượng nhớ (0-5)
+    ChonChatLuong --> KiemTraChatLuong: Hệ thống nhận giá trị quality
+    
+    state KiemTraChatLuong <<choice>>
+    KiemTraChatLuong --> QualityThap: quality < 3 (Không nhớ/Again)
+    KiemTraChatLuong --> QualityTot: quality >= 3 (Nhớ/Hard, Good, Easy)
+    
+    QualityThap --> DatLaiSM2: Đặt repetitions = 0, interval = 1 ngày
+    QualityTot --> TangRepetitions: repetitions = repetitions + 1
+    
+    TangRepetitions --> TinhInterval
+    state TinhInterval <<choice>>
+    TinhInterval --> LanDau: repetitions == 1
+    TinhInterval --> LanHai: repetitions == 2
+    TinhInterval --> LanBaTroDi: repetitions > 2
+    
+    LanDau --> DatInterval_1: interval = 1 ngày
+    LanHai --> DatInterval_3: interval = 3 ngày
+    LanBaTroDi --> DatInterval_Nhan: interval = tròn(interval cũ * ease_factor)
+    
+    DatLaiSM2 --> CapNhatEF
+    DatInterval_1 --> CapNhatEF
+    DatInterval_3 --> CapNhatEF
+    DatInterval_Nhan --> CapNhatEF
+    
+    CapNhatEF --> LuuDatabase: Tính EF mới (EF >= 1.3), tính next_review_date
+    LuuDatabase --> LayDanhSachThe: Chuyển sang thẻ tiếp theo
+
+2. Quy trình Luyện đàm thoại AI Kaiwa (KaiwaHub) tích hợp RAG và Groq LPU:
+Học sinh chọn chế độ (Study, Daily, Business N2) và gửi tin nhắn tiếng Nhật. Tin nhắn truyền qua Backend tới Flask AI Server. Flask kiểm tra chế độ: nếu là Study Mode, chạy đối sánh chuỗi RAG bằng Pandas tìm ngữ pháp N2 trong CSV rồi nhồi vào Prompt; nếu là Daily Mode, thiết lập Prompt đóng vai bạn bè N3-N4; nếu là Business Mode, thiết lập Prompt đối tác rà soát lỗi chính tả, ngữ pháp, kính ngữ Keigo. Flask gọi Groq LPU xử lý Llama-3.1-8b-instant để nhận phản hồi, lọc JSON sạch bằng Regex, gửi về Node.js để lưu vào bảng conversation_history của PostgreSQL và trả về hiển thị dòng chat cùng các hộp báo lỗi trên giao diện học viên.
+
+Mã Mermaid vẽ sơ đồ hoạt động AI Kaiwa:
+
+stateDiagram-v2
+    [*] --> BatDau
+    BatDau --> ChonCheDo: Học sinh vào KaiwaHub & chọn chế độ
+    ChonCheDo --> NhapTinNhan: Học sinh gửi tin nhắn tiếng Nhật
+    NhapTinNhan --> GuiBackend: Gửi Express API tới Python Flask Server
+    GuiBackend --> KiemTraCheDo: Flask Server phân tích chế độ
+    
+    state KiemTraCheDo <<choice>>
+    KiemTraCheDo --> Study: Chế độ Học tập (Study Mode)
+    KiemTraCheDo --> Daily: Chế độ Đời thường (Daily Mode)
+    KiemTraCheDo --> Business: Chế độ N2 Công sở (Business Mode)
+    
+    Study --> ChayRAG: Chạy String Matching tìm ngữ pháp trong file CSV
+    ChayRAG --> TronSystemPromptStudy: Nhồi dữ liệu sách giáo khoa vào System Prompt
+    
+    Daily --> ThietLapPromptDaily: Đóng vai bạn bè N3-N4, bỏ qua bắt lỗi
+    
+    Business --> ThietLapPromptBusiness: Đóng vai đối tác, rà soát kính ngữ Keigo, yêu cầu trả JSON lỗi
+    
+    TronSystemPromptStudy --> GoiGroqAPI
+    ThietLapPromptDaily --> GoiGroqAPI
+    ThietLapPromptBusiness --> GoiGroqAPI
+    
+    GoiGroqAPI --> NhanPhanHoi: Gọi Groq LPU chạy Llama-3.1-8b-instant
+    NhanPhanHoi --> RegexParser: Lọc định dạng JSON sạch bằng Regex
+    RegexParser --> LuuLichSu: Gửi về Node.js lưu vào bảng conversation_history
+    LuuLichSu --> HienThiGiaoDien: Hiển thị dòng chat và hộp sửa lỗi (nếu có)
+    HienThiGiaoDien --> [*]
+
+3. Quy trình làm bài thi trắc nghiệm (Test Engine):
+Học sinh chọn đề thi, hệ thống lấy câu hỏi trắc nghiệm từ bảng test_questions và đếm ngược thời gian. Học sinh lựa chọn đáp án và bấm nộp bài. Backend nhận mảng đáp án, đối chiếu correct_answer trong PostgreSQL để tính điểm trên thang 10, tổng hợp danh sách câu sai và lời giải thích. Kết quả được lưu vào bảng test_results rồi gửi về Frontend hiển thị cho học sinh.
+
+Mã Mermaid vẽ sơ đồ hoạt động Làm bài thi:
+
+stateDiagram-v2
+    [*] --> ChonDeThi: Học sinh chọn đề thi
+    ChonDeThi --> LayCauHoi: Backend truy vấn bảng test_questions
+    LayCauHoi --> HienThiDeThi: Hiển thị danh sách câu hỏi 4 lựa chọn
+    HienThiDeThi --> BatDauLamBai: Bắt đầu đếm ngược thời gian
+    BatDauLamBai --> LuaChonDapAn: Học sinh tích chọn đáp án
+    LuaChonDapAn --> NopBai: Bấm nút nộp bài thi
+    NopBai --> ChamDiem: Backend đối chiếu correct_answer
+    ChamDiem --> TinhDiem: Điểm = (câu đúng / tổng câu) * 10
+    TinhDiem --> LuuKetQua: Lưu vào bảng test_results
+    LuuKetQua --> HienThiKetQua: Trả về điểm số, câu sai và giải thích chi tiết
+    HienThiKetQua --> [*]
+
+
+E. Sơ đồ kiến trúc hệ thống (System Architecture Diagram)
+
+Sơ đồ kiến trúc hệ thống mô tả mô hình Hybrid Cloud AI với sự phân tách rõ ràng giữa 5 lớp thành phần chính:
+
+1. Lớp Client (Frontend): Ứng dụng SPA chạy trên trình duyệt web của người học (ReactJS, TypeScript, Tailwind CSS).
+2. Lớp Core Backend (Node.js & Express): Đóng vai trò máy chủ xử lý các logic nghiệp vụ thông thường, quản lý dữ liệu và xác thực.
+3. Lớp Database (Neon Serverless PostgreSQL): Lưu trữ dữ liệu quan hệ một cách tin cậy trên đám mây.
+4. Lớp AI Service Server (Google Colab, Flask, ngrok): Nhận tin nhắn Kaiwa, thực hiện RAG đối sánh chuỗi ngữ pháp chuẩn từ file CSV trên RAM bằng thư viện Pandas.
+5. Lớp Groq Cloud API (Groq LPU): Nền tảng phần cứng chuyên dụng chạy mô hình ngôn ngữ lớn Llama-3.1-8b-instant với hiệu năng siêu tốc dưới 0.5 giây.
+
+Mã Mermaid vẽ sơ đồ kiến trúc hệ thống:
+
+graph TD
+    subgraph ClientSide["LỚP CLIENT (FRONTEND)"]
+        ReactApp["ReactJS SPA (TypeScript & Tailwind CSS)"]
+    end
+
+    subgraph CoreBackend["LỚP CORE BACKEND (Node.js & Express)"]
+        NodeServer["Backend REST APIs Server"]
+        ConnPool["Database Connection Pool (pg)"]
+        NodeServer --> ConnPool
+    end
+
+    subgraph DatabaseLayer["LỚP DỮ LIỆU (Database Cloud)"]
+        NeonDB[("Neon Serverless PostgreSQL Database")]
+    end
+
+    subgraph AIService["LỚP DỊCH VỤ AI (Hybrid Cloud Server)"]
+        NgrokTunnel["Ngrok Tunnel (Secure HTTPS Link)"]
+        FlaskServer["Python Flask API Server (Google Colab)"]
+        RAGPandas["RAG Engine (Pandas CSV Scanner)"]
+        CSVData["JLPT_N2_Grammar_v2.csv (Knowledge Base)"]
+        
+        NgrokTunnel --> FlaskServer
+        FlaskServer --> RAGPandas
+        RAGPandas --> CSVData
+    end
+
+    subgraph ExternalCloud["LỚP TÍNH TOÁN ĐÁM MÂY NGOÀI (Groq Cloud)"]
+        GroqLPU["Groq LPU Cloud Platform"]
+        LlamaModel["Llama-3.1-8b-instant LLM Model"]
+        GroqLPU --> LlamaModel
+    end
+
+    ReactApp -->|HTTP REST APIs: /api/users, /api/tests| NodeServer
+    ReactApp -->|HTTP POST: /chat| NgrokTunnel
+    ConnPool -->|SQL Queries: Read/Write/Bulk Insert| NeonDB
+    FlaskServer -->|API Requests: JSON Mode| GroqLPU
+
+
+
+
+13. Cấu hình cơ chế pipeline AI và RAG (Retrieval-Augmented Generation)
+
+Cấu hình cơ chế pipeline AI và RAG trong đồ án được thiết kế nhằm tối ưu hóa tính chính xác về mặt học thuật của trợ lý ảo Kaiwa, đồng thời đảm bảo tốc độ phản hồi thời gian thực dưới 0.5 giây. Quy trình cấu hình và luồng xử lý chi tiết được thực hiện như sau:
+
+A. Thiết lập kiến trúc kết nối Pipeline AI
+
+Hệ thống AI được xây dựng theo mô hình Hybrid Cloud AI, tách biệt hoàn toàn máy chủ xử lý dữ liệu nghiệp vụ và máy chủ tính toán trí tuệ nhân tạo:
+- Máy chủ AI (AI Server): Triển khai trên môi trường Python Flask tận dụng tài nguyên tính toán (CPU/GPU) của Google Colab.
+- Đường truyền ngrok (Secure Tunnel): Do máy chủ Google Colab không mở cổng kết nối công khai, hệ thống sử dụng ngrok để thiết lập một đường truyền HTTPS an toàn, chuyển tiếp tất cả các yêu cầu từ internet vào Flask API cục bộ (cổng 5000). Địa chỉ ngrok được cấu hình động trong biến môi trường AI_API_URL ở Backend Node.js.
+- Nền tảng Groq LPU (Language Processing Unit): Máy chủ Flask không trực tiếp chạy suy luận mô hình lớn (do giới hạn RAM/GPU của Colab), mà đóng vai trò tiền xử lý ngữ cảnh, sau đó gọi API của Groq LPU để thực thi mô hình Llama-3.1-8b-instant. Groq LPU giúp tốc độ sinh văn bản đạt trên 100 tokens/giây, loại bỏ hoàn toàn độ trễ nghẽn.
+
+B. Cấu hình cơ chế RAG (Retrieval-Augmented Generation) dựa trên CSV Pandas
+
+Để chatbot AI giải thích kiến thức ngữ pháp N2 một cách chuẩn xác theo sách giáo khoa và không bị hiện tượng ảo giác (hallucination), hệ thống tích hợp cơ chế RAG tối giản hiệu năng cao:
+1. Cơ sở tri thức (Knowledge Base): Toàn bộ 150 mẫu ngữ pháp N2 chuẩn được biên soạn tỉ mỉ thành tệp phẳng JLPT_N2_Grammar_v2.csv. Mỗi dòng chứa các trường thông tin: pattern (tên cấu trúc), meaning (nghĩa tiếng Việt), explanation (cách nối từ và ý nghĩa ngữ cảnh), example_sentence (câu ví dụ tiếng Nhật) và example_translation (dịch nghĩa ví dụ).
+2. Nạp dữ liệu vào bộ nhớ (In-memory Caching): Khi máy chủ Python Flask khởi động, thư viện Pandas thực hiện nạp toàn bộ tệp CSV này vào RAM dưới dạng một DataFrame. Việc nạp sẵn vào RAM giúp loại bỏ độ trễ đọc/ghi ổ cứng vật lý khi có yêu cầu chat.
+3. Thuật toán đối sánh chuỗi (String Matching Scanner): Khi người dùng gửi tin nhắn trong chế độ Học tập (Study Mode), Flask Server sẽ trích xuất nội dung tin nhắn và chạy bộ quét đối sánh chuỗi. Bộ quét này kiểm tra sự tồn tại của các cấu trúc ngữ pháp (pattern) trong câu thoại của học sinh.
+4. Trích xuất ngữ cảnh bổ trợ (Context Extraction): Chọn lọc tối đa 2 cấu trúc ngữ pháp tương thích nhất được tìm thấy. Toàn bộ thông tin định nghĩa, giải nghĩa và câu ví dụ của mẫu ngữ pháp đó được định dạng thành một khối văn bản ngữ cảnh chuẩn.
+5. Tích hợp ngữ cảnh (Context Injection): Khối văn bản này được nhồi trực tiếp vào System Prompt của Llama 3.1 dưới dạng: "[DỮ LIỆU SÁCH GIÁO KHOA CHUẨN]: ...". Điều này bắt buộc AI phải dựa trên dữ liệu chuẩn này để đưa ra câu trả lời giải thích học thuật cho học viên.
+
+C. Cấu hình tham số API Groq và Trình biên dịch đầu ra (Regex Parser)
+
+Để kiểm soát định dạng phản hồi của AI luôn đồng nhất và tương thích với giao diện ReactJS, hệ thống áp dụng cấu hình kỹ thuật:
+- Cấu hình JSON Mode: Khi gọi API Groq, tham số response_format={"type": "json_object"} được thiết lập. Đồng thời, nhiệt độ sáng tạo (temperature) được hạ thấp xuống mức 0.3 để AI tuân thủ nghiêm ngặt cấu trúc JSON yêu cầu.
+- System Prompt điều hướng: Bắt buộc AI trả về đúng định dạng JSON chuẩn gồm hai khóa chính là "reply" (câu thoại tiếng Nhật tiếp theo) và "errors" (mảng danh sách các lỗi sai ngữ pháp, lỗi kính ngữ mà học viên mắc phải kèm câu sửa và giải thích chi tiết bằng tiếng Việt).
+- Trình phân tích Regex dự phòng (Regex Parser): Trong một số trường hợp đường truyền mạng không ổn định hoặc AI tự ý chèn thêm các ký tự giải thích ngoài khối JSON, máy chủ Flask sử dụng biểu thức chính quy Regex để tìm và trích xuất đúng khối chứa dấu ngoặc nhọn đầu tiên và cuối cùng {.*}. Điều này đảm bảo dữ liệu gửi về Node.js luôn phân tách được cú pháp JSON hợp lệ, tránh gây crash giao diện hiển thị phía Client.
+
+
+2.7. Kết chương 2
+
+Trong Chương 2 "Phân tích và thiết kế hệ thống", đề tài đã tập trung nghiên cứu, giải quyết và hoàn thiện các nội dung thiết kế kỹ thuật cốt lõi sau:
+- Đặc tả chi tiết hành vi của các tác nhân hệ thống (Học sinh và Quản trị viên) thông qua hệ thống sơ đồ ca sử dụng (Use Case) từ tổng quan đến phân rã chi tiết để phân định ranh giới tính năng và phân quyền bảo mật rõ ràng.
+- Xây dựng sơ đồ hoạt động (Activity Diagrams) mô tả trực quan và chính xác luồng xử lý nghiệp vụ cho các phân hệ trọng tâm: hệ thống học ôn thẻ ghi nhớ theo lịch thuật toán SM-2, cơ chế đàm thoại AI đan xen các chế độ học tập (RAG) và công sở (Keigo), cùng hệ thống bài thi trắc nghiệm chấm điểm tự động.
+- Kiến tạo mô hình kiến trúc hệ thống Hybrid Cloud AI nhằm tối ưu hóa hiệu năng, tận dụng sức mạnh xử lý ngôn ngữ thời gian thực siêu tốc từ Groq LPU kết nối qua ngrok tới máy chủ Python Flask trung gian và máy chủ quản trị dữ liệu Node.js.
+- Thiết kế chi tiết lược đồ cơ sở dữ liệu quan hệ (Database Schema) gồm 12 bảng liên kết chặt chẽ và cơ chế Bulk Insert để khắc phục triệt để bài toán nghẽn mạng và timeout hệ thống khi import dữ liệu hàng loạt.
+
+Nhìn chung, toàn bộ các mô hình thiết kế cấu trúc, thiết kế hành vi và đặc tả dữ liệu trong Chương 2 đã được chuẩn bị một cách khoa học, nhất quán và bám sát thực tiễn lập trình. Đây là cơ sở kỹ thuật và là bản vẽ blueprint quan trọng nhất để tiến hành triển khai viết mã nguồn, cấu hình hệ thống và thực nghiệm đánh giá kết quả ở Chương 3.
+
+
+================================================================================
+
+
+CHƯƠNG 3: TRIỂN KHAI VÀ KẾT QUẢ
+
+3.1. Tổng quan hệ thống và môi trường phát triển
+
+Hệ thống hỗ trợ học tiếng Nhật N2 tích hợp trợ lý AI được thiết kế và triển khai thực tế theo mô hình phân tầng Client-Server kết hợp Hybrid Cloud AI. Trong đó, toàn bộ giao diện người dùng hiển thị ở phía Client giao tiếp với Backend thông qua các luồng yêu cầu và phản hồi HTTP RESTful API, đồng thời liên kết trực tiếp với máy chủ AI trung gian để phục vụ đàm thoại thời gian thực.
+
+Mã Mermaid vẽ sơ đồ tổng quan hệ thống ở Chương 3 (Bạn có thể sao chép đoạn mã dưới đây dán vào công cụ vẽ trực tuyến Mermaid Live Editor hoặc Draw.io để vẽ hình):
+
+graph LR
+    subgraph ClientSide["Lớp Client"]
+        ClientReact["ReactJS Client (SPA)"]
+    end
+    subgraph BackendSide["Lớp Backend"]
+        BackendNode["Node.js / Express Server"]
+    end
+    subgraph DataSide["Lớp Dữ liệu"]
+        NeonDB[("Neon PostgreSQL Database")]
+    end
+    subgraph AIService["Lớp AI Service"]
+        ColabServer["Colab / ngrok / Flask Server"]
+        GroqLPU["Groq LPU (Llama 3.1)"]
+        ColabServer --> GroqLPU
+    end
+
+    ClientReact <-->|Gửi request / Response| BackendNode
+    BackendNode <-->|Lấy và nhận thông tin| NeonDB
+    ClientReact <-->|Hội thoại Kaiwa /chat| ColabServer
+
+Hình 3.1. Sơ đồ tổng quan hệ thống triển khai thực tế
+
+Cấu hình môi trường và các công cụ phát triển hệ thống:
+- Công cụ phát triển mã nguồn (IDE): Visual Studio Code, Cursor Editor.
+- Công cụ kiểm thử và phát triển giao diện API: Postman.
+- Ngôn ngữ lập trình Backend: TypeScript, JavaScript (chạy trong môi trường Node.js).
+- Framework Backend: Express.js.
+- Ngôn ngữ lập trình Frontend: TypeScript, HTML, CSS.
+- Framework/Thư viện Frontend: ReactJS, Vite (công cụ build), Tailwind CSS (hỗ trợ styling).
+- Cơ sở dữ liệu: Neon Serverless PostgreSQL (môi trường sản xuất đám mây) và PostgreSQL Local (môi trường phát triển).
+- Dịch vụ đám mây hosting ứng dụng: Render.com (triển khai dịch vụ backend Web Service và dịch vụ frontend Static Site).
+- Máy chủ tính toán AI: Google Colab (chạy Python Flask) kết hợp công cụ tạo đường hầm ngrok tunnel.
+- Mô hình ngôn ngữ lớn: API Groq Cloud (suy luận mô hình mã nguồn mở Llama-3.1-8b-instant).
+
+3.2. Triển khai hệ thống
+
+3.2.1. Frontend (ReactJS / Vite)
+- Cài đặt môi trường Node.js (phiên bản khuyến nghị LTS 18.x hoặc 20.x trở lên).
+- Cài đặt các thư viện phụ thuộc (dependencies):
+  + Mở terminal tại thư mục frontend của dự án và chạy lệnh: npm install
+- Biên dịch ứng dụng cho môi trường sản xuất (production build):
+  + Chạy lệnh biên dịch: npm run build
+  + Sau khi hoàn thành, Vite sẽ tạo ra một thư mục tên là "dist" chứa toàn bộ mã nguồn HTML, CSS và các file JavaScript đã được nén tối ưu.
+- Triển khai ứng dụng lên Render Static Apps:
+  + Bước 1: Truy cập trang chủ Render.com, đăng ký/đăng nhập tài khoản và kết nối trực tiếp với tài khoản GitHub cá nhân.
+  + Bước 2: Trên màn hình quản trị Render Dashboard, chọn nút "New" và chọn "Static Site".
+  + Bước 3: Tìm kiếm và liên kết với repository chứa mã nguồn của đồ án, chọn nhánh triển khai là "render-deploy".
+  + Bước 4: Trong phần cấu hình chi tiết, nhập Build Command là "npm run build" và Publish Directory là "dist".
+  + Bước 5: Mở mục "Environment" để thêm biến môi trường VITE_API_URL và điền giá trị trỏ về địa chỉ URL của Backend Web Service được deploy trên Render.
+  + Bước 6: Nhấn nút "Create Static Site" để Render tự động tải mã nguồn từ GitHub, biên dịch mã nguồn và cung cấp ứng dụng giao diện công khai tại URL do Render cấp.
+
+3.2.2. Backend (Node.js / Express)
+- Cài đặt môi trường thực thi Node.js trên máy chủ.
+- Cài đặt các thư viện phụ thuộc của Backend:
+  + Mở terminal tại thư mục backend của dự án và chạy lệnh: npm install
+- Thiết lập tệp cấu hình môi trường (.env) tại thư mục gốc backend:
+  + PORT = Cổng mạng chạy backend (ví dụ: 5000).
+  + DATABASE_URL = Chuỗi liên kết bí mật để kết nối bảo mật SSL tới database Neon PostgreSQL.
+  + JWT_SECRET = Khóa bảo mật dùng để ký và xác thực token đăng nhập JWT của học sinh.
+  + AI_API_URL = Đường dẫn HTTPS do ngrok cấp trỏ tới máy chủ Python Flask chứa dịch vụ AI.
+- Triển khai ứng dụng lên Render Web Services:
+  + Bước 1: Trên Render Dashboard, chọn nút "New" và chọn "Web Service".
+  + Bước 2: Liên kết với repository chứa mã nguồn đồ án, chọn nhánh triển khai là "render-deploy".
+  + Bước 3: Đặt Runtime Stack là Node.js.
+  + Bước 4: Cấu hình Build Command là "npm install" và Start Command là "npm start" (hoặc "node backend/server.js").
+  + Bước 5: Truy cập mục "Advanced" -> chọn "Add Environment Variable" và điền đầy đủ các khóa biến môi trường cấu hình bao gồm DATABASE_URL, JWT_SECRET, và AI_API_URL.
+  + Bước 6: Nhấn nút "Create Web Service" để Render tự động chạy container, cài đặt tài nguyên và khởi chạy dịch vụ backend trực tuyến.
+
+3.2.3. Cơ sở dữ liệu (Neon Serverless PostgreSQL)
+- Khởi tạo và cấu hình cơ sở dữ liệu trên Neon Cloud:
+  + Bước 1: Truy cập trang quản trị Neon.tech, đăng ký tài khoản và tạo một project cơ sở dữ liệu mới có tên "n2-japanese-learning".
+  + Bước 2: Chọn vùng địa lý (region) lưu trữ cơ sở dữ liệu gần nhất là Singapore để tối ưu tốc độ phản hồi truy vấn về Việt Nam.
+  + Bước 3: Sao chép chuỗi kết nối bảo mật dạng "postgresql://..." được Neon cấp sẵn và dán vào tham số biến môi trường DATABASE_URL trong cấu hình Backend Node.js.
+  + Bước 4: Truy cập công cụ SQL Editor trực tuyến được tích hợp sẵn trên Neon Console (hoặc sử dụng phần mềm quản trị DBeaver từ máy tính cá nhân), sao chép toàn bộ nội dung tệp database/schema.sql và nhấn thực thi (Execute) để hệ thống tự động khởi tạo cấu trúc 12 bảng dữ liệu quan hệ và các view bổ trợ tiến trình học tập.
+
+3.2.4. Trợ lý ảo AI Chatbot (Google Colab & ngrok & Groq API)
+- Thiết lập và khởi chạy dịch vụ chatbot AI:
+  + Bước 1: Mở môi trường Google Colab, kết nối tới tài nguyên CPU/GPU miễn phí.
+  + Bước 2: Cài đặt các thư viện Python cần thiết bằng cách thực thi lệnh: pip install flask flask-cors groq pyngrok pandas
+  + Bước 3: Đăng nhập vào bảng điều khiển ngrok để lấy mã xác thực Authtoken cá nhân, sau đó cấu hình mã này trong Python để cấp quyền thiết lập đường hầm tunnel.
+  + Bước 4: Tải file dữ liệu tri thức ngữ pháp chuẩn N2 (JLPT_N2_Grammar_v2.csv) lên phân vùng bộ nhớ của Colab để phục vụ thuật toán đối sánh chuỗi của cơ chế RAG.
+  + Bước 5: Thực thi đoạn mã chạy máy chủ Python Flask trên cổng 5000 cục bộ, đồng thời khởi chạy ngrok tunnel để ánh xạ cổng này thành một đường dẫn HTTPS công khai có dạng "...ngrok-free.dev".
+  + Bước 6: Sao chép đường dẫn HTTPS mới được sinh ra và dán vào biến môi trường AI_API_URL ở máy chủ Backend trên Render để hoàn tất liên kết truyền thông tin hội thoại.
+
+
+3.3. Kết quả giao diện hệ thống
+
+3.3.1. Giao diện Đăng ký
+Giao diện đăng ký tài khoản cho phép người học tạo tài khoản mới bằng cách nhập tên tài khoản (username), email cá nhân, họ tên đầy đủ và mật khẩu bảo mật, tích hợp trình kiểm thử lỗi nhập liệu thời gian thực trực quan.
+
+3.3.2. Giao diện Đăng nhập
+Giao diện đăng nhập cung cấp biểu mẫu nhập thông tin tài khoản và mật khẩu truy cập, liên kết với cơ chế xác thực Token JWT nhằm cấp quyền và bảo mật phiên làm việc của học viên trên ứng dụng.
+
+3.3.3. Giao diện Trang chủ
+Giao diện trang chủ (Dashboard chính) là không gian tương tác trung tâm của ứng dụng, hiển thị tổng hợp tiến trình học tập hiện tại của học viên cùng lối tắt truy cập nhanh vào các phân hệ học từ vựng, ngữ pháp, flashcard và chatbot AI.
+
+3.3.4. Giao diện trang Từ vựng
+Giao diện trang danh mục từ vựng (VocabLab) liệt kê toàn bộ ngân hàng từ vựng trình độ N2 được sắp xếp khoa học theo từng chủ đề thực tế, hỗ trợ công cụ tìm kiếm và lọc danh mục tiện lợi.
+
+3.3.5. Giao diện chi tiết một từ vựng
+Giao diện chi tiết của một từ vựng hiển thị đầy đủ các trường thông tin bao gồm chữ Kanji, cách đọc Hiragana, định nghĩa nghĩa tiếng Việt, câu ví dụ minh họa kèm bản dịch nghĩa, cùng tùy chọn thêm nhanh vào bộ thẻ ôn tập cá nhân.
+
+3.3.6. Giao diện trang Ngữ pháp
+Giao diện trang danh mục ngữ pháp (GrammarLab) hiển thị danh sách các cấu trúc ngữ pháp trình độ N2 kèm tóm tắt ý nghĩa sơ bộ, hỗ trợ học viên dễ dàng theo dõi và lựa chọn bài học tương ứng.
+
+3.3.7. Giao diện chi tiết một ngữ pháp
+Giao diện chi tiết của một cấu trúc ngữ pháp cung cấp phần giải nghĩa tiếng Việt, công thức liên kết từ loại, các điểm lưu ý học thuật quan trọng và hệ thống các câu ví dụ mẫu chuẩn Nhật ngữ.
+
+3.3.8. Giao diện trang Flashcard
+Giao diện trang danh sách bộ thẻ ôn tập (Flashcard Decks) hiển thị trực quan các bộ thẻ ôn tập toàn cục do hệ thống cung cấp (Global Decks) cùng các bộ thẻ cá nhân do chính học viên tự thiết lập.
+
+3.3.9. Giao diện chức năng Thêm vào flashcard cá nhân
+Giao diện hộp thoại chức năng thêm thẻ cá nhân cho phép học viên lựa chọn nhanh bộ thẻ đích mong muốn khi đang học từ vựng hoặc ngữ pháp để tự cá nhân hóa lộ trình ghi nhớ lâu dài.
+
+3.3.10. Giao diện trang Flashcard chi tiết
+Giao diện hiển thị danh sách các thẻ ghi nhớ chi tiết nằm trong một bộ thẻ cụ thể, bao gồm thông tin từ vựng/ngữ pháp đại diện cùng các chỉ số chu kỳ lặp lại (interval) và lịch hẹn ôn tập kế tiếp.
+
+3.3.11. Giao diện học flashcard
+Giao diện học và ôn tập thẻ ghi nhớ được xây dựng trên cơ chế lật thẻ hai mặt tương tác động, tích hợp 4 mức độ lựa chọn đánh giá trí nhớ (Again, Hard, Good, Easy) để hệ thống tự động cập nhật tham số thuật toán SM-2.
+
+3.3.12. Giao diện trang Progress
+Giao diện trang tiến độ học tập hiển thị các biểu đồ thống kê phần trăm từ vựng và cấu trúc ngữ pháp học viên đã thuộc, đo lường tần suất ôn tập thẻ ghi nhớ hàng tuần và các thành tích học tập đã đạt được.
+
+3.3.13. Giao diện trang Profile
+Giao diện trang hồ sơ cá nhân cho phép học viên tự cập nhật thông tin cá nhân bao gồm thay đổi họ tên hiển thị, cập nhật ảnh đại diện (avatar) qua đường link và thay đổi mật khẩu đăng nhập.
+
+3.3.14. Giao diện chức năng chat với AI
+Giao diện phân hệ đàm thoại AI (KaiwaHub) được thiết kế dưới dạng khung chat thời gian thực, hỗ trợ 3 chế độ trò chuyện chuyên biệt và hiển thị các bảng thống kê bóc tách lỗi sai ngữ pháp kèm giải thích trực quan bằng tiếng Việt.
+
+3.3.15. Giao diện trang Quản lý từ vựng (Admin)
+Giao diện quản lý từ vựng dành cho quản trị viên cung cấp bảng danh sách hệ thống dữ liệu từ vựng N2, hỗ trợ thanh tìm kiếm nhanh cùng các tùy chọn CRUD thủ công từng bản ghi một cách trực quan.
+
+3.3.16. Giao diện chức năng import từ vựng (1)
+Giao diện import từ vựng bước 1 cung cấp vùng kéo thả file Excel/CSV dữ liệu mẫu để Admin tải tệp lên và hệ thống tự động thực hiện xác thực tính hợp lệ của định dạng dữ liệu.
+
+3.3.17. Giao diện chức năng import từ vựng (2)
+Giao diện import từ vựng bước 2 hiển thị bảng xem trước (preview) các bản ghi hợp lệ được bóc tách từ file và nút xác nhận thực thi import hàng loạt (Bulk Insert) hiệu năng cao vào database.
+
+3.3.18. Giao diện trang Quản lý ngữ pháp
+Giao diện quản lý ngữ pháp dành cho quản trị viên cung cấp các tính năng CRUD danh mục ngữ pháp N2 thủ công và hỗ trợ chức năng nạp dữ liệu hàng loạt từ file Excel/CSV đồng bộ.
+
+3.3.19. Giao diện trang Quản lý bài test
+Giao diện quản lý bài kiểm tra trắc nghiệm của Admin hỗ trợ bộ công cụ tạo lập tiêu đề đề thi, thiết lập phân loại, quản lý chi tiết ngân hàng câu hỏi 4 lựa chọn cùng đáp án đúng và lời giải thích liên quan.
+
+3.3.20. Giao diện trang Quản lý flashcard
+Giao diện quản lý bộ thẻ ghi nhớ của Admin hỗ trợ thiết lập các bộ thẻ toàn cục hiển thị cho tất cả học viên (Global Decks), cập nhật mô tả và chỉ định các từ vựng mẫu nằm trong bộ thẻ ôn tập.
+
+
+================================================================================
+
+
+CHƯƠNG 4. KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN
+
+  1. Kết quả đạt được
+  Trong quá trình nghiên cứu, tìm hiểu lý thuyết và triển khai xây dựng "Hệ thống hỗ trợ học tiếng Nhật N2 tích hợp chatbot AI và thuật toán lặp lại ngắt quãng", hệ thống đã được xây dựng thành công và đáp ứng các tiêu chí đề ra.
+
+  Về mặt lý thuyết
+    • Thiết kế hệ thống toàn diện:
+      Hệ thống được xây dựng với kiến trúc module hóa rõ ràng, tách biệt Client (Frontend SPA) và Server (Backend API), áp dụng mô hình Hybrid Cloud AI để tích hợp dịch vụ trí tuệ nhân tạo độc lập, giúp dễ dàng bảo trì và mở rộng.
+    • Làm chủ công nghệ và thuật toán áp dụng:
+      ▪ ReactJS và TypeScript: Phát triển giao diện người dùng hiện đại, tối ưu trải nghiệm tự học trực tuyến.
+      ▪ Node.js và Express: Xây dựng backend bảo mật, hiệu quả, hỗ trợ quản lý API và xử lý nghiệp vụ phức tạp.
+      ▪ Neon Serverless PostgreSQL: Quản lý dữ liệu người dùng, từ vựng, ngữ pháp, flashcard ôn tập và đề thi trực tuyến với độ ổn định cao.
+      ▪ Trợ lý AI và thuật toán: Ứng dụng thành công thuật toán lặp lại ngắt quãng SM-2 để lập lịch ôn tập cá nhân hóa và cơ chế Pandas RAG đối sánh tri thức ngữ pháp N2 nhằm tối ưu hóa hội thoại đàm thoại.
+    • Triển khai trên môi trường đám mây thực tế:
+      Sử dụng Render cho việc triển khai tự động frontend và backend, kết hợp Neon Cloud cho cơ sở dữ liệu và Google Colab qua ngrok cho máy chủ AI chatbot, tận dụng các dịch vụ đám mây để đảm bảo tính sẵn sàng và khả năng mở rộng.
+
+  Về mặt thực tiễn ứng dụng
+    • Chức năng học từ vựng và ngữ pháp N2:
+      Hệ thống cung cấp ngân hàng học liệu N2 phong phú được cấu trúc khoa học theo chủ đề, hỗ trợ tra cứu chi tiết, lấy ví dụ thực tế và quản lý tiến trình học tập của học viên một cách dễ dàng.
+    • Ôn tập cá nhân hóa qua thẻ ghi nhớ (Flashcard):
+      Học viên tự thêm từ vựng/ngữ pháp đang học vào bộ thẻ ôn tập cá nhân, thực hiện học qua lật thẻ hai mặt tương tác động và đánh giá độ thuộc để thuật toán SM-2 tự động tối ưu hóa lịch ôn tập tiếp theo.
+    • Trợ lý ảo luyện đàm thoại phản xạ Kaiwa thông minh:
+      Cung cấp công cụ chat thời gian thực với trợ lý AI qua 3 chế độ trò chuyện chuyên biệt, có khả năng bóc tách lỗi sai ngữ pháp trong câu trả lời của học viên và gợi ý sửa lại chuẩn xác kèm giải thích trực quan bằng tiếng Việt.
+    • Kiểm tra đánh giá và quản lý nội dung:
+      Học viên dễ dàng làm bài kiểm tra trắc nghiệm tính giờ có chấm điểm tự động, đồng thời Admin được cung cấp đầy đủ công cụ CRUD và import dữ liệu hàng loạt từ file Excel/CSV hiệu năng cao thông qua cơ chế Bulk Insert.
+    • Giao diện thân thiện, dễ sử dụng:
+      Thiết kế giao diện trực quan, hiện đại, tối ưu hóa hiển thị và trải nghiệm trên nhiều kích thước màn hình, giúp học viên và quản trị viên dễ dàng tiếp cận và sử dụng mà không cần nhiều hướng dẫn.
+    • Hiệu năng và độ ổn định:
+      Hệ thống vận hành mượt mà nhờ các cơ chế tối ưu hóa truy vấn của PostgreSQL Serverless và tốc độ phản hồi siêu tốc của Groq API (dưới 0.5 giây), đảm bảo phục vụ người dùng ổn định mà không bị gián đoạn hay chậm trễ.
+    • Bảo mật và quản lý dữ liệu:
+      Mã hóa mật khẩu người dùng với bcryptjs, xác thực bảo mật tài khoản qua JWT (JSON Web Token), kết hợp sử dụng chứng chỉ SSL bảo vệ truyền tải dữ liệu an toàn.
+
+  2. Vấn đề tồn đọng
+    • Sự phụ thuộc vào môi trường chạy tạm thời của máy chủ AI: Do máy chủ Python Flask được chạy trên môi trường Google Colab và ánh xạ qua ngrok tunnel miễn phí, hệ thống thỉnh thoảng sẽ bị gián đoạn kết nối nếu phiên làm việc của Colab hết hạn hoặc ngrok tự động reset địa chỉ URL, gây ảnh hưởng đến trải nghiệm trò chuyện thời gian thực.
+    • Giới hạn ở cơ chế RAG đối sánh chuỗi đơn giản: Cơ chế đối sánh chuỗi (String Matching) bằng Pandas trên RAM đối với file CSV tri thức tĩnh có độ linh hoạt chưa cao nếu học viên nhập câu hội thoại quá dài, viết sai chính tả hoặc sử dụng cấu trúc ngữ pháp biến thể khiến AI không đối chiếu tương ứng được.
+    • Chưa tích hợp tính năng giao tiếp bằng giọng nói: Tính năng luyện Kaiwa mới chỉ hỗ trợ giao tiếp qua giao diện dòng văn bản (chat thô), học viên chưa thể luyện phản xạ nói trực tiếp và nghe âm thanh chuẩn phát âm bản xứ của trợ lý AI để tối ưu hóa kỹ năng giao tiếp thực tế.
+
+  3. Hướng phát triển
+    • Triển khai máy chủ AI cố định và chuyên nghiệp: Ưu tiên đóng gói và dịch chuyển máy chủ Python Flask từ Google Colab sang các dịch vụ máy chủ ảo VPS có hỗ trợ GPU cố định hoặc các dịch vụ đám mây hosting AI chuyên biệt để duy trì kết nối ổn định 24/7, loại bỏ sự phụ thuộc vào ngrok tunnel.
+    • Nâng cấp cơ chế RAG dựa trên tìm kiếm ngữ nghĩa: Tích hợp các mô hình nhúng (Embedding Models) và cơ sở dữ liệu Vector (như extension pgvector trong PostgreSQL hoặc các Vector DB chuyên dụng) để xây dựng hệ thống Semantic RAG, giúp tìm kiếm ngữ pháp theo sự tương đồng về ngữ nghĩa thay vì so khớp ký tự thô.
+    • Tích hợp tính năng hội thoại bằng giọng nói (Voice-to-Voice): Tích hợp dịch vụ chuyển giọng nói thành văn bản (Speech-to-Text như OpenAI Whisper) và dịch vụ chuyển văn bản thành giọng nói (Text-to-Speech) nhằm cho phép học viên luyện nói trực tiếp với trợ lý ảo và nghe AI phản hồi bằng giọng nói tiếng Nhật chuẩn bản xứ.
+    • Mở rộng kho học liệu đa cấp độ: Tiếp tục thu thập và bổ sung dữ liệu bài học từ vựng, ngữ pháp cũng như tinh chỉnh các Prompt hướng dẫn của chatbot AI để hỗ trợ toàn diện các cấp độ từ N5 đến N1 thay vì chỉ giới hạn ở trình độ N2.
+
+
+  ================================================================================
+
+
+  TÀI LIỆU THAM KHẢO
+
+  [1] React Developer Team, "Tài liệu hướng dẫn phát triển giao diện React," react.dev. [Trực tuyến]. Địa chỉ: https://react.dev
+  [2] Microsoft Corporation, "Tài liệu hướng dẫn phát triển ứng dụng bằng ngôn ngữ TypeScript," typescriptlang.org. [Trực tuyến]. Địa chỉ: https://www.typescriptlang.org/docs
+  [3] OpenJS Foundation, "Tài liệu hướng dẫn xây dựng dịch vụ phía máy chủ với Node.js," nodejs.org. [Trực tuyến]. Địa chỉ: https://nodejs.org/en/docs
+  [4] Express Project, "Tài liệu hướng dẫn lập trình Node.js & Express API," expressjs.com. [Trực tuyến]. Địa chỉ: https://expressjs.com
+  [5] PostgreSQL Global Development Group, "Hướng dẫn quản trị và vận hành hệ cơ sở dữ liệu PostgreSQL," postgresql.org. [Trực tuyến]. Địa chỉ: https://www.postgresql.org/docs
+  [6] Groq Inc., "Tài liệu giới thiệu kiến trúc phần cứng suy luận Groq LPU," groq.com. [Trực tuyến]. Địa chỉ: https://groq.com
+  [7] Meta AI, "Tài liệu tích hợp mô hình ngôn ngữ lớn Llama 3 từ Meta," llama.meta.com. [Trực tuyến]. Địa chỉ: https://llama.meta.com
+  [8] SuperMemo World, "Mô tả chi tiết nguyên lý hoạt động của thuật toán lặp lại ngắt quãng SuperMemo-2 (SM-2)," supermemo.com. [Trực tuyến]. Địa chỉ: https://www.supermemo.com/en/archives1990-2015/english/ol/sm2
+  [9] NVIDIA Corporation, "Tài liệu nghiên cứu cơ chế sinh tăng cường truy xuất dữ liệu Retrieval-Augmented Generation (RAG)," nvidia.com. [Trực tuyến]. Địa chỉ: https://blogs.nvidia.com/blog/what-is-retrieval-augmented-generation
+  [10] Codelearn Portal, "Tài liệu nghiên cứu mô hình kiến trúc ứng dụng Client-Server," codelearn.io. [Trực tuyến]. Địa chỉ: https://codelearn.io/sharing/tim-hieu-ve-mo-hinh-client-server
+  [11] Neon Inc., "Tài liệu quản trị cơ sở dữ liệu đám mây Neon Serverless PostgreSQL," neon.tech. [Trực tuyến]. Địa chỉ: https://neon.tech/docs
+  [12] LottieFiles, "Tài liệu hướng dẫn tích hợp hoạt họa động Lottie Animation cho ứng dụng Web," lottiefiles.com. [Trực tuyến]. Địa chỉ: https://lottiefiles.com

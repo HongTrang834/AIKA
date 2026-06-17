@@ -95,7 +95,7 @@ export function TopBar() {
         <div className="flex items-center gap-2 bg-[#ffc700]/20 px-4 py-2 rounded-xl text-[#ff9600] font-bold hover:bg-[#ffc700]/30 transition-colors cursor-default border-2 border-transparent">
           <Flame className="w-5 h-5 fill-current animate-pulse" />
           <span className="text-[15px]">
-            {loading ? 'Loading...' : `${streak} Day${streak !== 1 ? 's' : ''} Streak`}
+            {loading ? 'Loading...' : `${streak} Day Streak`}
           </span>
         </div>
 
@@ -126,6 +126,7 @@ export function TopBar() {
                 onClick={() => setShowLogout(false)}
               >
                 <User className="w-5 h-5 text-sky-blue" />
+                <span>Profile</span>
               </Link>
               <button
                 onClick={() => {
@@ -135,7 +136,7 @@ export function TopBar() {
                 className="flex items-center gap-3 px-4 py-3 text-bubblegum-pink hover:bg-pink-50 rounded-xl w-full transition-colors font-bold text-[15px] mt-1"
               >
                 <LogOut className="w-5 h-5 text-bubblegum-pink" />
-                <span>Đăng Xuất</span>
+                <span>Log Out</span>
               </button>
             </div>
           )}

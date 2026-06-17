@@ -83,10 +83,10 @@ export default function AdminVocabulary() {
         headers: { Authorization: `Bearer ${token}` },
       });
       await fetchVocabulary();
-      showToast('Đã xóa từ vựng', 'success');
+      showToast('Vocabulary deleted', 'success');
     } catch (error) {
       console.error('Error deleting vocabulary:', error);
-      showToast('Lỗi khi xóa từ vựng', 'error');
+      showToast('Error deleting vocabulary', 'error');
     }
   };
 
@@ -100,13 +100,13 @@ export default function AdminVocabulary() {
       if (res.ok) {
         await fetchVocabulary();
         setShowDeleteConfirm(false);
-        showToast('Đã xóa tất cả từ vựng', 'success');
+        showToast('All vocabulary deleted', 'success');
       } else {
-        showToast('Lỗi khi xóa từ vựng', 'error');
+        showToast('Error deleting vocabulary', 'error');
       }
     } catch (error) {
       console.error('Error deleting all vocabulary:', error);
-      showToast('Lỗi khi xóa từ vựng', 'error');
+      showToast('Error deleting vocabulary', 'error');
     } finally {
       setIsDeleting(false);
     }
@@ -125,10 +125,10 @@ export default function AdminVocabulary() {
 
     for (let i = 1; i < lines.length; i++) {
       if (!lines[i].trim()) continue;
-      
+
       const values = lines[i].split(',').map(v => v.trim());
       const row: any = {};
-      
+
       headers.forEach((header, idx) => {
         row[header] = values[idx] || '';
       });
@@ -141,7 +141,7 @@ export default function AdminVocabulary() {
 
   const mergeRecords = (records: any[]) => {
     const groupedRecords = {} as any;
-    
+
     // Group records by word+reading+meaning
     for (const record of records) {
       const word = record.word?.toString().trim();
@@ -158,7 +158,7 @@ export default function AdminVocabulary() {
       }
 
       const key = `${word}|${reading}|${meaning}`;
-      
+
       if (!groupedRecords[key]) {
         groupedRecords[key] = {
           word,
@@ -171,7 +171,7 @@ export default function AdminVocabulary() {
           examples: [],
         };
       }
-      
+
       // Add example to the group if it's unique
       if (example && !groupedRecords[key].examples.includes(example)) {
         groupedRecords[key].examples.push(example);
@@ -186,7 +186,7 @@ export default function AdminVocabulary() {
     // DEBUG: Check merge impact
     const merged = mergeRecords(records);
     console.log(`📊 Original records: ${records.length}, After merge: ${merged.length}, Diff: ${records.length - merged.length}`);
-    
+
     const validated = validateRecords(merged);
     setPreviewRecords(validated);
     setPendingImport(merged); // Send merged records to backend (no double merging!)
@@ -223,7 +223,7 @@ export default function AdminVocabulary() {
       const result = await res.json();
       setImportMessage(`✅ Imported successfully! Added ${result.imported} words, ${result.skipped} skipped`);
       await fetchVocabulary();
-      
+
       setTimeout(() => {
         setShowPreview(false);
         setPendingImport(null);
@@ -244,7 +244,7 @@ export default function AdminVocabulary() {
     try {
       const text = await file.text();
       const records = parseCSVFile(text);
-      
+
       if (records.length === 0) {
         setImportMessage('❌ File is empty!');
         return;
@@ -264,7 +264,7 @@ export default function AdminVocabulary() {
 
     try {
       const records = await parseExcelFile(file);
-      
+
       if (records.length === 0) {
         setImportMessage('❌ Excel file is empty!');
         return;
@@ -304,7 +304,7 @@ export default function AdminVocabulary() {
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="h1-feather text-almost-black">Quản lý Từ Vựng</h1>
+        <h1 className="h1-feather text-almost-black">Vocabulary Management</h1>
         <div className="flex gap-4">
           <button
             onClick={() => {
@@ -316,7 +316,7 @@ export default function AdminVocabulary() {
             className="btn-3d-blue flex items-center gap-2 px-6"
           >
             <Plus className="w-5 h-5" />
-            Thêm Từ Vựng
+            Add Vocab
           </button>
           <button
             onClick={() => {
@@ -335,7 +335,7 @@ export default function AdminVocabulary() {
             className="btn-3d-red flex items-center gap-2 px-6"
           >
             <Trash2 className="w-5 h-5" />
-            Xóa Tất Cả
+            Delete All
           </button>
         </div>
       </div>
@@ -343,39 +343,36 @@ export default function AdminVocabulary() {
       {/* Import Section */}
       {showImport && (
         <div className="card-duo p-8 mb-8">
-          <h2 className="h2-feather mb-6">Import Từ Vựng</h2>
+          {/* <h2 className="h2-feather mb-6">Import Từ Vựng</h2> */}
 
           {/* Tab Navigation */}
           <div className="flex gap-3 mb-6 border-b-2 border-cloud-gray pb-4">
             <button
               onClick={() => setActiveImportTab('csv')}
-              className={`px-5 py-3 rounded-xl border-2 font-bold flex items-center gap-2 transition-all ${
-                activeImportTab === 'csv'
-                  ? 'border-sky-blue bg-sky-blue/10 text-sky-blue'
-                  : 'border-transparent text-silver hover:bg-gray-50 hover:border-cloud-gray'
-              }`}
+              className={`px-5 py-3 rounded-xl border-2 font-bold flex items-center gap-2 transition-all ${activeImportTab === 'csv'
+                ? 'border-sky-blue bg-sky-blue/10 text-sky-blue'
+                : 'border-transparent text-silver hover:bg-gray-50 hover:border-cloud-gray'
+                }`}
             >
               <Upload className="w-5 h-5" />
               CSV File
             </button>
             <button
               onClick={() => setActiveImportTab('excel')}
-              className={`px-5 py-3 rounded-xl border-2 font-bold flex items-center gap-2 transition-all ${
-                activeImportTab === 'excel'
-                  ? 'border-sky-blue bg-sky-blue/10 text-sky-blue'
-                  : 'border-transparent text-silver hover:bg-gray-50 hover:border-cloud-gray'
-              }`}
+              className={`px-5 py-3 rounded-xl border-2 font-bold flex items-center gap-2 transition-all ${activeImportTab === 'excel'
+                ? 'border-sky-blue bg-sky-blue/10 text-sky-blue'
+                : 'border-transparent text-silver hover:bg-gray-50 hover:border-cloud-gray'
+                }`}
             >
               <FileText className="w-5 h-5" />
               Excel File
             </button>
             <button
               onClick={() => setActiveImportTab('batch')}
-              className={`px-5 py-3 rounded-xl border-2 font-bold flex items-center gap-2 transition-all ${
-                activeImportTab === 'batch'
-                  ? 'border-sky-blue bg-sky-blue/10 text-sky-blue'
-                  : 'border-transparent text-silver hover:bg-gray-50 hover:border-cloud-gray'
-              }`}
+              className={`px-5 py-3 rounded-xl border-2 font-bold flex items-center gap-2 transition-all ${activeImportTab === 'batch'
+                ? 'border-sky-blue bg-sky-blue/10 text-sky-blue'
+                : 'border-transparent text-silver hover:bg-gray-50 hover:border-cloud-gray'
+                }`}
             >
               <List className="w-5 h-5" />
               Quick Add
@@ -384,11 +381,10 @@ export default function AdminVocabulary() {
 
           {importMessage && (
             <div
-              className={`p-5 rounded-2xl mb-6 font-bold border-2 ${
-                importMessage.includes('✅')
-                  ? 'bg-sky-blue-light text-sky-blue border-sky-blue'
-                  : 'bg-pink-50 text-bubblegum-pink border-bubblegum-pink'
-              }`}
+              className={`p-5 rounded-2xl mb-6 font-bold border-2 ${importMessage.includes('✅')
+                ? 'bg-sky-blue-light text-sky-blue border-sky-blue'
+                : 'bg-pink-50 text-bubblegum-pink border-bubblegum-pink'
+                }`}
             >
               {importMessage}
             </div>
@@ -492,11 +488,11 @@ export default function AdminVocabulary() {
       {/* Form */}
       {showForm && (
         <div className="card-duo p-8 mb-8">
-          <h2 className="h2-feather mb-6">{editingId ? 'Sửa' : 'Thêm'} Từ Vựng</h2>
+          <h2 className="h2-feather mb-6">{editingId ? 'Edit' : 'Add'} Vocabulary</h2>
           <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-5">
             <input
               type="text"
-              placeholder="Từ (Word)"
+              placeholder="Word"
               value={formData.word}
               onChange={(e) => setFormData({ ...formData, word: e.target.value })}
               required
@@ -504,7 +500,7 @@ export default function AdminVocabulary() {
             />
             <input
               type="text"
-              placeholder="Đọc (Reading)"
+              placeholder="Reading"
               value={formData.reading}
               onChange={(e) => setFormData({ ...formData, reading: e.target.value })}
               required
@@ -512,7 +508,7 @@ export default function AdminVocabulary() {
             />
             <input
               type="text"
-              placeholder="Nghĩa (Meaning)"
+              placeholder="Meaning"
               value={formData.meaning}
               onChange={(e) => setFormData({ ...formData, meaning: e.target.value })}
               required
@@ -520,7 +516,7 @@ export default function AdminVocabulary() {
             />
             <input
               type="text"
-              placeholder="Danh mục (Category)"
+              placeholder="Category"
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
               className="border-2 border-cloud-gray px-5 py-4 rounded-2xl focus:border-sky-blue focus:bg-sky-blue/5 outline-none font-bold text-almost-black text-[15px]"
@@ -533,7 +529,7 @@ export default function AdminVocabulary() {
               className="border-2 border-cloud-gray px-5 py-4 rounded-2xl focus:border-sky-blue focus:bg-sky-blue/5 outline-none font-bold text-almost-black text-[15px]"
             />
             <textarea
-              placeholder="Ví dụ (Example)"
+              placeholder="Example"
               value={formData.example_sentence}
               onChange={(e) => setFormData({ ...formData, example_sentence: e.target.value })}
               className="border-2 border-cloud-gray px-5 py-4 rounded-2xl focus:border-sky-blue focus:bg-sky-blue/5 outline-none font-bold text-almost-black text-[15px] col-span-2"
@@ -541,7 +537,7 @@ export default function AdminVocabulary() {
             />
             <div className="col-span-2 flex gap-4 mt-2">
               <button type="submit" className="btn-3d-blue px-8 text-[17px]">
-                {editingId ? 'Cập nhật' : 'Thêm'}
+                {editingId ? 'Update' : 'Add'}
               </button>
               <button
                 type="button"
@@ -551,7 +547,7 @@ export default function AdminVocabulary() {
                 }}
                 className="btn-outline-gray px-8 text-[17px] text-graphite"
               >
-                Hủy
+                Cancel
               </button>
             </div>
           </form>
@@ -563,20 +559,20 @@ export default function AdminVocabulary() {
         <table className="w-full">
           <thead className="bg-cloud-gray border-b-2 border-cloud-gray">
             <tr>
-              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">ID</th>
-              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Từ</th>
-              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Đọc</th>
-              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Nghĩa</th>
-              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Danh mục</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">No.</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Word</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Reading</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Meaning</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Category</th>
               <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Level</th>
-              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Ví dụ</th>
-              <th className="px-5 py-4 text-center font-extrabold text-[13px] uppercase tracking-wider text-graphite">Hành động</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Example</th>
+              <th className="px-5 py-4 text-center font-extrabold text-[13px] uppercase tracking-wider text-graphite">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {vocabulary.map((item) => (
+            {vocabulary.map((item, index) => (
               <tr key={item.id} className="border-b-2 border-cloud-gray hover:bg-gray-50 transition-colors">
-                <td className="px-5 py-4 font-bold text-silver">{item.id}</td>
+                <td className="px-5 py-4 font-bold text-silver">{index + 1}</td>
                 <td className="px-5 py-4 font-feather font-bold text-[22px] text-almost-black">{item.word}</td>
                 <td className="px-5 py-4 font-bold text-graphite">{item.reading}</td>
                 <td className="px-5 py-4 font-bold text-graphite">{item.meaning}</td>
@@ -604,23 +600,23 @@ export default function AdminVocabulary() {
       </div>
 
       {vocabulary.length === 0 && (
-        <div className="text-center py-12 font-bold text-silver text-[17px]">Không có từ vựng nào</div>
+        <div className="text-center py-12 font-bold text-silver text-[17px]">No vocabulary found</div>
       )}
 
       {/* Delete All Confirm Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-almost-black/50 flex items-center justify-center z-50 p-4">
           <div className="card-duo p-10 max-w-sm w-full relative">
-            <h2 className="h2-feather text-bubblegum-pink mb-4">Xóa Tất Cả Từ Vựng?</h2>
-            <p className="font-bold text-graphite mb-2">Hành động này sẽ xóa <strong>{vocabulary.length} từ vựng</strong> và không thể hoàn tác.</p>
-            <p className="text-silver font-bold text-[15px] mb-8">Hãy chắc chắn rằng bạn muốn tiếp tục.</p>
+            <h2 className="h2-feather text-bubblegum-pink mb-4">Delete All Vocabulary?</h2>
+            <p className="font-bold text-graphite mb-2">This action will delete <strong>{vocabulary.length} vocabulary words</strong> and cannot be undone.</p>
+            <p className="text-silver font-bold text-[15px] mb-8">Please make sure you want to continue.</p>
             <div className="flex gap-4 justify-end">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
                 disabled={isDeleting}
                 className="btn-outline-gray px-6 py-3 font-bold text-graphite disabled:opacity-50"
               >
-                Hủy
+                Cancel
               </button>
               <button
                 onClick={handleDeleteAll}
@@ -628,7 +624,7 @@ export default function AdminVocabulary() {
                 className="btn-3d-red px-6 py-3 disabled:opacity-50 flex items-center gap-2"
               >
                 {isDeleting && <Loader className="w-5 h-5 animate-spin" />}
-                {isDeleting ? 'Đang xóa...' : 'Xóa Tất Cả'}
+                {isDeleting ? 'Deleting...' : 'Delete All'}
               </button>
             </div>
           </div>

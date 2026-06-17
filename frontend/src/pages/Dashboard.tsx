@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PlayCircle, Flame, TrendingUp, BookOpen, Compass, MessageSquare, AlarmClock, Award, Search, X, SlidersHorizontal } from 'lucide-react';
+import { PlayCircle, Flame, TrendingUp, BookOpen, Compass, MessageSquare, AlarmClock, Award, Search, X, SlidersHorizontal, Calendar, Trophy } from 'lucide-react';
 import { motion } from 'motion/react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -206,17 +206,17 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="p-8">
+    <div className="p-24">
       {/* Search Bar (appears at top, always) */}
-      <section className="relative mb-20">
+      <section className="relative mb-24">
         <div className="relative">
-          <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-6 h-6 text-silver" />
+          <Search className="absolute left-16 top-1/2 -translate-y-1/2 w-24 h-24 text-silver" />
           <input
             type="text"
             placeholder="Search vocabulary or grammar..."
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
-            className="w-full pl-14 pr-14 py-4 border-2 border-cloud-gray rounded-2xl focus:outline-none focus:border-sky-blue focus:bg-sky-blue/5 font-bold text-[15px] text-almost-black placeholder:text-silver transition-colors"
+            className="w-full pl-48 pr-16 py-12 border-2 border-cloud-gray rounded-2xl focus:outline-none focus:border-sky-blue focus:bg-sky-blue/5 font-bold text-[15px] text-almost-black placeholder:text-silver transition-colors"
           />
           <button
             onClick={() => setShowSearchFilters(!showSearchFilters)}
@@ -233,9 +233,9 @@ export default function Dashboard() {
             <div className="absolute right-0 top-16 w-[180px] bg-white border-2 border-cloud-gray rounded-xl shadow-xl z-50 overflow-hidden">
               <div className="p-2 space-y-1">
                 {[
-                  { id: 'all', label: 'Tất cả' },
-                  { id: 'vocabulary', label: 'Từ vựng' },
-                  { id: 'grammar', label: 'Ngữ pháp' }
+                  { id: 'all', label: 'All' },
+                  { id: 'vocabulary', label: 'Vocabulary' },
+                  { id: 'grammar', label: 'Grammar' }
                 ].map(option => (
                   <button
                     key={option.id}
@@ -275,7 +275,7 @@ export default function Dashboard() {
                         <p className="text-graphite font-bold">{result.meaning}</p>
                       </div>
                       <span className="px-3 py-1 bg-cloud-gray text-graphite rounded-xl text-xs font-bold uppercase tracking-wider">
-                        {result.type}
+                        {result.type === 'vocabulary' ? 'Vocabulary' : 'Grammar'}
                       </span>
                     </div>
                   ))}
@@ -289,22 +289,20 @@ export default function Dashboard() {
       </section>
 
       {/* Hero Section */}
-      <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch min-h-[300px] mb-20">
+      <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch min-h-[300px] mb-24">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="lg:col-span-7 flex flex-col justify-center bg-sky-blue/10 border-4 border-dashed border-sky-blue rounded-[3rem] p-8 md:p-12 h-full"
+          className="lg:col-span-7 flex flex-col justify-center bg-sky-blue-light/30 border-2 border-dashed border-sky-blue rounded-[32px] p-32 h-full"
         >
-          <span className="inline-block px-4 py-2 bg-sky-blue-light text-sky-blue font-bold rounded-full text-sm uppercase tracking-widest mb-6 border-2 border-transparent w-max">
-            Current Unit: {loading ? 'Loading...' : currentLesson?.unit || 'Loading'}
-          </span>
-          <h2 className="h1-feather text-sky-blue mb-6 leading-[1.1]">
-            Ready to master
-            <br />
-            {loading ? 'Japanese?' : `${currentLesson?.title}?`}
+          <div className="inline-flex items-center rounded-full bg-sky-blue-light/60 px-16 py-6 text-xs font-bold text-sky-blue uppercase tracking-wider mb-20 w-max">
+            CURRENT UNIT: {currentLesson?.unit || 'BUSINESS ETHICS'}
+          </div>
+          <h2 className="font-feather text-4xl md:text-5xl font-black tracking-heading text-sky-blue mb-16 leading-[1.15]">
+            Ready to master {currentLesson?.title || 'Company Culture'}?
           </h2>
-          <p className="text-graphite text-lg leading-relaxed max-w-lg font-bold">
-            {loading ? 'Loading lesson details...' : currentLesson?.description || 'Start your next lesson now.'}
+          <p className="text-graphite font-bold text-[17px] leading-relaxed">
+            {currentLesson?.description || 'Understanding Japanese business values'}
           </p>
         </motion.div>
 
@@ -313,30 +311,47 @@ export default function Dashboard() {
           animate={{ opacity: 1, x: 0 }}
           className="lg:col-span-5 flex justify-center items-center h-full"
         >
-          {/* Character Illustration Lottie */}
-          <div className="w-full max-w-sm aspect-square bg-sky-blue/10 border-4 border-dashed border-sky-blue rounded-[3rem] flex flex-col items-center justify-center text-sky-blue p-8 text-center h-full">
+          <div className="w-full max-w-md bg-sky-blue/5 border-2 border-sky-blue/20 rounded-3xl flex flex-col items-center justify-center p-24 text-center h-full relative">
+            {/* Speech bubble */}
+            <div className="relative bg-white border-2 border-cloud-gray rounded-2xl p-16 mb-16 shadow-sm max-w-[280px]">
+              <p className="text-almost-black text-[15px] font-bold leading-snug">
+                Let's practice daily to keep up your learning streak!
+              </p>
+              {/* Tail pointing down */}
+              <div className="absolute bottom-[-9px] left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-r-2 border-b-2 border-cloud-gray rotate-45"></div>
+            </div>
+
+            {/* Character Illustration Lottie */}
             {/* @ts-ignore */}
             <dotlottie-wc
               src="https://lottie.host/3f3dc821-c71c-4e89-86e8-0e84ec318e4b/7v2ezoKhLz.lottie"
-              style={{ width: '250px', height: '250px' }}
+              style={{ width: '180px', height: '180px' }}
               autoplay
               loop
             ></dotlottie-wc>
+
+            {/* Streak Counter Box */}
+            <div className="mt-16 flex items-center gap-3 bg-sunshine-yellow/10 border-2 border-sunshine-yellow/30 rounded-2xl px-16 py-8 shadow-sm">
+              <Flame className="w-6 h-6 text-sunshine-yellow fill-sunshine-yellow animate-pulse" />
+              <span className="font-feather text-[17px] font-bold text-almost-black">
+                {streak.current_streak} days streak
+              </span>
+            </div>
           </div>
         </motion.div>
       </section>
       {/* Stats Section */}
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-28">
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 md:gap-24 mb-24">
         {/* Vocabulary */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl p-6"
-          style={{ backgroundColor: '#EAF2FF' }}
+          className="bg-sky-blue/5 border-2 border-sky-blue/20 rounded-3xl shadow-sm flex flex-col justify-between"
+          style={{ padding: '24px' }}
         >
-          <p className="font-bold text-[15px] mb-4" style={{ color: '#3B82F6' }}>Từ Vựng</p>
-          <p className="font-black text-[32px] leading-none" style={{ color: '#1E3A8A' }}>
-            {loading ? '...' : progress.total_vocab_learned} <span className="text-[17px] font-bold">từ</span>
+          <p className="font-bold text-[15px] mb-4 text-sky-blue uppercase tracking-wider">Vocabulary</p>
+          <p className="font-black text-[32px] leading-none text-sky-blue">
+            {loading ? '...' : progress.total_vocab_learned} <span className="text-[17px] font-bold text-sky-blue/70">words</span>
           </p>
         </motion.div>
 
@@ -345,12 +360,12 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="rounded-2xl p-6"
-          style={{ backgroundColor: '#F6ECFF' }}
+          className="bg-grape-soda/5 border-2 border-grape-soda/20 rounded-3xl shadow-sm flex flex-col justify-between"
+          style={{ padding: '24px' }}
         >
-          <p className="font-bold text-[15px] mb-4" style={{ color: '#9333EA' }}>Ngữ Pháp</p>
-          <p className="font-black text-[32px] leading-none" style={{ color: '#581C87' }}>
-            {loading ? '...' : progress.total_grammar_learned} <span className="text-[17px] font-bold">mẫu</span>
+          <p className="font-bold text-[15px] mb-4 text-grape-soda uppercase tracking-wider">Grammar</p>
+          <p className="font-black text-[32px] leading-none text-grape-soda">
+            {loading ? '...' : progress.total_grammar_learned} <span className="text-[17px] font-bold text-grape-soda/70">patterns</span>
           </p>
         </motion.div>
 
@@ -359,12 +374,12 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="rounded-2xl p-6"
-          style={{ backgroundColor: '#E5F9ED' }}
+          className="bg-emerald-500/5 border-2 border-emerald-500/20 rounded-3xl shadow-sm flex flex-col justify-between"
+          style={{ padding: '24px' }}
         >
-          <p className="font-bold text-[15px] mb-4" style={{ color: '#3B82F6' }}>Hội Thoại</p>
-          <p className="font-black text-[32px] leading-none" style={{ color: '#1E3A8A' }}>
-            {loading ? '...' : progress.total_kaiwas} <span className="text-[17px] font-bold">lần</span>
+          <p className="font-bold text-[15px] mb-4 text-emerald-600 uppercase tracking-wider">Conversation</p>
+          <p className="font-black text-[32px] leading-none text-emerald-600">
+            {loading ? '...' : progress.total_kaiwas} <span className="text-[17px] font-bold text-emerald-600/70">times</span>
           </p>
         </motion.div>
 
@@ -373,48 +388,53 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="rounded-2xl p-6"
-          style={{ backgroundColor: '#FFF3E6' }}
+          className="bg-orange-500/5 border-2 border-orange-500/20 rounded-3xl shadow-sm flex flex-col justify-between"
+          style={{ padding: '24px' }}
         >
-          <p className="font-bold text-[15px] mb-4" style={{ color: '#D97706' }}>Flash Card</p>
-          <p className="font-black text-[32px] leading-none" style={{ color: '#78350F' }}>
-            {loading ? '...' : progress.total_flashcard_reviews} <span className="text-[17px] font-bold">thẻ</span>
+          <p className="font-bold text-[15px] mb-4 text-orange-600 uppercase tracking-wider">Flashcards</p>
+          <p className="font-black text-[32px] leading-none text-orange-600">
+            {loading ? '...' : progress.total_flashcard_reviews} <span className="text-[17px] font-bold text-orange-600/70">cards</span>
           </p>
         </motion.div>
       </section>
 
       {/* Two-Column Bottom Panel */}
-      <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-28">
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-32 mb-32 items-start">
 
         {/* Left Column: Review Center */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="card-duo p-8 md:p-12 flex flex-col justify-between"
+          className="card-duo rounded-3xl flex flex-col justify-between"
+          style={{ padding: '24px' }}
         >
           <div>
-            <div className="w-20 h-20 bg-sky-blue/20 text-sky-blue rounded-2xl flex items-center justify-center mb-8 shadow-sm">
-              <AlarmClock className="w-10 h-10" />
+            <div className="flex items-center gap-4 mb-24">
+              <div className="w-40 h-40 bg-sky-blue/20 text-sky-blue rounded-xl flex items-center justify-center shadow-sm">
+                <AlarmClock className="w-24 h-24" />
+              </div>
+              <h3 className="font-feather text-2xl font-bold tracking-heading text-almost-black leading-none">
+                Review Center
+              </h3>
             </div>
-            <h3 className="h2-feather text-almost-black mb-4">Review Center</h3>
 
-            <div className="bg-sky-blue/10 border-2 border-sky-blue/20 rounded-2xl p-6 mb-8 inline-block w-max">
+            <div className="bg-sky-blue/10 border-2 border-sky-blue/20 rounded-2xl p-16 mb-24 inline-block w-max">
               <span className="font-black text-3xl text-sky-blue">{loading ? '...' : progress.total_flashcard_reviews + 24}</span>
               <span className="text-sky-blue font-bold ml-2">cards</span>
               <p className="text-sky-blue/70 font-bold text-sm mt-1">Waiting for review</p>
             </div>
           </div>
 
-          <div className="space-y-4 mt-auto">
+          <div className="space-y-16 mt-auto">
             <NavLink
               to="/flashcards"
-              className="w-full btn-3d-blue py-4 flex items-center justify-center text-[17px]"
+              className="w-full btn-3d-blue py-12 flex items-center justify-center text-[17px]"
             >
-              Start Flashcards
+              Start Review
             </NavLink>
             <NavLink
               to="/flashcards"
-              className="w-full btn-outline-gray py-4 flex items-center justify-center text-[17px] hover:bg-cloud-gray/20 border-cloud-gray border-2 rounded-xl text-graphite font-bold"
+              className="w-full btn-outline-gray py-12 flex items-center justify-center text-[17px] hover:bg-cloud-gray/20 border-cloud-gray border-2 rounded-xl text-graphite font-bold"
             >
               View All Decks
             </NavLink>
@@ -422,17 +442,26 @@ export default function Dashboard() {
         </motion.div>
 
         {/* Right Column: Weekly Activity & Achievement */}
-        <div className="space-y-8 flex flex-col">
+        <div className="space-y-24 flex flex-col">
 
           {/* Weekly Activity */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="card-duo p-8 md:p-12 flex-1"
+            className="card-duo rounded-3xl flex-shrink-0"
+            style={{ padding: '24px' }}
           >
-            <h3 className="h2-feather text-almost-black mb-8">Weekly Activity</h3>
-            <div className="flex justify-between items-center px-2">
+            <div className="flex items-center gap-4 mb-24">
+              <div className="w-40 h-40 bg-sky-blue/20 text-sky-blue rounded-xl flex items-center justify-center shadow-sm">
+                <Calendar className="w-24 h-24" />
+              </div>
+              <h3 className="font-feather text-2xl font-bold tracking-heading text-almost-black leading-none">
+                Weekly Activity
+              </h3>
+            </div>
+
+            <div className="flex justify-between items-center px-8 pb-32">
               {(() => {
                 const today = new Date();
                 const dates = [];
@@ -441,22 +470,24 @@ export default function Dashboard() {
                   date.setDate(date.getDate() - i);
                   dates.push(date);
                 }
+                const EN_WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
                 return dates.map((date, i) => {
-                  const dayName = date.toLocaleDateString('en-US', { weekday: 'narrow' });
+                  const dayName = EN_WEEKDAYS[date.getDay()];
                   const dayNum = date.getDate();
-                  const isActive = (activityData[i] || 0) > 0;
+                  const total = activityData[i] || 0;
+                  const isActive = total > 0;
                   const isToday = i === 6;
 
                   return (
-                    <div key={i} className="flex flex-col items-center gap-3">
+                    <div key={i} className="flex flex-col items-center gap-12">
                       <span className="text-sm font-bold text-silver">{dayName}</span>
                       <div className={cn(
                         "w-14 h-14 rounded-full flex items-center justify-center font-bold text-[17px] border-2 transition-all",
-                        isToday
-                          ? "bg-sky-blue/20 text-sky-blue border-sky-blue/30"
-                          : isActive
-                            ? "bg-sky-blue text-white border-sky-blue shadow-sm"
-                            : "bg-cloud-gray text-silver border-transparent"
+                        isActive
+                          ? "bg-sky-blue text-white border-sky-blue shadow-sm"
+                          : isToday
+                            ? "bg-white border-2 border-sky-blue text-sky-blue"
+                            : "bg-cloud-gray/40 border-2 border-cloud-gray/60 text-silver"
                       )}>
                         {dayNum}
                       </div>
@@ -472,19 +503,30 @@ export default function Dashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="card-duo p-6 md:p-8 bg-sunshine-yellow/10 border-sunshine-yellow/30 flex items-center gap-6"
+            className="card-duo rounded-3xl bg-sunshine-yellow/5 border-2 border-sunshine-yellow/20 flex flex-col flex-shrink-0 gap-24"
+            style={{ padding: '24px' }}
           >
-            <div className="w-20 h-20 flex-shrink-0 bg-white border-2 border-sunshine-yellow rounded-2xl flex items-center justify-center text-4xl shadow-sm">
-              {loading ? '🏆' : nextBadge?.emoji || '🏆'}
+            <div className="flex items-center gap-4">
+              <div className="w-40 h-40 bg-sunshine-yellow/20 text-sunshine-yellow rounded-xl flex items-center justify-center shadow-sm">
+                <Trophy className="w-24 h-24" />
+              </div>
+              <h3 className="font-feather text-2xl font-bold tracking-heading text-almost-black leading-none">
+                Next Achievement
+              </h3>
             </div>
-            <div>
-              <p className="text-xs font-bold text-sunshine-yellow uppercase tracking-widest mb-1">Next Achievement</p>
-              <h4 className="text-[20px] font-bold text-almost-black leading-tight mb-2">
-                {loading ? 'Loading...' : `${nextBadge?.name || 'Starter'}`}
-              </h4>
-              <p className="text-[15px] text-sunshine-yellow font-bold">
-                {loading ? 'Loading...' : `${nextBadge?.daysAway || 7} days away`}
-              </p>
+
+            <div className="flex items-center gap-24">
+              <div className="w-80 h-80 flex-shrink-0 bg-white border-2 border-sunshine-yellow rounded-2xl flex items-center justify-center text-4xl shadow-sm">
+                {loading ? '🏆' : nextBadge?.emoji || '🏆'}
+              </div>
+              <div>
+                <h4 className="text-[20px] font-bold text-almost-black leading-tight mb-8">
+                  {loading ? 'Loading...' : `${nextBadge?.name || 'Starter'}`}
+                </h4>
+                <p className="text-[15px] text-sunshine-yellow font-bold">
+                  {loading ? 'Loading...' : `${nextBadge?.daysAway || 7} days left`}
+                </p>
+              </div>
             </div>
           </motion.div>
 

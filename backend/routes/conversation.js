@@ -27,36 +27,24 @@ router.get('/history', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
 // Save conversation message
 router.post('/save', async (req, res) => {
   try {
     const userId = req.userId;
-    const { mode, scenario_id, user_message, ai_response, grammar_errors } = req.body;
+    const { mode, user_message, ai_response, grammar_errors } = req.body;
 
     if (!user_message || !ai_response) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
     const result = await pool.query(
-      'INSERT INTO conversation_history (user_id, mode, scenario_id, user_message, ai_response, grammar_errors) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [userId, mode || 'free', scenario_id || null, user_message, ai_response, JSON.stringify(grammar_errors || [])]
+      'INSERT INTO conversation_history (user_id, mode, user_message, ai_response, grammar_errors) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [userId, mode || 'free', user_message, ai_response, JSON.stringify(grammar_errors || [])]
     );
 
     res.status(201).json(result.rows[0]);
   } catch (error) {
     console.error('Save conversation error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-// Get all scenarios
-router.get('/scenarios', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM scenarios ORDER BY id');
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Scenarios error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });

@@ -1,4 +1,4 @@
-// Japanese N2 Learning Platform - Database Diagram
+// Japanese N2 Learning Platform - Database Diagram (Updated)
 // Paste this content at https://dbdiagram.io/d
 
 Table users {
@@ -21,6 +21,7 @@ Table vocabulary {
   category varchar
   level int [default: 2]
   example_sentence varchar
+  example_translation varchar
   examples text [note: 'JSON array of examples']
   created_at timestamp
 }
@@ -32,6 +33,7 @@ Table grammar {
   explanation varchar [not null]
   meaning varchar [not null]
   example_sentence varchar
+  example_translation varchar
   category varchar
   examples text [note: 'JSON array of examples']
   level int [default: 2]
@@ -39,7 +41,7 @@ Table grammar {
 
 Table flashcard_decks {
   id int [primary key]
-  user_id int [not null]
+  user_id int [note: 'Nullable for global decks']
   name varchar [not null]
   description varchar
   color varchar [default: 'blue']
@@ -122,7 +124,6 @@ Table conversation_history {
   id int [primary key]
   user_id int [not null]
   mode varchar
-  scenario_id int
   user_message varchar
   ai_response varchar
   grammar_errors json
@@ -133,16 +134,6 @@ Table conversation_history {
   }
 }
 
-Table scenarios {
-  id int [primary key]
-  title varchar [not null]
-  description varchar
-  context varchar
-  example_conversation text
-  difficulty_level int
-  created_at timestamp
-}
-
 Table user_progress {
   id int [primary key]
   user_id int [unique, not null]
@@ -150,8 +141,68 @@ Table user_progress {
   total_grammar_learned int [default: 0]
   total_kaiwas int [default: 0]
   total_flashcard_reviews int [default: 0]
+  last_lesson_id int
   last_activity timestamp
   created_at timestamp
+}
+
+Table units {
+  id int [primary key]
+  title varchar [not null]
+  description varchar
+  sequence_number int [not null]
+  difficulty_level int [default: 2]
+  created_at timestamp
+}
+
+Table lessons {
+  id int [primary key]
+  unit_id int [not null]
+  title varchar [not null]
+  description varchar
+  lesson_number decimal [not null]
+  type varchar
+  content text
+  vocabulary_count int [default: 0]
+  grammar_count int [default: 0]
+  sequence_number int [not null]
+  created_at timestamp
+}
+
+Table user_vocabulary_learned {
+  id int [primary key]
+  user_id int [not null]
+  vocabulary_id int [not null]
+  status varchar [default: 'NEW']
+  learned_at timestamp
+  review_count int [default: 0]
+  last_reviewed_at timestamp
+  created_at timestamp
+  updated_at timestamp
+  
+  indexes {
+    user_id
+    status
+    (user_id, vocabulary_id) [unique]
+  }
+}
+
+Table user_grammar_learned {
+  id int [primary key]
+  user_id int [not null]
+  grammar_id int [not null]
+  status varchar [default: 'NEW']
+  learned_at timestamp
+  review_count int [default: 0]
+  last_reviewed_at timestamp
+  created_at timestamp
+  updated_at timestamp
+  
+  indexes {
+    user_id
+    status
+    (user_id, grammar_id) [unique]
+  }
 }
 
 // Foreign Keys
@@ -166,5 +217,10 @@ Ref: test_questions.grammar_id > grammar.id
 Ref: test_results.user_id > users.id
 Ref: test_results.test_id > tests.id
 Ref: conversation_history.user_id > users.id
-Ref: conversation_history.scenario_id > scenarios.id
 Ref: user_progress.user_id > users.id
+Ref: user_progress.last_lesson_id > lessons.id
+Ref: lessons.unit_id > units.id
+Ref: user_vocabulary_learned.user_id > users.id
+Ref: user_vocabulary_learned.vocabulary_id > vocabulary.id
+Ref: user_grammar_learned.user_id > users.id
+Ref: user_grammar_learned.grammar_id > grammar.id

@@ -85,10 +85,10 @@ export default function AdminGrammar() {
         headers: { Authorization: `Bearer ${token}` },
       });
       await fetchGrammar();
-      showToast('Đã xóa ngữ pháp', 'success');
+      showToast('Grammar deleted', 'success');
     } catch (error) {
       console.error('Error deleting grammar:', error);
-      showToast('Lỗi khi xóa ngữ pháp', 'error');
+      showToast('Error deleting grammar', 'error');
     }
   };
 
@@ -102,13 +102,13 @@ export default function AdminGrammar() {
       if (res.ok) {
         await fetchGrammar();
         setShowDeleteConfirm(false);
-        showToast('Đã xóa tất cả ngữ pháp', 'success');
+        showToast('All grammar deleted', 'success');
       } else {
-        showToast('Lỗi khi xóa ngữ pháp', 'error');
+        showToast('Error deleting grammar', 'error');
       }
     } catch (error) {
       console.error('Error deleting all grammar:', error);
-      showToast('Lỗi khi xóa ngữ pháp', 'error');
+      showToast('Error deleting grammar', 'error');
     } finally {
       setIsDeleting(false);
     }
@@ -122,7 +122,7 @@ export default function AdminGrammar() {
 
   const mergeRecords = (records: any[]) => {
     const groupedRecords = {} as any;
-    
+
     // Group records by pattern|meaning
     for (const record of records) {
       const pattern = record.pattern?.toString().trim();
@@ -138,7 +138,7 @@ export default function AdminGrammar() {
       }
 
       const key = `${pattern}|${meaning}`;
-      
+
       if (!groupedRecords[key]) {
         groupedRecords[key] = {
           title: title || pattern,
@@ -162,7 +162,7 @@ export default function AdminGrammar() {
     // DEBUG: Check merge impact
     const merged = mergeRecords(records);
     console.log(`📊 Original records: ${records.length}, After merge: ${merged.length}, Diff: ${records.length - merged.length}`);
-    
+
     const validated = validateGrammarRecords(merged);
     setPreviewRecords(validated);
     setPendingImport(merged); // Send merged records to backend
@@ -176,7 +176,7 @@ export default function AdminGrammar() {
     try {
       const text = await file.text();
       const records = parseCSVFile(text);
-      
+
       if (records.length === 0) {
         setImportMessage('❌ File is empty!');
         return;
@@ -196,7 +196,7 @@ export default function AdminGrammar() {
 
     try {
       const records = await parseExcelFile(file);
-      
+
       if (records.length === 0) {
         setImportMessage('❌ Excel file is empty!');
         return;
@@ -227,13 +227,13 @@ export default function AdminGrammar() {
       } else if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
         records = await parseExcelFile(file);
       } else {
-        setImportMessage('❌ Định dạng file không hỗ trợ. Vui lòng dùng CSV hoặc Excel');
+        setImportMessage('❌ Unsupported file format. Please use CSV or Excel');
         setImportLoading(false);
         return;
       }
 
       if (records.length === 0) {
-        setImportMessage('❌ File trống hoặc không có dữ liệu hợp lệ');
+        setImportMessage('❌ Empty file or no valid data');
         setImportLoading(false);
         return;
       }
@@ -246,9 +246,9 @@ export default function AdminGrammar() {
       setPreviewRecords(validated);
       setPendingImport(merged); // Send merged records to backend
       setShowPreview(true);
-      setImportMessage(`✅ Tìm thấy ${records.length} bản ghi (merged to ${merged.length})`);
+      setImportMessage(`✅ Found ${records.length} records (merged to ${merged.length})`);
     } catch (error: any) {
-      setImportMessage(`❌ Lỗi: ${error.message}`);
+      setImportMessage(`❌ Error: ${error.message}`);
     } finally {
       setImportLoading(false);
       event.target.value = '';
@@ -285,7 +285,7 @@ export default function AdminGrammar() {
       const result = await res.json();
       setImportMessage(`✅ Imported successfully! Added ${result.imported} items, ${result.skipped} skipped`);
       await fetchGrammar();
-      
+
       setTimeout(() => {
         setShowPreview(false);
         setPendingImport(null);
@@ -310,7 +310,7 @@ export default function AdminGrammar() {
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="h1-feather text-almost-black">Quản lý Ngữ Pháp</h1>
+        <h1 className="h1-feather text-almost-black">Grammar Management</h1>
         <div className="flex gap-4">
           <button
             onClick={() => {
@@ -322,7 +322,7 @@ export default function AdminGrammar() {
             className="btn-3d-blue flex items-center gap-2 px-6"
           >
             <Plus className="w-5 h-5" />
-            Thêm Ngữ Pháp
+            Add Grammar
           </button>
           <button
             onClick={() => {
@@ -341,7 +341,7 @@ export default function AdminGrammar() {
             className="btn-3d-red flex items-center gap-2 px-6"
           >
             <Trash2 className="w-5 h-5" />
-            Xóa Tất Cả
+            Delete All
           </button>
         </div>
       </div>
@@ -349,28 +349,26 @@ export default function AdminGrammar() {
       {/* Import Section */}
       {showImport && (
         <div className="card-duo p-8 mb-8">
-          <h2 className="h2-feather mb-6">Import Ngữ Pháp</h2>
+          {/* <h2 className="h2-feather mb-6">Import Ngữ Pháp</h2> */}
 
           {/* Tab Navigation */}
           <div className="flex gap-3 mb-6 border-b-2 border-cloud-gray pb-4">
             <button
               onClick={() => setActiveImportTab('csv')}
-              className={`px-5 py-3 rounded-xl border-2 font-bold flex items-center gap-2 transition-all ${
-                activeImportTab === 'csv'
+              className={`px-5 py-3 rounded-xl border-2 font-bold flex items-center gap-2 transition-all ${activeImportTab === 'csv'
                   ? 'border-sky-blue bg-sky-blue/10 text-sky-blue'
                   : 'border-transparent text-silver hover:bg-gray-50 hover:border-cloud-gray'
-              }`}
+                }`}
             >
               <Upload className="w-5 h-5" />
               CSV File
             </button>
             <button
               onClick={() => setActiveImportTab('excel')}
-              className={`px-5 py-3 rounded-xl border-2 font-bold flex items-center gap-2 transition-all ${
-                activeImportTab === 'excel'
+              className={`px-5 py-3 rounded-xl border-2 font-bold flex items-center gap-2 transition-all ${activeImportTab === 'excel'
                   ? 'border-sky-blue bg-sky-blue/10 text-sky-blue'
                   : 'border-transparent text-silver hover:bg-gray-50 hover:border-cloud-gray'
-              }`}
+                }`}
             >
               <FileText className="w-5 h-5" />
               Excel File
@@ -379,11 +377,10 @@ export default function AdminGrammar() {
 
           {importMessage && (
             <div
-              className={`p-5 rounded-2xl mb-6 font-bold border-2 ${
-                importMessage.includes('✅')
+              className={`p-5 rounded-2xl mb-6 font-bold border-2 ${importMessage.includes('✅')
                   ? 'bg-sky-blue-light text-sky-blue border-sky-blue'
                   : 'bg-pink-50 text-bubblegum-pink border-bubblegum-pink'
-              }`}
+                }`}
             >
               {importMessage}
             </div>
@@ -403,8 +400,8 @@ export default function AdminGrammar() {
                 />
                 <label htmlFor="csv-input" className="cursor-pointer flex flex-col items-center">
                   <Upload className="w-12 h-12 mb-4 text-silver" />
-                  <p className="font-extrabold text-[17px] text-almost-black">Kéo thả hoặc <span className="text-sky-blue">chọn CSV</span></p>
-                  <p className="text-[15px] font-bold text-silver mt-2">Định dạng: pattern, meaning, title, explanation, category, level, example_sentence, example_translation</p>
+                  <p className="font-extrabold text-[17px] text-almost-black">Drag and drop or <span className="text-sky-blue">choose CSV</span></p>
+                  <p className="text-[15px] font-bold text-silver mt-2">Format: pattern, meaning, title, explanation, category, level, example_sentence, example_translation</p>
                 </label>
               </div>
             </div>
@@ -424,8 +421,8 @@ export default function AdminGrammar() {
                 />
                 <label htmlFor="excel-input" className="cursor-pointer flex flex-col items-center">
                   <FileText className="w-12 h-12 mb-4 text-silver" />
-                  <p className="font-extrabold text-[17px] text-almost-black">Kéo thả hoặc <span className="text-sky-blue">chọn Excel</span></p>
-                  <p className="text-[15px] font-bold text-silver mt-2">Định dạng: .xlsx hoặc .xls</p>
+                  <p className="font-extrabold text-[17px] text-almost-black">Drag and drop or <span className="text-sky-blue">choose Excel</span></p>
+                  <p className="text-[15px] font-bold text-silver mt-2">Format: .xlsx or .xls</p>
                 </label>
               </div>
             </div>
@@ -435,7 +432,7 @@ export default function AdminGrammar() {
             onClick={() => setShowImport(false)}
             className="mt-6 w-full btn-outline-gray px-6 py-4 flex items-center justify-center font-bold text-[17px] text-graphite"
           >
-            Đóng
+            Close
           </button>
         </div>
       )}
@@ -443,11 +440,11 @@ export default function AdminGrammar() {
       {/* Form */}
       {showForm && (
         <div className="card-duo p-8 mb-8">
-          <h2 className="h2-feather mb-6">{editingId ? 'Sửa' : 'Thêm'} Ngữ Pháp</h2>
+          <h2 className="h2-feather mb-6">{editingId ? 'Edit' : 'Add'} Grammar</h2>
           <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-5">
             <input
               type="text"
-              placeholder="Tiêu đề (Title)"
+              placeholder="Title"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               required
@@ -455,14 +452,14 @@ export default function AdminGrammar() {
             />
             <input
               type="text"
-              placeholder="Dạng (Pattern)"
+              placeholder="Pattern"
               value={formData.pattern}
               onChange={(e) => setFormData({ ...formData, pattern: e.target.value })}
               required
               className="border-2 border-cloud-gray px-5 py-4 rounded-2xl focus:border-sky-blue focus:bg-sky-blue/5 outline-none font-bold text-almost-black text-[15px]"
             />
             <textarea
-              placeholder="Giải thích (Explanation)"
+              placeholder="Explanation"
               value={formData.explanation}
               onChange={(e) => setFormData({ ...formData, explanation: e.target.value })}
               required
@@ -471,7 +468,7 @@ export default function AdminGrammar() {
             />
             <input
               type="text"
-              placeholder="Nghĩa (Meaning)"
+              placeholder="Meaning"
               value={formData.meaning}
               onChange={(e) => setFormData({ ...formData, meaning: e.target.value })}
               required
@@ -479,7 +476,7 @@ export default function AdminGrammar() {
             />
             <input
               type="text"
-              placeholder="Danh mục (Category)"
+              placeholder="Category"
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
               className="border-2 border-cloud-gray px-5 py-4 rounded-2xl focus:border-sky-blue focus:bg-sky-blue/5 outline-none font-bold text-almost-black text-[15px]"
@@ -493,14 +490,14 @@ export default function AdminGrammar() {
             />
             <input
               type="text"
-              placeholder="Ví dụ (Example)"
+              placeholder="Example"
               value={formData.example_sentence}
               onChange={(e) => setFormData({ ...formData, example_sentence: e.target.value })}
               className="border-2 border-cloud-gray px-5 py-4 rounded-2xl focus:border-sky-blue focus:bg-sky-blue/5 outline-none font-bold text-almost-black text-[15px] col-span-2"
             />
             <div className="col-span-2 flex gap-4 mt-2">
               <button type="submit" className="btn-3d-blue px-8 text-[17px]">
-                {editingId ? 'Cập nhật' : 'Thêm'}
+                {editingId ? 'Update' : 'Add'}
               </button>
               <button
                 type="button"
@@ -510,7 +507,7 @@ export default function AdminGrammar() {
                 }}
                 className="btn-outline-gray px-8 text-[17px] text-graphite"
               >
-                Hủy
+                Cancel
               </button>
             </div>
           </form>
@@ -528,7 +525,7 @@ export default function AdminGrammar() {
           setPendingImport(null);
         }}
         isLoading={importLoading}
-        title="Preview Ngữ Pháp"
+        title="Preview Grammar"
         type="grammar"
       />
 
@@ -537,19 +534,19 @@ export default function AdminGrammar() {
         <table className="w-full">
           <thead className="bg-cloud-gray border-b-2 border-cloud-gray">
             <tr>
-              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">ID</th>
-              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Tiêu đề</th>
-              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Dạng</th>
-              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Nghĩa</th>
-              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Danh mục</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">No.</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Title</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Pattern</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Meaning</th>
+              <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Category</th>
               <th className="px-5 py-4 text-left font-extrabold text-[13px] uppercase tracking-wider text-graphite">Level</th>
-              <th className="px-5 py-4 text-center font-extrabold text-[13px] uppercase tracking-wider text-graphite">Hành động</th>
+              <th className="px-5 py-4 text-center font-extrabold text-[13px] uppercase tracking-wider text-graphite">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {grammar.map((item) => (
+            {grammar.map((item, index) => (
               <tr key={item.id} className="border-b-2 border-cloud-gray hover:bg-gray-50 transition-colors">
-                <td className="px-5 py-4 font-bold text-silver">{item.id}</td>
+                <td className="px-5 py-4 font-bold text-silver">{index + 1}</td>
                 <td className="px-5 py-4 font-feather font-bold text-[19px] text-almost-black">{item.title}</td>
                 <td className="px-5 py-4 font-bold text-sky-blue">{item.pattern}</td>
                 <td className="px-5 py-4 font-bold text-graphite">{item.meaning}</td>
@@ -576,23 +573,23 @@ export default function AdminGrammar() {
       </div>
 
       {grammar.length === 0 && (
-        <div className="text-center py-12 font-bold text-silver text-[17px]">Không có ngữ pháp nào</div>
+        <div className="text-center py-12 font-bold text-silver text-[17px]">No grammar found</div>
       )}
 
       {/* Delete All Confirm Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-almost-black/50 flex items-center justify-center z-50 p-4">
           <div className="card-duo p-10 max-w-sm w-full relative">
-            <h2 className="h2-feather text-bubblegum-pink mb-4">⚠️ Xóa Tất Cả Ngữ Pháp?</h2>
-            <p className="font-bold text-graphite mb-2">Hành động này sẽ xóa <strong>{grammar.length} ngữ pháp</strong> và không thể hoàn tác.</p>
-            <p className="text-silver font-bold text-[15px] mb-8">Hãy chắc chắn rằng bạn muốn tiếp tục.</p>
+            <h2 className="h2-feather text-bubblegum-pink mb-4">⚠️ Delete All Grammar?</h2>
+            <p className="font-bold text-graphite mb-2">This action will delete <strong>{grammar.length} grammar patterns</strong> and cannot be undone.</p>
+            <p className="text-silver font-bold text-[15px] mb-8">Please make sure you want to continue.</p>
             <div className="flex gap-4 justify-end">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
                 disabled={isDeleting}
                 className="btn-outline-gray px-6 py-3 font-bold text-graphite disabled:opacity-50"
               >
-                Hủy
+                Cancel
               </button>
               <button
                 onClick={handleDeleteAll}
@@ -600,7 +597,7 @@ export default function AdminGrammar() {
                 className="btn-3d-red px-6 py-3 disabled:opacity-50 flex items-center gap-2"
               >
                 {isDeleting ? <Loader className="w-5 h-5 animate-spin" /> : <Trash2 className="w-5 h-5" />}
-                {isDeleting ? 'Đang xóa...' : 'Xóa Tất Cả'}
+                {isDeleting ? 'Deleting...' : 'Delete All'}
               </button>
             </div>
           </div>

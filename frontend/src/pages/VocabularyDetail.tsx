@@ -83,10 +83,10 @@ export default function VocabularyDetail() {
       // showToast('Đã thêm vào flashcards', 'success');
       setSaved(true); // Sync with the new save button
       setShowConfetti(true);
-      setTimeout(() => setShowConfetti(false), 2500);
+      setTimeout(() => setShowConfetti(false), 1200);
       setShowDeckSelection(false);
     } catch (error: any) {
-      showToast('Lỗi: ' + (error.message || 'Không thể thêm vào flashcards'), 'error');
+      showToast('Error: ' + (error.message || 'Unable to add to flashcards'), 'error');
     } finally {
       setIsAdding(false);
     }
@@ -125,7 +125,7 @@ export default function VocabularyDetail() {
           className="inline-flex items-center gap-2 rounded-xl bg-slate-200 px-4 py-2 font-semibold text-slate-600 transition hover:bg-slate-300 mb-7"
         >
           <ArrowLeft size={16} />
-          Quay lại
+          Back
         </button>
 
         {/* Hero */}
@@ -133,7 +133,7 @@ export default function VocabularyDetail() {
           <div className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-sky-blue/10" />
 
           <div className="flex flex-wrap gap-2 mb-5">
-            <Badge className="bg-sky-blue text-white">⚡ Từ Vựng</Badge>
+            <Badge className="bg-sky-blue text-white">⚡ Vocabulary</Badge>
             <Badge className="bg-white text-sky-blue border border-sky-200">{level}</Badge>
             <Badge className="bg-blue-100 text-blue-800">{category}</Badge>
           </div>
@@ -162,7 +162,7 @@ export default function VocabularyDetail() {
                     <>
                       {/* @ts-ignore */}
                       <dotlottie-wc src="https://lottie.host/9d650f31-f397-4975-a573-607bf6075bd9/IOVwsC4yPc.lottie" style={{ width: '32px', height: '32px' }} autoplay loop></dotlottie-wc>
-                      Xem cách đọc
+                      Reveal reading
                     </>
                   )}
                 </span>
@@ -182,7 +182,7 @@ export default function VocabularyDetail() {
           <div className="rounded-2xl border-2 border-slate-200 bg-white p-7 shadow-sm">
             <div className="flex items-center gap-3 mb-4">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-100 text-lg">📝</div>
-              <p className="font-bold text-slate-800">Câu ví dụ</p>
+              <p className="font-bold text-slate-800">Example sentence</p>
             </div>
             <div className="rounded-xl bg-slate-50 p-4 mb-3">
               <p className="font-jp text-base leading-relaxed text-slate-800">{example_sentence}</p>
@@ -223,7 +223,7 @@ export default function VocabularyDetail() {
 
                     {/* Subtitle */}
                     <p className="text-sm text-slate-500 mb-2 tracking-wide">
-                      Thử đọc từ này
+                      Try reading this word
                     </p>
 
                     {/* Japanese Word */}
@@ -246,7 +246,7 @@ export default function VocabularyDetail() {
       active:scale-[0.98]
     "
                   >
-                    ⚡ Bắt đầu Quiz!
+                    ⚡ Start Quiz!
                   </button>
                 </>
               ) : quizResult ? (
@@ -275,7 +275,7 @@ export default function VocabularyDetail() {
                       "text-lg font-bold mb-1",
                       quizResult === 'correct' ? 'text-blue-600' : 'text-red-600'
                     )}>
-                      {quizResult === 'correct' ? 'Chính xác!' : 'Chưa đúng!'}
+                      {quizResult === 'correct' ? 'Correct!' : 'Incorrect!'}
                     </p>
                     {/* <p className="text-sm text-slate-500 mb-0">
                       Đáp án: <strong className="font-jp text-sky-blue">{reading}</strong>
@@ -285,13 +285,13 @@ export default function VocabularyDetail() {
                     onClick={resetQuiz}
                     className="rounded-lg border-none bg-sky-blue px-5 py-2 text-sm font-semibold text-white mx-auto mt-auto"
                   >
-                    Thử lại
+                    Try again
                   </button>
                 </>
               ) : (
                 <>
                   <div className="flex-1 flex flex-col justify-center">
-                    <p className="text-sm text-slate-600 mb-2">Gõ cách đọc (hiragana):</p>
+                    <p className="text-sm text-slate-600 mb-2">Type the reading (hiragana):</p>
                     <input
                       value={quizAnswer}
                       onChange={e => setQuizAnswer(e.target.value)}
@@ -304,7 +304,7 @@ export default function VocabularyDetail() {
                     onClick={checkQuiz}
                     className="w-full rounded-xl border-none bg-sky-blue py-3 font-bold text-white mt-auto"
                   >
-                    Kiểm tra →
+                    Check →
                   </button>
                 </>
               )}
@@ -324,17 +324,17 @@ export default function VocabularyDetail() {
           )}
         >
           {saved ? (
-            <> <Check size={20} /> Đã lưu vào Deck! </>
+            <> <Check size={20} /> Saved to Deck! </>
           ) : isAdding ? (
-            'Đang lưu...'
+            'Saving...'
           ) : (
-            <> <Plus size={20} /> Lưu vào Flashcard Deck </>
+            <> <Plus size={20} /> Add to Flashcard Deck </>
           )}
         </button>
       </div>
 
       {showConfetti && (
-        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm animate-in fade-in duration-150">
           <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
             {/* @ts-ignore */}
             <dotlottie-wc
@@ -343,9 +343,9 @@ export default function VocabularyDetail() {
               autoplay
             ></dotlottie-wc>
           </div>
-          <div className="flex flex-col items-center justify-center animate-in zoom-in-75 duration-500 gap-6">
+          <div className="flex flex-col items-center justify-center animate-in zoom-in-75 duration-200 gap-6">
             <Check size={100} strokeWidth={4} className="text-emerald-400 drop-shadow-2xl" />
-            <p className="font-extrabold text-3xl text-white drop-shadow-lg tracking-wide">Đã lưu thành công!</p>
+            <p className="font-extrabold text-3xl text-white drop-shadow-lg tracking-wide">Successfully Saved!</p>
           </div>
         </div>
       )}

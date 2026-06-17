@@ -83,10 +83,10 @@ export default function TestTaker({ testId, onBack }: { testId: number; onBack: 
       const result = await api.submitTest(token!, testId, submitAnswers);
       setResult(result);
       setSubmitted(true);
-      showToast('Bài test đã được nộp thành công', 'success');
+      showToast('Test submitted successfully', 'success');
     } catch (error) {
       console.error('Error submitting test:', error);
-      showToast('Lỗi khi nộp bài', 'error');
+      showToast('Error submitting test', 'error');
     } finally {
       setSubmitting(false);
     }
@@ -105,9 +105,9 @@ export default function TestTaker({ testId, onBack }: { testId: number; onBack: 
       <div className="w-full p-8">
         <button onClick={onBack} className="flex items-center gap-2 text-blue-600 hover:text-blue-800 mb-4">
           <ArrowLeft className="w-5 h-5" />
-          Quay lại
+          Back
         </button>
-        <p className="text-gray-500">Không tìm thấy bài test hoặc chưa có câu hỏi</p>
+        <p className="text-gray-500">Test not found or no questions available</p>
       </div>
     );
   }
@@ -117,23 +117,23 @@ export default function TestTaker({ testId, onBack }: { testId: number; onBack: 
       <div className="w-full max-w-4xl mx-auto p-8">
         <button onClick={onBack} className="flex items-center gap-2 text-blue-600 hover:text-blue-800 mb-8">
           <ArrowLeft className="w-5 h-5" />
-          Quay lại
+          Back
         </button>
 
         {/* Results Header */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-          <h1 className="text-3xl font-bold mb-4">Kết Quả Bài Test</h1>
+          <h1 className="text-3xl font-bold mb-4">Test Result</h1>
           <div className="grid grid-cols-3 gap-4">
             <div className="bg-blue-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-600">Điểm Số</p>
+              <p className="text-sm text-gray-600">Score</p>
               <p className="text-3xl font-bold text-blue-600">{result.score.toFixed(1)}%</p>
             </div>
             <div className="bg-blue-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-600">Đúng</p>
+              <p className="text-sm text-gray-600">Correct</p>
               <p className="text-3xl font-bold text-blue-600">{result.correctCount}/{result.totalQuestions}</p>
             </div>
             <div className="bg-purple-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-600">Tổng Câu</p>
+              <p className="text-sm text-gray-600">Total Questions</p>
               <p className="text-3xl font-bold text-purple-600">{result.totalQuestions}</p>
             </div>
           </div>
@@ -141,7 +141,7 @@ export default function TestTaker({ testId, onBack }: { testId: number; onBack: 
 
         {/* Review Answers */}
         <div className="space-y-4">
-          <h2 className="text-2xl font-bold">Xem Lại Đáp Án</h2>
+          <h2 className="text-2xl font-bold">Review Answers</h2>
           {questions.map((q, idx) => {
             const userAnswer = result.answers.find((a: any) => a.question_id === q.id);
             const isCorrect = userAnswer?.is_correct;
@@ -155,12 +155,12 @@ export default function TestTaker({ testId, onBack }: { testId: number; onBack: 
                     <XCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-1" />
                   )}
                   <div className="flex-1">
-                    <p className="font-semibold text-gray-900">Câu {idx + 1}: {q.question_text}</p>
+                    <p className="font-semibold text-gray-900">Question {idx + 1}: {q.question_text}</p>
                   </div>
                 </div>
                 <div className="ml-9 space-y-2">
-                  <p className="text-sm"><span className="font-semibold text-gray-700">Bạn chọn:</span> <span className="text-gray-900">{userAnswer?.answer || '(chưa trả lời)'}</span></p>
-                  <p className="text-sm"><span className="font-semibold text-blue-700">Đáp án đúng:</span> <span className="text-blue-900">{result.answers.find((a: any) => a.question_id === q.id)?.correct_answer || 'N/A'}</span></p>
+                  <p className="text-sm"><span className="font-semibold text-gray-700">Your choice:</span> <span className="text-gray-900">{userAnswer?.answer || '(no answer)'}</span></p>
+                  <p className="text-sm"><span className="font-semibold text-blue-700">Correct answer:</span> <span className="text-blue-900">{result.answers.find((a: any) => a.question_id === q.id)?.correct_answer || 'N/A'}</span></p>
                 </div>
               </div>
             );
@@ -177,7 +177,7 @@ export default function TestTaker({ testId, onBack }: { testId: number; onBack: 
     <div className="w-full max-w-4xl mx-auto p-8">
       <button onClick={onBack} className="flex items-center gap-2 text-blue-600 hover:text-blue-800 mb-8">
         <ArrowLeft className="w-5 h-5" />
-        Quay lại
+        Back
       </button>
 
       {/* Test Header */}
@@ -191,7 +191,7 @@ export default function TestTaker({ testId, onBack }: { testId: number; onBack: 
           />
         </div>
         <p className="text-sm text-gray-500 mt-2">
-          Câu {currentQuestionIndex + 1}/{questions.length}
+          Question {currentQuestionIndex + 1}/{questions.length}
         </p>
       </div>
 
@@ -234,7 +234,7 @@ export default function TestTaker({ testId, onBack }: { testId: number; onBack: 
             disabled={currentQuestionIndex === 0}
             className="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 disabled:opacity-50"
           >
-            ← Câu Trước
+            ← Prev
           </button>
 
           {currentQuestionIndex === questions.length - 1 ? (
@@ -244,14 +244,14 @@ export default function TestTaker({ testId, onBack }: { testId: number; onBack: 
               className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
             >
               {submitting ? <Loader className="w-4 h-4 animate-spin" /> : null}
-              Nộp Bài
+              Submit
             </button>
           ) : (
             <button
               onClick={handleNext}
               className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
             >
-              Câu Tiếp →
+              Next →
             </button>
           )}
         </div>
@@ -259,7 +259,7 @@ export default function TestTaker({ testId, onBack }: { testId: number; onBack: 
 
       {/* Question List */}
       <div className="bg-white rounded-lg shadow-lg p-6">
-        <h3 className="font-bold text-gray-900 mb-4">Danh Sách Câu Hỏi</h3>
+        <h3 className="font-bold text-gray-900 mb-4">Questions List</h3>
         <div className="grid grid-cols-5 gap-2">
           {questions.map((q, idx) => (
             <button
