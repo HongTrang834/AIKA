@@ -2,10 +2,16 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import { generateToken, authMiddleware } from '../auth.js';
 import pool from '../db.js';
+import { sendVerificationEmail, sendPasswordResetEmail } from '../services/mail.js';
 
 const router = express.Router();
 
-// Register User
+// Generate a random 6-digit code
+const generate6DigitCode = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+// Register User (Requires Email Verification)
 router.post('/register', async (req, res) => {
   try {
     const { username, email, password, full_name } = req.body;
@@ -28,27 +34,147 @@ router.post('/register', async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user
+    // Generate verification code & expiry (15 minutes)
+    const verificationCode = generate6DigitCode();
+    const verificationExpires = new Date(Date.now() + 15 * 60 * 1000);
+
+    // Create user (unverified)
     const result = await pool.query(
-      'INSERT INTO users (username, email, password_hash, full_name, role) VALUES ($1, $2, $3, $4, $5) RETURNING id, username, email, role, full_name, avatar_url',
-      [username, email, hashedPassword, full_name || username, 'student']
+      'INSERT INTO users (username, email, password_hash, full_name, role, is_verified, verification_code, verification_expires) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id, username, email, role, full_name',
+      [username, email, hashedPassword, full_name || username, 'student', false, verificationCode, verificationExpires]
     );
 
     const user = result.rows[0];
-    const token = generateToken(user.id, user.role);
 
-    // Create user progress record
-    await pool.query(
-      'INSERT INTO user_progress (user_id) VALUES ($1)',
-      [user.id]
-    );
+    // Send verification email in background to prevent API blocking
+    sendVerificationEmail(email, user.username, verificationCode).catch((err) => {
+      console.error('Failed to send verification email in background:', err.message);
+    });
 
     res.status(201).json({
-      user,
-      token,
+      message: 'Registration successful. A 6-digit verification code has been sent to your email.',
+      email: user.email,
     });
   } catch (error) {
     console.error('Register error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Verify Email
+router.post('/verify-email', async (req, res) => {
+  try {
+    const { email, code } = req.body;
+
+    if (!email || !code) {
+      return res.status(400).json({ error: 'Email and verification code are required' });
+    }
+
+    // Get user
+    const userResult = await pool.query(
+      'SELECT * FROM users WHERE email = $1',
+      [email]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const user = userResult.rows[0];
+
+    if (user.is_verified) {
+      return res.status(400).json({ error: 'Email is already verified' });
+    }
+
+    // Check code & expiry
+    if (user.verification_code !== code) {
+      return res.status(400).json({ error: 'Invalid verification code' });
+    }
+
+    if (new Date() > new Date(user.verification_expires)) {
+      return res.status(400).json({ error: 'Verification code has expired' });
+    }
+
+    // Update user status
+    await pool.query(
+      'UPDATE users SET is_verified = true, verification_code = NULL, verification_expires = NULL WHERE id = $1',
+      [user.id]
+    );
+
+    // Create user progress record if not exists
+    const progressResult = await pool.query(
+      'SELECT 1 FROM user_progress WHERE user_id = $1',
+      [user.id]
+    );
+    if (progressResult.rows.length === 0) {
+      await pool.query(
+        'INSERT INTO user_progress (user_id) VALUES ($1)',
+        [user.id]
+      );
+    }
+
+    // Generate JWT token
+    const token = generateToken(user.id, user.role);
+
+    res.json({
+      message: 'Email verified successfully.',
+      token,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        full_name: user.full_name,
+        avatar_url: user.avatar_url,
+      },
+    });
+  } catch (error) {
+    console.error('Email verification error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Resend Verification Code
+router.post('/resend-verification', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    const userResult = await pool.query(
+      'SELECT id, username, is_verified FROM users WHERE email = $1',
+      [email]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const user = userResult.rows[0];
+
+    if (user.is_verified) {
+      return res.status(400).json({ error: 'Email is already verified' });
+    }
+
+    // Generate new code & expiry (15 mins)
+    const verificationCode = generate6DigitCode();
+    const verificationExpires = new Date(Date.now() + 15 * 60 * 1000);
+
+    await pool.query(
+      'UPDATE users SET verification_code = $1, verification_expires = $2 WHERE id = $3',
+      [verificationCode, verificationExpires, user.id]
+    );
+
+    // Send verification email in background to prevent API blocking
+    sendVerificationEmail(email, user.username, verificationCode).catch((err) => {
+      console.error('Failed to send verification email in background:', err.message);
+    });
+
+    res.json({ message: 'A new verification code has been sent to your email.' });
+  } catch (error) {
+    console.error('Resend verification error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -63,7 +189,7 @@ router.post('/login', async (req, res) => {
     }
 
     const result = await pool.query(
-      'SELECT id, username, email, password_hash, role, full_name, avatar_url FROM users WHERE email = $1',
+      'SELECT id, username, email, password_hash, role, full_name, avatar_url, is_verified FROM users WHERE email = $1',
       [email]
     );
 
@@ -76,6 +202,15 @@ router.post('/login', async (req, res) => {
 
     if (!passwordMatch) {
       return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    // Block unverified users from logging in
+    if (!user.is_verified) {
+      return res.status(403).json({
+        error: 'Email not verified. Please verify your email.',
+        code: 'EMAIL_NOT_VERIFIED',
+        email: user.email,
+      });
     }
 
     const token = generateToken(user.id, user.role);
@@ -95,6 +230,101 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+// Request Password Reset (Forgot Password)
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    const userResult = await pool.query(
+      'SELECT id, username FROM users WHERE email = $1',
+      [email]
+    );
+
+    if (userResult.rows.length === 0) {
+      // Return 200 for security, but say reset code was sent (prevent email enumeration)
+      // For developer debugging, it might be easier to return 404, but let's keep it secure.
+      // Actually, we can return success but log to console.
+      console.log(`Password reset requested for non-existent email: ${email}`);
+      return res.json({ message: 'If this email is registered, a password reset code has been sent.' });
+    }
+
+    const user = userResult.rows[0];
+
+    // Generate 6-digit code and expiry (15 mins)
+    const resetCode = generate6DigitCode();
+    const resetExpires = new Date(Date.now() + 15 * 60 * 1000);
+
+    await pool.query(
+      'UPDATE users SET reset_code = $1, reset_expires = $2 WHERE id = $3',
+      [resetCode, resetExpires, user.id]
+    );
+
+    // Send reset email in background to prevent API blocking
+    sendPasswordResetEmail(email, user.username, resetCode).catch((err) => {
+      console.error('Failed to send reset email in background:', err.message);
+    });
+
+    res.json({ message: 'A password reset code has been sent to your email.' });
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Reset Password using Code
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { email, code, new_password } = req.body;
+
+    if (!email || !code || !new_password) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    if (new_password.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters long' });
+    }
+
+    const userResult = await pool.query(
+      'SELECT id, reset_code, reset_expires FROM users WHERE email = $1',
+      [email]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const user = userResult.rows[0];
+
+    // Check code and expiry
+    if (user.reset_code !== code) {
+      return res.status(400).json({ error: 'Invalid password reset code' });
+    }
+
+    if (new Date() > new Date(user.reset_expires)) {
+      return res.status(400).json({ error: 'Password reset code has expired' });
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(new_password, 10);
+
+    // Update password, clear reset fields
+    await pool.query(
+      'UPDATE users SET password_hash = $1, reset_code = NULL, reset_expires = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+      [hashedPassword, user.id]
+    );
+
+    res.json({ message: 'Password has been reset successfully. You can now log in.' });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 // Get User Profile
 router.get('/profile', authMiddleware, async (req, res) => {

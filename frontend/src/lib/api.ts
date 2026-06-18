@@ -49,6 +49,43 @@ export const api = {
     return res.json();
   },
 
+  verifyEmail: async (email: string, code: string) => {
+    const res = await fetch(`${API_BASE_URL}/users/verify-email`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, code }),
+    });
+    return res.json();
+  },
+
+  resendVerification: async (email: string) => {
+    const res = await fetch(`${API_BASE_URL}/users/resend-verification`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    return res.json();
+  },
+
+  forgotPassword: async (email: string) => {
+    const res = await fetch(`${API_BASE_URL}/users/forgot-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    return res.json();
+  },
+
+  resetPassword: async (data: { email: string; code: string; new_password: string }) => {
+    const res = await fetch(`${API_BASE_URL}/users/reset-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    return res.json();
+  },
+
+
   getProfile: async (token: string) => {
     const res = await fetch(`${API_BASE_URL}/users/profile`, {
       headers: { Authorization: `Bearer ${token}` },

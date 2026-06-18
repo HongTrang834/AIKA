@@ -199,12 +199,30 @@ export async function runMigrations() {
       console.log("ℹ️ grammar.examples column note:", err.message.substring(0, 50));
     }
 
+    const usersVerificationAlterSQL = `
+      ALTER TABLE users
+      ADD COLUMN IF NOT EXISTS is_verified BOOLEAN DEFAULT FALSE,
+      ADD COLUMN IF NOT EXISTS verification_code VARCHAR(6),
+      ADD COLUMN IF NOT EXISTS verification_expires TIMESTAMP,
+      ADD COLUMN IF NOT EXISTS reset_code VARCHAR(6),
+      ADD COLUMN IF NOT EXISTS reset_expires TIMESTAMP;
+    `;
+
+    try {
+      await pool.query(usersVerificationAlterSQL);
+      await pool.query(`UPDATE users SET is_verified = TRUE WHERE is_verified IS NULL OR (is_verified = FALSE AND verification_code IS NULL)`);
+      console.log("✅ users verification and reset columns ready");
+    } catch (err) {
+      console.log("ℹ️ users verification migration note:", err.message.substring(0, 50));
+    }
+
     try {
       await pool.query(avatarUrlAlterSQL);
       console.log("✅ users.avatar_url column upgraded to TEXT");
     } catch (err) {
       console.log("ℹ️ avatar_url column type check:", err.message.substring(0, 50));
     }
+
 
     try {
       await pool.query(testsTableSQL);
