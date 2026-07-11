@@ -221,14 +221,3 @@ Dịch vụ AI Chatbot hoạt động theo mô hình Hybrid Cloud AI với máy 
    *Express server chạy ở chế độ Production sẽ tự động phục vụ trực tiếp các file tĩnh trong thư mục `dist` trên cổng cấu hình.*
 
 ---
-
-## 🤝 Thành Viên Đóng Góp (Contributors)
-
-* **Trần Hồng Trang** (Mã nguồn chính & Đề tài Đồ án tốt nghiệp)
-* Cùng sự hỗ trợ đóng góp từ các thành viên trong nhóm nghiên cứu học thuật.
-
----
-
-## 📄 Giấy Phép (License)
-
-Dự án này thuộc bản quyền của nhóm phát triển và được phát hành dưới Giấy phép **MIT**. Mọi hành vi sao chép hay sử dụng cho mục đích thương mại cần có sự đồng ý của tác giả đề tài.
